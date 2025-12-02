@@ -25,7 +25,13 @@
     ],
     "paths": {
       "@/*": [
-        "./*"
+        "./src/*"
+      ],
+      "@public/*": [
+        "./public/*"
+      ],
+      "@components": [
+        "./src/components"
       ]
     }
   },

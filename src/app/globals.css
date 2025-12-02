@@ -1,1 +1,50 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    /* 🎨 COLORES BASE (se sobreescriben según el tema) */
+    --background: #F9FAFB;
+    --foreground: #111827;
+
+    --card: #FFFFFF;
+    --card-foreground: #1F2937;
+
+    --primary: #4F46E5;
+    --primary-foreground: #FFFFFF;
+
+    --secondary: #6366F1;
+    --secondary-foreground: #FFFFFF;
+
+    --muted: #E5E7EB;
+    --muted-foreground: #6B7280;
+
+    --accent: #22C55E;
+    --accent-foreground: #FFFFFF;
+
+    --destructive: #EF4444;
+    --destructive-foreground: #FFFFFF;
+}
+
+.dark {
+    --background: #0F0F12;
+    --foreground: #F3F4F6;
+
+    --card: #1A1A1D;
+    --card-foreground: #E5E7EB;
+
+    --primary: #818CF8;
+    --primary-foreground: #111827;
+
+    --secondary: #A5B4FC;
+    --secondary-foreground: #1F2937;
+
+    --muted: #2A2A2E;
+    --muted-foreground: #9CA3AF;
+
+    --accent: #4ADE80;
+    --accent-foreground: #1F2937;
+
+    --destructive: #F87171;
+    --destructive-foreground: #1F2937;
+}
