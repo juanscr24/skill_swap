@@ -3,48 +3,37 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    /* 🎨 COLORES BASE (se sobreescriben según el tema) */
-    --background: #F9FAFB;
-    --foreground: #111827;
+    /* Superficies (fondos, tarjetas, etc.) */
+    --bg-1: #F6F8F8;
+    --bg-2: #FFFFFF;
 
-    --card: #FFFFFF;
-    --card-foreground: #1F2937;
+    /* Texto */
+    --text-1: #111718;
+    --text-2: #6C8E91;
+    /* muted-foreground */
 
-    --primary: #4F46E5;
-    --primary-foreground: #FFFFFF;
+    /* Botones / Acciones */
+    --button-1: #2BDEEE;
+    --button-1-text: #111718;
+    --button-2: #F6F8F8;
 
-    --secondary: #6366F1;
-    --secondary-foreground: #FFFFFF;
-
-    --muted: #E5E7EB;
-    --muted-foreground: #6B7280;
-
-    --accent: #22C55E;
-    --accent-foreground: #FFFFFF;
-
-    --destructive: #EF4444;
-    --destructive-foreground: #FFFFFF;
+    --border-1: #DBE5E6;
 }
 
 .dark {
-    --background: #0F0F12;
-    --foreground: #F3F4F6;
+    /* Superficies (fondos, tarjetas, etc.) */
+    --bg-1: #0A1921;
+    --bg-2: #0F202B;
 
-    --card: #1A1A1D;
-    --card-foreground: #E5E7EB;
+    /* Texto */
+    --text-1: #E2E8F0;
+    --text-2: #94A3B8;
+    /* muted-foreground */
 
-    --primary: #818CF8;
-    --primary-foreground: #111827;
+    /* Botones / Acciones */
+    --button-1: #2DD4BF;
+    --button-1-text: #0A1921;
+    --button-2: #0F202B;
 
-    --secondary: #A5B4FC;
-    --secondary-foreground: #1F2937;
-
-    --muted: #2A2A2E;
-    --muted-foreground: #9CA3AF;
-
-    --accent: #4ADE80;
-    --accent-foreground: #1F2937;
-
-    --destructive: #F87171;
-    --destructive-foreground: #1F2937;
+    --border-1: #213F4F;
 }

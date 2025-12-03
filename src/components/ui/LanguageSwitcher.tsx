@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useTransition } from 'react'
 import { LanguageSwitcherProps } from '@/types'
 import { useLocaleStore } from '@/stores/localeStore'
+import { flagEn, flagEs } from '@public/index'
 
 export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
     const { locale, setLocale } = useLocaleStore()
@@ -24,7 +25,7 @@ export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
             disabled={isPending}
         >
             <Image
-                src={locale === 'es' ? '/flags/es.svg' : '/flags/en.svg'}
+                src={locale === 'es' ? flagEs : flagEn}
                 alt={locale === 'es' ? 'Español' : 'English'}
                 width={30}
                 height={22}
