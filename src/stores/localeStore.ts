@@ -29,7 +29,14 @@ export const useLocaleStore = create<LocaleState>()(
         }),
         {
             name: 'locale-storage',
-            partialize: (state) => ({ locale: state.locale })
+            partialize: (state) => ({ locale: state.locale }),
+            // Cuando se hidrata desde localStorage, actualizar los mensajes
+            onRehydrateStorage: () => (state) => {
+                if (state) {
+                    // Actualizar los mensajes basados en el locale guardado
+                    state.messages = messagesMap[state.locale]
+                }
+            }
         }
     )
 )

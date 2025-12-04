@@ -26,17 +26,27 @@ export default function RootLayout({
   return (
     <html lang="es" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
-        {/* Blocking script to prevent flash of light mode */}
+        {/* Blocking script to prevent flash of wrong theme/locale */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
                             (function() {
                                 try {
-                                    const stored = localStorage.getItem('theme-storage');
-                                    if (stored) {
-                                        const { state } = JSON.parse(stored);
+                                    // Set theme
+                                    const themeStored = localStorage.getItem('theme-storage');
+                                    if (themeStored) {
+                                        const { state } = JSON.parse(themeStored);
                                         if (state && state.theme === 'dark') {
                                             document.documentElement.classList.add('dark');
+                                        }
+                                    }
+                                    
+                                    // Set locale
+                                    const localeStored = localStorage.getItem('locale-storage');
+                                    if (localeStored) {
+                                        const { state } = JSON.parse(localeStored);
+                                        if (state && state.locale) {
+                                            document.documentElement.lang = state.locale;
                                         }
                                     }
                                 } catch (e) {}

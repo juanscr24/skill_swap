@@ -1,7 +1,11 @@
+'use client'
+import { FOOTER_ITEMS } from "@/constants/footer_item"
 import { Component } from "lucide-react"
+import { useTranslations } from "next-intl"
 import Link from "next/link"
 
 export const LadingFooter = () => {
+    const t = useTranslations("landingFooter")
     return (
         <div className="flex flex-col items-center justify-center gap-10 py-10 border-t border-(--border-1)">
             <div className="flex justify-between items-center w-full">
@@ -9,11 +13,10 @@ export const LadingFooter = () => {
                     <Component className="text-(--button-1)" />
                     <h1 className="font-bold text-xl">SkillSwap</h1>
                 </div>
-                <div className="flex items-center gap-10 text-(--text-1)">
-                    <Link href="#">About Us</Link>
-                    <Link href="#">Contact</Link>
-                    <Link href="#">Terms of Use</Link>
-                    <Link href="#">Privacy Policy</Link>
+                <div className="flex items-center gap-10 text-(--text-2)">
+                    {FOOTER_ITEMS.map((item, index) => (
+                        <Link className="hover:scale-102 transition-all duration-300" key={index} href={item.href}>{t(item.label)}</Link>
+                    ))}
                 </div>
             </div>
             <div className="flex items-center gap-10 text-(--text-2)">
