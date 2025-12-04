@@ -59,7 +59,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-(--bg-1) flex justify-center`}
       >
         <LocaleProvider>
-          <div className="w-7/10">
+          <div className="w-8/10">
             {children}
           </div>
         </LocaleProvider>

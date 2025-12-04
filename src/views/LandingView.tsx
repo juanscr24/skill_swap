@@ -1,4 +1,5 @@
 'use client'
+import { motion } from "motion/react"
 import { guides } from "@/constants/guides"
 import { skills } from "@/constants/skills"
 import { useTranslations } from "next-intl"
@@ -11,41 +12,122 @@ export const LandingView = () => {
     const tCardGuide = useTranslations('cardGuide')
     const tskills = useTranslations('skills')
     const toccupation = useTranslations('occupation')
+
     return (
-        <div>
+        <div className="pt-24">
             <LandingNavbar />
             <AboutUs />
-            <h2 id="how_work" className="text-4xl font-semibold text-(--text-1) pb-20 text-center">{t('howItWorks')}</h2>
+
+            {/* Sección: Cómo funciona */}
+            <motion.h2
+                id="how_work"
+                className="text-4xl font-semibold text-(--text-1) pb-20 text-center"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+            >
+                {t('howItWorks')}
+            </motion.h2>
+
             <div className="grid grid-cols-3 gap-10">
                 {guides.map((guide, index) => {
                     const Icon = guide.icon
                     return (
-                        <CardGuide key={index} icon={<Icon className="text-(--button-1) h-7 w-7" />} title={tCardGuide(guide.title)} description={tCardGuide(guide.description)} />
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{
+                                duration: 0.5,
+                                delay: index * 0.1,
+                                ease: "easeOut"
+                            }}
+                        >
+                            <CardGuide
+                                icon={<Icon className="text-(--button-1) h-7 w-7" />}
+                                title={tCardGuide(guide.title)}
+                                description={tCardGuide(guide.description)}
+                            />
+                        </motion.div>
                     )
                 })}
             </div>
-            <h2 id="popular_skills" className="text-4xl font-semibold text-(--text-1) py-20 text-center">{t('popularSkills')}</h2>
-            <div className="grid grid-cols-3 gap-10">
+
+            {/* Sección: Habilidades Populares */}
+            <motion.h2
+                id="popular_skills"
+                className="text-4xl font-semibold text-(--text-1) pb-20 mt-20 text-center"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+            >
+                {t('popularSkills')}
+            </motion.h2>
+
+            <div className="grid grid-cols-5 gap-10 mb-20">
                 {skills.map((skill, index) => {
                     const Icon = skill.icon
                     return (
-                        <CardSkill
+                        <motion.div
                             key={index}
-                            icon={<Icon className="text-(--button-1) h-7 w-7" />}
-                            skill={tskills(skill.skill)} />
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{
+                                duration: 0.4,
+                                delay: index * 0.05,
+                                ease: "easeOut"
+                            }}
+                        >
+                            <CardSkill
+                                icon={<Icon className="text-(--button-1) h-7 w-7" />}
+                                skill={tskills(skill.skill)}
+                            />
+                        </motion.div>
                     )
                 })}
             </div>
-            <h2 id="reviews" className="text-4xl font-semibold text-(--text-1) py-20 text-center">{t('userReviews')}</h2>
-            <div className="grid grid-cols-4 gap-10 pb-20 pt-5">
-                {userReviews.map((review, index) => (
-                    <CardReview
-                        key={index}
-                        username={review.username}
-                        occupation={toccupation(review.occupation)}
-                        review={review.review} />
-                ))}
-            </div>
+
+            {/* Sección: Opiniones */}
+            <motion.h2
+                id="reviews"
+                className="text-4xl font-semibold text-(--text-1) pb-20 mt-10 text-center"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+            >
+                {t('userReviews')}
+            </motion.h2>
+
+            <motion.div
+                className="relative overflow-hidden"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+                {/* Gradient fade izquierdo */}
+                <div className="absolute left-0 top-0 bottom-0 w-40 bg-linear-to-r from-(--bg-1) to-transparent z-10 pointer-events-none"></div>
+
+                {/* Gradient fade derecho */}
+                <div className="absolute right-0 top-0 bottom-0 w-40 bg-linear-to-l from-(--bg-1) to-transparent z-10 pointer-events-none"></div>
+
+                <div className="flex gap-10 pb-20 pt-10 animate-marquee-right">
+                    {[...userReviews, ...userReviews].map((review, index) => (
+                        <CardReview
+                            key={index}
+                            username={review.username}
+                            occupation={toccupation(review.occupation)}
+                            review={review.review}
+                        />
+                    ))}
+                </div>
+            </motion.div>
+
             <LadingFooter />
         </div>
     )

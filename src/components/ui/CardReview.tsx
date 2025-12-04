@@ -7,7 +7,7 @@ export const CardReview = ({ review, username, occupation }: CardReviewProps) =>
     const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(username || 'default')}&backgroundColor=b6e3f4,c0aede,d1d4f9&mouth=twinkle&eyebrows=default&eyes=default`
 
     return (
-        <div className="flex flex-col items-center justify-center gap-4 relative bg-(--bg-2) rounded-lg border border-(--border-1) pt-15 pb-6 hover:scale-101 transition-all duration-300 cursor-pointer">
+        <div className="flex flex-col w-70 items-center justify-center gap-4 relative bg-(--bg-2) rounded-lg border border-(--border-1) pt-15 pb-6 hover:scale-101 transition-all duration-300 cursor-pointer">
             <div className="absolute -top-12 h-25 w-25 bg-(--bg-1) border-b border-(--border-1) flex items-center justify-center rounded-full overflow-hidden">
                 <Image
                     src={avatarUrl}
