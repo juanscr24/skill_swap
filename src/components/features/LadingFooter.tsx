@@ -15,20 +15,26 @@ export const LadingFooter = () => {
                 duration: 0.5,
                 ease: [0, 0.71, 0.2, 1.01]
             }}
-            className="flex flex-col items-center justify-center gap-10 py-10 border-t border-(--border-1)">
-            <div className="flex justify-between items-center w-full">
-                <div className="flex items-center gap-3 text-(--text-1)">
-                    <Component className="text-(--button-1)" />
-                    <h1 className="font-bold text-xl">SkillSwap</h1>
+            className="flex flex-col items-center justify-center gap-10 max-md:gap-6 py-10 max-md:py-6 border-t border-(--border-1)">
+            <div className="flex max-md:flex-col justify-between items-center max-md:gap-6 w-full">
+                <div className="flex items-center gap-3 max-sm:gap-2 text-(--text-1)">
+                    <Component className="text-(--button-1) max-sm:w-5 max-sm:h-5" />
+                    <h1 className="font-bold text-xl max-sm:text-lg">SkillSwap</h1>
                 </div>
-                <div className="flex items-center gap-10 text-(--text-2)">
+                <div className="flex items-center max-md:flex-col gap-10 max-lg:gap-6 max-md:gap-4 text-(--text-2)">
                     {FOOTER_ITEMS.map((item, index) => (
-                        <Link className="hover:scale-102 transition-all duration-300" key={index} href={item.href}>{t(item.label)}</Link>
+                        <Link
+                            className="hover:text-(--text-1) transition-all duration-300 text-sm max-sm:text-xs"
+                            key={index}
+                            href={item.href}
+                        >
+                            {t(item.label)}
+                        </Link>
                     ))}
                 </div>
             </div>
             <div className="flex items-center gap-10 text-(--text-2)">
-                <p>© 2025 SkillSwap. All rights reserved.</p>
+                <p className="text-sm max-sm:text-xs text-center">© 2025 SkillSwap. All rights reserved.</p>
             </div>
         </motion.div>
     )

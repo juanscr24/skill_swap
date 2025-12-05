@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tasklancer",
-  description: "Tasklancer es una plataforma de gestión de tareas que te permite crear, asignar y gestionar tus tareas de manera eficiente.",
+  title: "SkillSwap",
+  description: "SkillSwap es una plataforma de intercambio de habilidades que te permite aprender y enseñar tus habilidades de manera eficiente.",
 };
 
 export default function RootLayout({
@@ -59,7 +59,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-(--bg-1) flex justify-center`}
       >
         <LocaleProvider>
-          <div className="w-8/10">
+          <div className="w-8/10 max-md:w-9/10">
             {children}
           </div>
         </LocaleProvider>

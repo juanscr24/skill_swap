@@ -9,9 +9,9 @@ import Link from "next/link"
 export const AboutUs = () => {
     const t = useTranslations('aboutUs')
     return (
-        <div className="flex gap-20 items-center justify-between">
+        <div className="grid grid-cols-2 max-md:grid-cols-1 gap-20 pt-10 max-lg:gap-4 max-md:gap-8 items-center justify-between">
             <motion.div
-                className="flex flex-col gap-8 w-1/2"
+                className="flex flex-col gap-8 max-md:gap-6 w-full"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{
@@ -20,7 +20,7 @@ export const AboutUs = () => {
                 }}
             >
                 <motion.h2
-                    className="text-5xl font-bold text-(--text-1)"
+                    className="text-5xl max-lg:text-4xl max-md:text-3xl max-sm:text-2xl font-bold text-(--text-1)"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{
@@ -31,9 +31,15 @@ export const AboutUs = () => {
                 >
                     {t('title')}
                 </motion.h2>
-
+                <Image
+                    className="object-cover w-full rounded-lg hidden max-md:block"
+                    src={landing}
+                    alt="Landing"
+                    width={1280}
+                    height={1280}
+                />
                 <motion.p
-                    className="text-lg text-(--text-2)"
+                    className="text-lg max-md:text-base max-sm:text-sm text-(--text-2)"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{
@@ -55,12 +61,13 @@ export const AboutUs = () => {
                     }}
                 >
                     <Link href="/auth">
-                        <Button className="w-60 py-3" primary children={t('button')} />
+                        <Button className="w-60 max-sm:w-full py-3" primary children={t('button')} />
                     </Link>
                 </motion.div>
             </motion.div>
 
             <motion.div
+                className="max-md:w-full max-md:flex max-md:justify-center"
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{
@@ -69,7 +76,13 @@ export const AboutUs = () => {
                     ease: "easeOut"
                 }}
             >
-                <Image className="object-cover" src={landing} alt="Landing" width={550} height={550} />
+                <Image
+                    className="object-cover rounded-lg max-md:hidden cursor-pointer hover:scale-101 transition-all duration-300"
+                    src={landing}
+                    alt="Landing"
+                    width={1280}
+                    height={1280}
+                />
             </motion.div>
         </div>
     )

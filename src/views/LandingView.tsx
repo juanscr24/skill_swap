@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl"
 import { userReviews } from "@/constants/userReviews"
 import { LadingFooter } from "@/components/features/LadingFooter"
 import { AboutUs, CardGuide, CardReview, CardSkill, LandingNavbar } from "@/components"
+import { useMediaQuery } from "@/hooks/useMediaQuery"
 
 export const LandingView = () => {
     const t = useTranslations('landing')
@@ -13,15 +14,27 @@ export const LandingView = () => {
     const tskills = useTranslations('skills')
     const toccupation = useTranslations('occupation')
 
+    // Detectar tamaños de pantalla
+    const isTablet = useMediaQuery('(max-width: 1024px)')
+    const isSmallDesktop = useMediaQuery('(max-width: 1536px)')
+
+    // Limitar skills según el tamaño de pantalla
+    const displayedSkills =
+        isTablet ?
+            skills.slice(0, 6) :
+            isSmallDesktop ?
+                skills.slice(0, 8) :
+                skills
+
     return (
-        <div className="pt-24">
+        <div className="pt-24 max-md:pt-20 max-sm:pt-16">
             <LandingNavbar />
             <AboutUs />
 
             {/* Sección: Cómo funciona */}
             <motion.h2
                 id="how_work"
-                className="text-4xl font-semibold text-(--text-1) pb-20 text-center"
+                className="text-4xl max-lg:text-3xl max-md:text-2xl max-sm:text-xl font-semibold text-(--text-1) pb-20 max-md:pb-12 max-sm:pb-8 text-center"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
@@ -30,7 +43,7 @@ export const LandingView = () => {
                 {t('howItWorks')}
             </motion.h2>
 
-            <div className="grid grid-cols-3 gap-10">
+            <div className="grid grid-cols-3 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-10 max-lg:gap-6 max-md:gap-4">
                 {guides.map((guide, index) => {
                     const Icon = guide.icon
                     return (
@@ -58,7 +71,7 @@ export const LandingView = () => {
             {/* Sección: Habilidades Populares */}
             <motion.h2
                 id="popular_skills"
-                className="text-4xl font-semibold text-(--text-1) pb-20 mt-20 text-center"
+                className="text-4xl max-lg:text-3xl max-md:text-2xl max-sm:text-xl font-semibold text-(--text-1) pb-20 max-md:pb-12 max-sm:pb-8 mt-20 max-md:mt-12 max-sm:mt-8 text-center"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
@@ -67,8 +80,8 @@ export const LandingView = () => {
                 {t('popularSkills')}
             </motion.h2>
 
-            <div className="grid grid-cols-5 gap-10 mb-20">
-                {skills.map((skill, index) => {
+            <div className="grid grid-cols-5 max-2xl:grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 gap-10 max-lg:gap-6 max-md:gap-4 mb-20 max-md:mb-12 max-sm:mb-8">
+                {displayedSkills.map((skill, index) => {
                     const Icon = skill.icon
                     return (
                         <motion.div
@@ -94,7 +107,7 @@ export const LandingView = () => {
             {/* Sección: Opiniones */}
             <motion.h2
                 id="reviews"
-                className="text-4xl font-semibold text-(--text-1) pb-20 mt-10 text-center"
+                className="text-4xl max-lg:text-3xl max-md:text-2xl max-sm:text-xl font-semibold text-(--text-1) pb-20 max-md:pb-12 max-sm:pb-8 mt-10 max-md:mt-6 max-sm:mt-4 text-center"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
@@ -111,12 +124,12 @@ export const LandingView = () => {
                 transition={{ duration: 0.8, ease: "easeOut" }}
             >
                 {/* Gradient fade izquierdo */}
-                <div className="absolute left-0 top-0 bottom-0 w-40 bg-linear-to-r from-(--bg-1) to-transparent z-10 pointer-events-none"></div>
+                <div className="absolute left-0 top-0 bottom-0 w-40 max-md:w-20 max-sm:w-10 bg-linear-to-r from-(--bg-1) to-transparent z-10 pointer-events-none"></div>
 
                 {/* Gradient fade derecho */}
-                <div className="absolute right-0 top-0 bottom-0 w-40 bg-linear-to-l from-(--bg-1) to-transparent z-10 pointer-events-none"></div>
+                <div className="absolute right-0 top-0 bottom-0 w-40 max-md:w-20 max-sm:w-10 bg-linear-to-l from-(--bg-1) to-transparent z-10 pointer-events-none"></div>
 
-                <div className="flex gap-10 pb-20 pt-10 animate-marquee-right">
+                <div className="flex gap-10 max-md:gap-6 max-sm:gap-4 pb-20 pt-10 animate-marquee-right">
                     {[...userReviews, ...userReviews].map((review, index) => (
                         <CardReview
                             key={index}
