@@ -15,6 +15,7 @@
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "lucide-react": "^0.555.0",
+    "motion": "^12.23.25",
     "next": "16.0.6",
     "next-auth": "^4.24.13",
     "next-intl": "^4.5.7",

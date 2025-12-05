@@ -12,22 +12,20 @@ export function LocaleProvider({ children }: LocaleProviderProps) {
     const { locale, messages } = useLocaleStore()
     const [mounted, setMounted] = useState(false)
 
-    // Evitar hydration mismatch
+    // Esperar a que Zustand se hidrate desde localStorage
     useEffect(() => {
         setMounted(true)
     }, [])
 
-    if (!mounted) {
-        // Renderizar con valores por defecto en el servidor
-        return (
-            <NextIntlClientProvider messages={messages} locale={locale}>
-                {children}
-            </NextIntlClientProvider>
-        )
-    }
-
+    // Durante SSR y la primera renderización, usar el locale del store
+    // (que será el valor por defecto o el valor hidratado de localStorage)
     return (
-        <NextIntlClientProvider messages={messages} locale={locale}>
+        <NextIntlClientProvider
+            messages={messages}
+            locale={locale}
+            // Evitar warnings de hydration
+            timeZone="America/Bogota"
+        >
             {children}
         </NextIntlClientProvider>
     )

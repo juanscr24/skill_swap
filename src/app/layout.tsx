@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tasklancer",
-  description: "Tasklancer es una plataforma de gestión de tareas que te permite crear, asignar y gestionar tus tareas de manera eficiente.",
+  title: "SkillSwap",
+  description: "SkillSwap es una plataforma de intercambio de habilidades que te permite aprender y enseñar tus habilidades de manera eficiente.",
 };
 
 export default function RootLayout({
@@ -26,17 +26,27 @@ export default function RootLayout({
   return (
     <html lang="es" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
-        {/* Blocking script to prevent flash of light mode */}
+        {/* Blocking script to prevent flash of wrong theme/locale */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
                             (function() {
                                 try {
-                                    const stored = localStorage.getItem('theme-storage');
-                                    if (stored) {
-                                        const { state } = JSON.parse(stored);
+                                    // Set theme
+                                    const themeStored = localStorage.getItem('theme-storage');
+                                    if (themeStored) {
+                                        const { state } = JSON.parse(themeStored);
                                         if (state && state.theme === 'dark') {
                                             document.documentElement.classList.add('dark');
+                                        }
+                                    }
+                                    
+                                    // Set locale
+                                    const localeStored = localStorage.getItem('locale-storage');
+                                    if (localeStored) {
+                                        const { state } = JSON.parse(localeStored);
+                                        if (state && state.locale) {
+                                            document.documentElement.lang = state.locale;
                                         }
                                     }
                                 } catch (e) {}
@@ -46,10 +56,12 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-(--bg-1) flex justify-center`}
       >
         <LocaleProvider>
-          {children}
+          <div className="w-8/10 max-md:w-9/10">
+            {children}
+          </div>
         </LocaleProvider>
       </body>
     </html>
