@@ -3,10 +3,10 @@ import { motion } from "motion/react"
 import { guides } from "@/constants/guides"
 import { skills } from "@/constants/skills"
 import { useTranslations } from "next-intl"
+import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { userReviews } from "@/constants/userReviews"
 import { LadingFooter } from "@/components/features/LadingFooter"
 import { AboutUs, CardGuide, CardReview, CardSkill, LandingNavbar } from "@/components"
-import { useMediaQuery } from "@/hooks/useMediaQuery"
 
 export const LandingView = () => {
     const t = useTranslations('landing')
