@@ -18,11 +18,11 @@ export const ScheduleSessionView = () => {
     }))
 
     return (
-        <div className="p-8 max-w-3xl mx-auto">
-            <h1 className="text-3xl font-bold text-(--text-1) mb-8">{t('scheduleSessions')}</h1>
+        <div className="p-8 max-md:p-6 max-sm:p-4 max-w-3xl mx-auto">
+            <h1 className="text-3xl max-md:text-2xl max-sm:text-xl font-bold text-(--text-1) mb-8 max-md:mb-6 max-sm:mb-4">{t('scheduleSessions')}</h1>
 
             <Card>
-                <form className="space-y-6">
+                <form className="space-y-6 max-md:space-y-4 max-sm:space-y-3">
                     <Select
                         label={t('selectMentor')}
                         options={mentorOptions}
@@ -45,7 +45,7 @@ export const ScheduleSessionView = () => {
                         rows={4}
                     />
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-4 max-sm:gap-3">
                         <Input
                             type="date"
                             label={t('date')}
@@ -58,7 +58,7 @@ export const ScheduleSessionView = () => {
                         />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-4 max-sm:gap-3">
                         <Input
                             type="number"
                             label={`${t('duration')} (${t('hours')})`}
@@ -73,11 +73,11 @@ export const ScheduleSessionView = () => {
                         />
                     </div>
 
-                    <div className="flex gap-4">
-                        <Button primary className="flex-1 py-3">
+                    <div className="flex flex-col sm:flex-row gap-4 max-sm:gap-3">
+                        <Button primary className="flex-1 py-3 max-sm:py-2">
                             {t('schedule')}
                         </Button>
-                        <Button secondary className="px-8 py-3">
+                        <Button secondary className="px-8 max-sm:px-4 py-3 max-sm:py-2">
                             {t('cancel')}
                         </Button>
                     </div>

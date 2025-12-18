@@ -19,12 +19,12 @@ export const Tabs = ({ tabs, defaultTab, className = '' }: TabsProps) => {
     return (
         <div className={className}>
             {/* Tab Headers */}
-            <div className="flex border-b border-(--border-1) gap-4">
+            <div className="flex border-b border-(--border-1) gap-4 max-sm:gap-2 overflow-x-auto">
                 {tabs.map((tab) => (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`px-4 py-3 font-semibold transition-colors relative
+                        className={`px-4 max-sm:px-3 py-3 max-sm:py-2 max-sm:text-sm font-semibold transition-colors relative whitespace-nowrap
                             ${activeTab === tab.id
                                 ? 'text-(--button-1)'
                                 : 'text-(--text-2) hover:text-(--text-1)'
@@ -39,7 +39,7 @@ export const Tabs = ({ tabs, defaultTab, className = '' }: TabsProps) => {
             </div>
 
             {/* Tab Content */}
-            <div className="mt-6">
+            <div className="mt-6 max-sm:mt-4">
                 {tabs.find(tab => tab.id === activeTab)?.content}
             </div>
         </div>

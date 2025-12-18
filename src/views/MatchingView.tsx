@@ -24,9 +24,9 @@ export const MatchingView = () => {
 
     if (!currentProfile) {
         return (
-            <div className="p-8 flex items-center justify-center min-h-[80vh]">
-                <Card className="text-center py-12">
-                    <h2 className="text-2xl font-bold text-(--text-1) mb-4">{t('noMoreUsers')}</h2>
+            <div className="p-8 max-md:p-6 max-sm:p-4 flex items-center justify-center min-h-[80vh]">
+                <Card className="text-center py-12 max-md:py-8 max-sm:py-6">
+                    <h2 className="text-2xl max-md:text-xl max-sm:text-lg font-bold text-(--text-1) mb-4 max-sm:mb-3">{t('noMoreUsers')}</h2>
                     <Button primary onClick={() => setCurrentIndex(0)}>
                         {t('startMatching')}
                     </Button>
@@ -36,35 +36,35 @@ export const MatchingView = () => {
     }
 
     return (
-        <div className="p-8">
-            <h1 className="text-3xl font-bold text-(--text-1) mb-8">{t('matching')}</h1>
+        <div className="p-8 max-md:p-6 max-sm:p-4">
+            <h1 className="text-3xl max-md:text-2xl max-sm:text-xl font-bold text-(--text-1) mb-8 max-md:mb-6 max-sm:mb-4">{t('matching')}</h1>
 
             <div className="max-w-2xl mx-auto">
                 <Card className="overflow-hidden">
                     {/* Profile Card */}
                     <div className="text-center">
-                        <div className="bg-(--bg-1) p-8 mb-6">
+                        <div className="bg-(--bg-1) p-8 max-md:p-6 max-sm:p-4 mb-6 max-sm:mb-4">
                             <Avatar 
                                 src={currentProfile.image} 
                                 alt={currentProfile.name} 
                                 size="xl"
-                                className="mx-auto mb-4"
+                                className="mx-auto mb-4 max-sm:mb-3"
                             />
-                            <h2 className="text-2xl font-bold text-(--text-1) mb-2">
+                            <h2 className="text-2xl max-md:text-xl max-sm:text-lg font-bold text-(--text-1) mb-2 max-sm:mb-1">
                                 {currentProfile.name}
                             </h2>
-                            <div className="flex items-center justify-center gap-2 text-(--text-2)">
-                                <FiMapPin className="w-4 h-4" />
-                                <span>{currentProfile.city}</span>
+                            <div className="flex items-center justify-center gap-2 max-sm:gap-1 text-(--text-2)">
+                                <FiMapPin className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
+                                <span className="max-sm:text-sm">{currentProfile.city}</span>
                             </div>
                         </div>
 
-                        <div className="px-8 pb-8">
-                            <p className="text-(--text-2) mb-6">{currentProfile.bio}</p>
+                        <div className="px-8 max-md:px-6 max-sm:px-4 pb-8 max-md:pb-6 max-sm:pb-4">
+                            <p className="text-(--text-2) mb-6 max-sm:mb-4 max-sm:text-sm">{currentProfile.bio}</p>
 
                             {/* Skills they teach */}
-                            <div className="mb-6">
-                                <h3 className="font-semibold text-(--text-1) mb-3">{t('teaches')}</h3>
+                            <div className="mb-6 max-sm:mb-4">
+                                <h3 className="font-semibold text-(--text-1) mb-3 max-sm:mb-2 max-sm:text-sm">{t('teaches')}</h3>
                                 <div className="flex flex-wrap gap-2 justify-center">
                                     {currentProfile.skills.map((skill) => (
                                         <Badge key={skill.id} variant="success">
@@ -75,8 +75,8 @@ export const MatchingView = () => {
                             </div>
 
                             {/* Skills they want to learn */}
-                            <div className="mb-8">
-                                <h3 className="font-semibold text-(--text-1) mb-3">{t('wantsToLearn')}</h3>
+                            <div className="mb-8 max-md:mb-6 max-sm:mb-4">
+                                <h3 className="font-semibold text-(--text-1) mb-3 max-sm:mb-2 max-sm:text-sm">{t('wantsToLearn')}</h3>
                                 <div className="flex flex-wrap gap-2 justify-center">
                                     {currentProfile.wanted_skills.map((skill) => (
                                         <Badge key={skill.id} variant="warning">
@@ -87,22 +87,22 @@ export const MatchingView = () => {
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="flex gap-4 justify-center">
+                            <div className="flex gap-4 max-sm:gap-3 justify-center">
                                 <button
                                     onClick={() => handleSwipe('left')}
-                                    className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center hover:scale-110 transition-transform"
+                                    className="w-16 h-16 max-sm:w-12 max-sm:h-12 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center hover:scale-110 transition-transform"
                                 >
-                                    <FiX className="w-8 h-8" />
+                                    <FiX className="w-8 h-8 max-sm:w-6 max-sm:h-6" />
                                 </button>
                                 <button
                                     onClick={() => handleSwipe('right')}
-                                    className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center hover:scale-110 transition-transform"
+                                    className="w-16 h-16 max-sm:w-12 max-sm:h-12 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center hover:scale-110 transition-transform"
                                 >
-                                    <FiHeart className="w-8 h-8" />
+                                    <FiHeart className="w-8 h-8 max-sm:w-6 max-sm:h-6" />
                                 </button>
                             </div>
 
-                            <div className="mt-6 text-(--text-2) text-sm">
+                            <div className="mt-6 max-sm:mt-4 text-(--text-2) text-sm max-sm:text-xs">
                                 <p>{t('swipeLeft')} | {t('swipeRight')}</p>
                             </div>
                         </div>
@@ -110,7 +110,7 @@ export const MatchingView = () => {
                 </Card>
 
                 {/* Progress */}
-                <div className="mt-6 text-center text-(--text-2)">
+                <div className="mt-6 max-sm:mt-4 text-center text-(--text-2) max-sm:text-sm">
                     {currentIndex + 1} / {availableUsers.length}
                 </div>
             </div>

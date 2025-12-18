@@ -20,6 +20,7 @@ export { SearchBar } from './ui/SearchBar'
 export { LandingNavbar } from './features/LandingNavbar'
 export { AboutUs } from './features/AboutUs'
 export { Sidebar } from './features/Sidebar'
+export { DashboardNavbar } from './features/DashboardNavbar'
 
 // Form
 

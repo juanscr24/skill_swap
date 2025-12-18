@@ -56,10 +56,10 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-(--bg-1) flex justify-center`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-(--bg-1) flex justify-center min-h-screen`}
       >
         <LocaleProvider>
-          <div className="w-8/10 max-md:w-9/10">
+          <div className="w-full max-w-[100vw] overflow-x-hidden">
             {children}
           </div>
         </LocaleProvider>
