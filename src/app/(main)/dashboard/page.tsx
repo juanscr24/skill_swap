@@ -1,7 +1,5 @@
-const Dashboard = () => {
-    return (
-        <div>Esto es el Dashboard</div>
-    )
-}
+import { DashboardView } from "@/views/DashboardView"
 
-export default Dashboard
+export default function DashboardPage() {
+    return <DashboardView />
+}

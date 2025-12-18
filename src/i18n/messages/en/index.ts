@@ -6,6 +6,15 @@ import aboutUs from './components/aboutUs.json';
 import cardGuide from './components/cardGuide.json';
 import skills from './components/skills.json';
 import occupation from './components/occupation.json';
+import auth from './pages/auth.json';
+import dashboard from './pages/dashboard.json';
+import profile from './pages/profile.json';
+import mentors from './pages/mentors.json';
+import matching from './pages/matching.json';
+import requests from './pages/requests.json';
+import chat from './pages/chat.json';
+import sessions from './pages/sessions.json';
+import reviews from './pages/reviews.json';
 
 export default {
     common,
@@ -15,5 +24,15 @@ export default {
     aboutUs,
     cardGuide,
     skills,
-    occupation
+    occupation,
+    auth,
+    dashboard,
+    profile,
+    mentors,
+    matching,
+    requests,
+    chat,
+    sessions,
+    reviews
 };
+

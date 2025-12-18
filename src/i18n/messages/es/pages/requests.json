@@ -1,0 +1,17 @@
+{
+    "requests": "Solicitudes de Intercambio",
+    "received": "Recibidas",
+    "sent": "Enviadas",
+    "pending": "Pendiente",
+    "accepted": "Aceptada",
+    "rejected": "Rechazada",
+    "accept": "Aceptar",
+    "reject": "Rechazar",
+    "cancel": "Cancelar",
+    "noRequests": "No tienes solicitudes",
+    "skill": "Habilidad",
+    "from": "De",
+    "to": "Para",
+    "status": "Estado",
+    "actions": "Acciones"
+}
