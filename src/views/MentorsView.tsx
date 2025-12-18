@@ -32,12 +32,12 @@ export const MentorsView = () => {
     ]
 
     return (
-        <div className="p-8">
-            <h1 className="text-3xl font-bold text-(--text-1) mb-8">{t('mentors')}</h1>
+        <div className="p-8 max-md:p-6 max-sm:p-4">
+            <h1 className="text-3xl max-md:text-2xl max-sm:text-xl font-bold text-(--text-1) mb-8 max-md:mb-6 max-sm:mb-4">{t('mentors')}</h1>
 
             {/* Filters */}
-            <Card className="mb-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="mb-8 max-md:mb-6 max-sm:mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-sm:gap-3">
                     <SearchBar
                         value={search}
                         onChange={setSearch}
@@ -49,30 +49,30 @@ export const MentorsView = () => {
             </Card>
 
             {/* Results Count */}
-            <p className="text-(--text-2) mb-4">{mentors.length} {t('results')}</p>
+            <p className="text-(--text-2) mb-4 max-sm:mb-3 max-sm:text-sm">{mentors.length} {t('results')}</p>
 
             {/* Mentors Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-md:gap-4 max-sm:gap-3">
                 {mentors.map((mentor) => (
                     <Card key={mentor.id} hover>
                         <div className="flex flex-col items-center text-center">
-                            <Avatar src={mentor.image} alt={mentor.name} size="lg" className="mb-4" />
+                            <Avatar src={mentor.image} alt={mentor.name} size="lg" className="mb-4 max-sm:mb-3" />
                             
-                            <h3 className="text-xl font-bold text-(--text-1) mb-1">{mentor.name}</h3>
+                            <h3 className="text-xl max-md:text-lg max-sm:text-base font-bold text-(--text-1) mb-1">{mentor.name}</h3>
                             
-                            <div className="flex items-center gap-1 text-(--text-2) mb-3">
-                                <FiMapPin className="w-4 h-4" />
-                                <span className="text-sm">{mentor.city}</span>
+                            <div className="flex items-center gap-1 text-(--text-2) mb-3 max-sm:mb-2">
+                                <FiMapPin className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
+                                <span className="text-sm max-sm:text-xs">{mentor.city}</span>
                             </div>
 
-                            <div className="flex items-center gap-2 mb-4">
+                            <div className="flex items-center gap-2 max-sm:gap-1 mb-4 max-sm:mb-3">
                                 <Rating value={mentor.rating} readonly size="sm" />
-                                <span className="text-sm font-semibold text-(--text-1)">{mentor.rating}</span>
+                                <span className="text-sm max-sm:text-xs font-semibold text-(--text-1)">{mentor.rating}</span>
                             </div>
 
-                            <p className="text-(--text-2) text-sm mb-4 line-clamp-2">{mentor.bio}</p>
+                            <p className="text-(--text-2) text-sm max-sm:text-xs mb-4 max-sm:mb-3 line-clamp-2">{mentor.bio}</p>
 
-                            <div className="flex flex-wrap gap-2 mb-4 justify-center">
+                            <div className="flex flex-wrap gap-2 mb-4 max-sm:mb-3 justify-center">
                                 {mentor.skills.slice(0, 3).map((skill) => (
                                     <span
                                         key={skill.id}
@@ -84,7 +84,7 @@ export const MentorsView = () => {
                             </div>
 
                             <Link href={`/profile/${mentor.id}`} className="w-full">
-                                <Button primary className="w-full">
+                                <Button primary className="w-full max-sm:text-sm">
                                     {t('viewProfile')}
                                 </Button>
                             </Link>

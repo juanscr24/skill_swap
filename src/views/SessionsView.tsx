@@ -37,29 +37,29 @@ export const SessionsView = () => {
 
         return (
             <Card hover>
-                <div className="flex items-start gap-4">
-                    <div className="p-3 bg-(--button-1) rounded-lg">
-                        <FiCalendar className="w-6 h-6 text-(--button-1-text)" />
+                <div className="flex flex-col md:flex-row items-start gap-4 max-sm:gap-3">
+                    <div className="p-3 max-sm:p-2 bg-(--button-1) rounded-lg">
+                        <FiCalendar className="w-6 h-6 max-sm:w-5 max-sm:h-5 text-(--button-1-text)" />
                     </div>
 
-                    <div className="flex-1">
-                        <div className="flex items-start justify-between mb-2">
+                    <div className="flex-1 w-full">
+                        <div className="flex flex-col sm:flex-row items-start justify-between mb-2 gap-2">
                             <div>
-                                <h3 className="text-lg font-bold text-(--text-1)">{session.title}</h3>
-                                <p className="text-sm text-(--text-2)">{session.description}</p>
+                                <h3 className="text-lg max-md:text-base max-sm:text-sm font-bold text-(--text-1)">{session.title}</h3>
+                                <p className="text-sm max-sm:text-xs text-(--text-2)">{session.description}</p>
                             </div>
                             <Badge variant={statusVariant[session.status]}>
                                 {t(session.status)}
                             </Badge>
                         </div>
 
-                        <div className="flex items-center gap-4 text-sm text-(--text-2) mb-3">
-                            <div className="flex items-center gap-2">
-                                <FiCalendar className="w-4 h-4" />
+                        <div className="flex flex-wrap items-center gap-4 max-sm:gap-2 text-sm max-sm:text-xs text-(--text-2) mb-3 max-sm:mb-2">
+                            <div className="flex items-center gap-2 max-sm:gap-1">
+                                <FiCalendar className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
                                 <span>{session.start_at.toLocaleDateString()}</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <FiClock className="w-4 h-4" />
+                            <div className="flex items-center gap-2 max-sm:gap-1">
+                                <FiClock className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
                                 <span>
                                     {session.start_at.toLocaleTimeString('es-ES', { 
                                         hour: '2-digit', 
@@ -69,23 +69,23 @@ export const SessionsView = () => {
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                             <div className="flex items-center gap-2">
                                 <Avatar src={otherUser.image} alt={otherUser.name} size="sm" />
                                 <div>
-                                    <p className="text-sm font-medium text-(--text-1)">{otherUser.name}</p>
-                                    <p className="text-xs text-(--text-2)">
+                                    <p className="text-sm max-sm:text-xs font-medium text-(--text-1)">{otherUser.name}</p>
+                                    <p className="text-xs max-sm:text-[10px] text-(--text-2)">
                                         {isHost ? t('guest') : t('host')}
                                     </p>
                                 </div>
                             </div>
 
                             {session.status === 'scheduled' && (
-                                <div className="flex gap-2">
-                                    <Button primary className="px-4 py-2">
+                                <div className="flex gap-2 max-sm:gap-1 flex-wrap">
+                                    <Button primary className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs">
                                         {t('markAsCompleted')}
                                     </Button>
-                                    <Button secondary className="px-4 py-2">
+                                    <Button secondary className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs">
                                         {t('cancel')}
                                     </Button>
                                 </div>
@@ -102,9 +102,9 @@ export const SessionsView = () => {
             id: 'upcoming',
             label: t('upcomingSessions'),
             content: (
-                <div className="space-y-4">
+                <div className="space-y-4 max-sm:space-y-3">
                     {upcomingSessions.length === 0 ? (
-                        <p className="text-(--text-2) text-center py-8">{t('noSessions')}</p>
+                        <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('noSessions')}</p>
                     ) : (
                         upcomingSessions.map((session) => (
                             <SessionCard key={session.id} session={session} />
@@ -117,9 +117,9 @@ export const SessionsView = () => {
             id: 'past',
             label: t('pastSessions'),
             content: (
-                <div className="space-y-4">
+                <div className="space-y-4 max-sm:space-y-3">
                     {pastSessions.length === 0 ? (
-                        <p className="text-(--text-2) text-center py-8">{t('noSessions')}</p>
+                        <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('noSessions')}</p>
                     ) : (
                         pastSessions.map((session) => (
                             <SessionCard key={session.id} session={session} />
@@ -131,11 +131,11 @@ export const SessionsView = () => {
     ]
 
     return (
-        <div className="p-8">
-            <div className="flex items-center justify-between mb-8">
-                <h1 className="text-3xl font-bold text-(--text-1)">{t('sessions')}</h1>
+        <div className="p-8 max-md:p-6 max-sm:p-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 max-md:mb-6 max-sm:mb-4 gap-4">
+                <h1 className="text-3xl max-md:text-2xl max-sm:text-xl font-bold text-(--text-1)">{t('sessions')}</h1>
                 <Link href="/sessions/schedule">
-                    <Button primary className="px-6 py-3">
+                    <Button primary className="px-6 max-sm:px-4 py-3 max-sm:py-2 max-sm:text-sm">
                         {t('scheduleSessions')}
                     </Button>
                 </Link>
