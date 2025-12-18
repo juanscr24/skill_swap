@@ -15,6 +15,7 @@ export { Select } from './ui/Select'
 export { Modal } from './ui/Modal'
 export { Tabs } from './ui/Tabs'
 export { SearchBar } from './ui/SearchBar'
+export { PasswordStrength } from './ui/PasswordStrength'
 
 // Features
 export { LandingNavbar } from './features/LandingNavbar'

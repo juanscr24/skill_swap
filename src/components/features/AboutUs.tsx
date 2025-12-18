@@ -60,7 +60,7 @@ export const AboutUs = () => {
                         ease: "easeOut"
                     }}
                 >
-                    <Link href="/auth">
+                    <Link href="/register">
                         <Button className="w-60 max-sm:w-full py-3" primary children={t('button')} />
                     </Link>
                 </motion.div>

@@ -15,6 +15,7 @@ import {
 } from "react-icons/fi"
 import { ButtonMode } from "../ui/ButtonMode"
 import { LanguageSwitcher } from "../ui/LanguageSwitcher"
+import { useAuth } from "@/hooks/useAuth"
 
 interface SidebarProps {
     isOpen: boolean
@@ -24,6 +25,7 @@ interface SidebarProps {
 export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
     const pathname = usePathname()
     const t = useTranslations('dashboard')
+    const { logout } = useAuth()
 
     const menuItems = [
         { icon: FiHome, label: t('dashboard'), href: '/dashboard' },
@@ -35,12 +37,14 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
         { icon: FiCalendar, label: t('sessions'), href: '/sessions' },
     ]
 
-    const bottomItems = [
-        { icon: FiSettings, label: t('settings'), href: '/settings' },
-        { icon: FiLogOut, label: t('logout'), href: '/auth/login' },
-    ]
+    const settingsItem = { icon: FiSettings, label: t('settings'), href: '/settings' }
 
     const handleLinkClick = () => {
+        setIsOpen(false)
+    }
+
+    const handleLogout = async () => {
+        await logout()
         setIsOpen(false)
     }
 
@@ -56,9 +60,13 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
 
             {/* Sidebar */}
             <aside className={`
-                w-64 max-md:w-56 max-sm:w-64 bg-(--bg-2) border-r border-(--border-1) h-[calc(100vh-4rem)] max-md:h-[calc(100vh-3.5rem)] sticky top-16 max-md:top-14 flex flex-col
-                max-lg:fixed max-lg:z-40 max-lg:transition-transform max-lg:duration-300
-                ${isOpen ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-full'}
+                fixed left-0 top-16 max-md:top-14 z-40 
+                w-64 max-md:w-56 max-sm:w-64 
+                h-[calc(100vh-4rem)] max-md:h-[calc(100vh-3.5rem)]
+                bg-(--bg-2) border-r border-(--border-1) 
+                flex flex-col
+                transition-transform duration-300
+                ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
             `}>
 
                 {/* Menu Items */}
@@ -87,23 +95,35 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
 
                 {/* Bottom Items */}
                 <div className="p-4 max-md:p-3 border-t border-(--border-1) space-y-2">
-                    <ButtonMode />
-                    <LanguageSwitcher />
-                    {bottomItems.map((item) => {
-                        const Icon = item.icon
+                    {/* Dark Mode & Language Switcher in one row */}
+                    <div className="flex items-center justify-between gap-2 px-4 max-md:px-3 py-2">
+                        <div className="flex items-center gap-2 text-(--text-2)">
+                            <span className="text-sm font-medium">Tema / Language</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <ButtonMode className="w-6 h-6" />
+                            <LanguageSwitcher className="p-0" />
+                        </div>
+                    </div>
+                    
+                    {/* Settings */}
+                    <Link
+                        href={settingsItem.href}
+                        onClick={handleLinkClick}
+                        className="flex items-center gap-3 max-md:gap-2 px-4 max-md:px-3 py-3 max-md:py-2 rounded-lg text-(--text-2) hover:bg-(--bg-1) hover:text-(--text-1) transition-colors"
+                    >
+                        <FiSettings className="w-5 h-5 max-md:w-4 max-md:h-4 shrink-0" />
+                        <span className="font-medium max-md:text-sm">{settingsItem.label}</span>
+                    </Link>
 
-                        return (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                onClick={handleLinkClick}
-                                className="flex items-center gap-3 max-md:gap-2 px-4 max-md:px-3 py-3 max-md:py-2 rounded-lg text-(--text-2) hover:bg-(--bg-1) hover:text-(--text-1) transition-colors"
-                            >
-                                <Icon className="w-5 h-5 max-md:w-4 max-md:h-4 shrink-0" />
-                                <span className="font-medium max-md:text-sm">{item.label}</span>
-                            </Link>
-                        )
-                    })}
+                    {/* Logout */}
+                    <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-3 max-md:gap-2 px-4 max-md:px-3 py-3 max-md:py-2 rounded-lg text-(--text-2) hover:bg-red-500/10 hover:text-red-500 transition-colors"
+                    >
+                        <FiLogOut className="w-5 h-5 max-md:w-4 max-md:h-4 shrink-0" />
+                        <span className="font-medium max-md:text-sm">{t('logout')}</span>
+                    </button>
                 </div>
             </aside>
         </>
