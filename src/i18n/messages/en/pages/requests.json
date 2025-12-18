@@ -1,0 +1,17 @@
+{
+    "requests": "Exchange Requests",
+    "received": "Received",
+    "sent": "Sent",
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "rejected": "Rejected",
+    "accept": "Accept",
+    "reject": "Reject",
+    "cancel": "Cancel",
+    "noRequests": "You have no requests",
+    "skill": "Skill",
+    "from": "From",
+    "to": "To",
+    "status": "Status",
+    "actions": "Actions"
+}

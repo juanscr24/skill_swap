@@ -142,10 +142,10 @@ export const LandingNavbar = () => {
                             ease: "easeOut"
                         }}
                     >
-                        <Link href="/auth">
+                        <Link href="/login">
                             <Button secondary children={t("login")} />
                         </Link>
-                        <Link href="/auth">
+                        <Link href="/register">
                             <Button primary children={t("register")} />
                         </Link>
                     </motion.div>

@@ -1,6 +1,6 @@
 import { InputProps } from "@/types"
 
-export const Input = ({ type, placeholder, label, icon, id, error, register }: InputProps) => {
+export const Input = ({ type, placeholder, label, icon, id, error, register, value, onChange }: InputProps) => {
     return (
         <div className="w-full">
             <label className="font-semibold text-(--text-1)" htmlFor={id}>{label}</label>
@@ -8,13 +8,15 @@ export const Input = ({ type, placeholder, label, icon, id, error, register }: I
                 {icon && <div className="ml-4 absolute">{icon}</div>}
                 <input
                     id={id}
-                    className={`bg-(--bg-2) placeholder:text-(--text-2) w-full outline-none px-4 py-4 rounded-md ${icon ? 'pl-12' : ''} ${error ? 'border-2 border-red-500' : ''}`}
+                    className={`bg-(--bg-2) border border-(--border-1) placeholder:text-(--text-2) w-full outline-none px-4 py-4 rounded-md ${icon ? 'pl-12' : ''} ${error ? 'border-2 border-red-500' : ''}`}
                     type={type}
                     placeholder={placeholder}
+                    value={value}
+                    onChange={onChange}
                     {...register}
                 />
             </div>
-            {error && <p className="text-(--error-1) text-sm mt-1">{error}</p>}
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
         </div>
     )
 }

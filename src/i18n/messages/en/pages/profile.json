@@ -1,0 +1,23 @@
+{
+    "profile": "Profile",
+    "editProfile": "Edit Profile",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "bio": "Bio",
+    "city": "City",
+    "skillsTeach": "Skills I Teach",
+    "skillsLearn": "Skills I Want to Learn",
+    "addSkill": "Add skill",
+    "remove": "Remove",
+    "rating": "Rating",
+    "reviews": "Reviews",
+    "requestExchange": "Request Exchange",
+    "availability": "Availability",
+    "uploadPhoto": "Upload photo",
+    "skillName": "Skill name",
+    "skillLevel": "Level",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "description": "Description"
+}

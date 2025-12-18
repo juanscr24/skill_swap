@@ -1,0 +1,16 @@
+{
+    "mentors": "Mentors Catalog",
+    "search": "Search mentors...",
+    "filters": "Filters",
+    "allSkills": "All skills",
+    "allCities": "All cities",
+    "allRatings": "All ratings",
+    "availability": "Availability",
+    "available": "Available",
+    "notAvailable": "Not available",
+    "clearFilters": "Clear filters",
+    "results": "results",
+    "noResults": "No mentors found",
+    "viewProfile": "View profile",
+    "rating": "Rating"
+}

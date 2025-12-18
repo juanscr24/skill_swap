@@ -1,0 +1,21 @@
+{
+    "dashboard": "Dashboard",
+    "statistics": "Statistics",
+    "classesTaken": "Classes Taken",
+    "classesGiven": "Classes Given",
+    "hoursTeaching": "Hours Teaching",
+    "progressLevel": "Progress Level",
+    "upcomingSessions": "Upcoming Sessions",
+    "noUpcomingSessions": "No upcoming sessions",
+    "viewAll": "View all",
+    "hoursPerMonth": "Hours per Month",
+    "skillsDistribution": "Skills Distribution",
+    "profile": "Profile",
+    "mentors": "Mentors",
+    "matching": "Matching",
+    "requests": "Requests",
+    "chats": "Messages",
+    "sessions": "Sessions",
+    "settings": "Settings",
+    "logout": "Logout"
+}
