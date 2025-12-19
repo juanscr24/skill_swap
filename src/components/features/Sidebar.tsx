@@ -97,9 +97,6 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
                 <div className="p-4 max-md:p-3 border-t border-(--border-1) space-y-2">
                     {/* Dark Mode & Language Switcher in one row */}
                     <div className="flex items-center justify-between gap-2 px-4 max-md:px-3 py-2">
-                        <div className="flex items-center gap-2 text-(--text-2)">
-                            <span className="text-sm font-medium">Tema / Language</span>
-                        </div>
                         <div className="flex items-center gap-2">
                             <ButtonMode className="w-6 h-6" />
                             <LanguageSwitcher className="p-0" />
