@@ -81,6 +81,7 @@ export function useProfile() {
     bio?: string
     city?: string
     image?: string
+    image_public_id?: string
   }) => {
     try {
       setError(null)

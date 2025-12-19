@@ -32,6 +32,7 @@ export const EditProfileView = () => {
     const [city, setCity] = useState('')
     const [bio, setBio] = useState('')
     const [imageUrl, setImageUrl] = useState('')
+    const [imagePublicId, setImagePublicId] = useState('')
 
     // New skill states
     const [newSkillName, setNewSkillName] = useState('')
@@ -72,7 +73,8 @@ export const EditProfileView = () => {
             name,
             city,
             bio,
-            image: imageUrl
+            image: imageUrl,
+            image_public_id: imagePublicId
         })
 
         setIsSaving(false)
@@ -120,6 +122,7 @@ export const EditProfileView = () => {
             }
 
             setImageUrl(data.url)
+            setImagePublicId(data.publicId)
             setSuccessMessage('Imagen subida correctamente')
             setTimeout(() => setSuccessMessage(''), 3000)
 

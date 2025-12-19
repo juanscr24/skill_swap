@@ -11,6 +11,7 @@ export async function getUserProfile(userId: string) {
       name: true,
       email: true,
       image: true,
+      image_public_id: true,
       bio: true,
       city: true,
       role: true,
@@ -82,6 +83,7 @@ export async function updateUserProfile(
     bio?: string
     city?: string
     image?: string
+    image_public_id?: string
   }
 ) {
   return prisma.users.update({
@@ -95,6 +97,7 @@ export async function updateUserProfile(
       name: true,
       email: true,
       image: true,
+      image_public_id: true,
       bio: true,
       city: true,
       role: true,

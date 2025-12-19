@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { v2 as cloudinary } from 'cloudinary'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
+import { prisma } from '@/lib/prisma'
 
 // Configurar Cloudinary
 cloudinary.config({
@@ -21,6 +22,19 @@ export async function POST(req: NextRequest) {
             )
         }
 
+        // Buscar el usuario para obtener el public_id de la imagen anterior
+        const user = await prisma.users.findUnique({
+            where: { email: session.user.email },
+            select: { id: true, image_public_id: true }
+        })
+
+        if (!user) {
+            return NextResponse.json(
+                { error: 'Usuario no encontrado' },
+                { status: 404 }
+            )
+        }
+
         // Obtener el archivo del FormData
         const formData = await req.formData()
         const file = formData.get('file') as File
@@ -36,6 +50,17 @@ export async function POST(req: NextRequest) {
         const bytes = await file.arrayBuffer()
         const buffer = Buffer.from(bytes)
         const base64Image = `data:${file.type};base64,${buffer.toString('base64')}`
+
+        // Si existe una imagen anterior en Cloudinary, eliminarla
+        if (user.image_public_id) {
+            try {
+                await cloudinary.uploader.destroy(user.image_public_id)
+                console.log('Imagen anterior eliminada:', user.image_public_id)
+            } catch (deleteError) {
+                console.error('Error al eliminar imagen anterior:', deleteError)
+                // Continuar aunque falle la eliminación
+            }
+        }
 
         // Subir a Cloudinary
         const result = await cloudinary.uploader.upload(base64Image, {
