@@ -4,9 +4,39 @@ import { Button, Input } from "@/components"
 import Link from "next/link"
 import { FcGoogle } from "react-icons/fc"
 import { FaGithub } from "react-icons/fa"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { registerSchema, type RegisterInput } from "@/validations/auth"
+import { useAuth } from "@/hooks/useAuth"
+import { useState } from "react"
 
 export const RegisterView = () => {
     const t = useTranslations('auth')
+    const { register: registerUser, loginWithGoogle, loginWithGithub, isLoading, error: authError } = useAuth()
+    const [submitError, setSubmitError] = useState<string | null>(null)
+    
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<RegisterInput>({
+        resolver: zodResolver(registerSchema),
+        mode: 'onBlur', // Validar cuando el campo pierde el foco
+    })
+
+    const onSubmit = async (data: RegisterInput) => {
+        try {
+            setSubmitError(null)
+            
+            const result = await registerUser(data)
+            
+            if (!result.success) {
+                setSubmitError(result.error || 'Error al registrar usuario')
+            }
+        } catch (err: any) {
+            setSubmitError(err.message || 'Error al registrar usuario')
+        }
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-(--bg-1) px-4 max-sm:px-2 py-8 max-sm:py-4">
@@ -18,34 +48,61 @@ export const RegisterView = () => {
                     SkillSwap
                 </p>
 
-                <form className="space-y-4 max-sm:space-y-3">
-                    <Input
-                        type="text"
-                        label={t('name')}
-                        placeholder="Juan Pérez"
-                        id="name"
-                    />
-                    <Input
-                        type="email"
-                        label={t('email')}
-                        placeholder="tu@email.com"
-                        id="email"
-                    />
-                    <Input
-                        type="password"
-                        label={t('password')}
-                        placeholder="••••••••"
-                        id="password"
-                    />
-                    <Input
-                        type="password"
-                        label={t('confirmPassword')}
-                        placeholder="••••••••"
-                        id="confirmPassword"
-                    />
+                {(submitError || authError) && (
+                    <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-sm">
+                        {submitError || authError}
+                    </div>
+                )}
 
-                    <Button primary className="w-full py-3 max-sm:py-2">
-                        {t('registerButton')}
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-sm:space-y-3">
+                    <div>
+                        <Input
+                            type="text"
+                            label={t('name')}
+                            placeholder="Juan Pérez"
+                            id="name"
+                            {...register('name')}
+                            error={errors.name?.message}
+                        />
+                    </div>
+                    <div>
+                        <Input
+                            type="email"
+                            label={t('email')}
+                            placeholder="tu@email.com"
+                            id="email"
+                            {...register('email')}
+                            error={errors.email?.message}
+                        />
+                    </div>
+                    <div>
+                        <Input
+                            type="password"
+                            label={t('password')}
+                            placeholder="••••••••"
+                            id="password"
+                            {...register('password')}
+                            error={errors.password?.message}
+                        />
+                    </div>
+                    <div>
+                        <Input
+                            type="password"
+                            label={t('confirmPassword')}
+                            placeholder="••••••••"
+                            id="confirmPassword"
+                            {...register('confirmPassword')}
+                            error={errors.confirmPassword?.message}
+                        />
+                    </div>
+
+                    <Button 
+                        type="submit"
+                        primary 
+                        className="w-full py-3 max-sm:py-2"
+                        disabled={isLoading || isSubmitting}
+                    >
+                        {isLoading || isSubmitting ? 'Cargando...' : t('registerButton')}
                     </Button>
                 </form>
 
@@ -62,11 +119,23 @@ export const RegisterView = () => {
                     </div>
 
                     <div className="mt-6 max-sm:mt-4 grid grid-cols-2 gap-3 max-sm:gap-2">
-                        <Button secondary className="flex items-center justify-center gap-2 max-sm:gap-1 py-3 max-sm:py-2 max-sm:text-sm">
+                        <Button 
+                            type="button"
+                            secondary 
+                            className="flex items-center justify-center gap-2 max-sm:gap-1 py-3 max-sm:py-2 max-sm:text-sm"
+                            onClick={loginWithGoogle}
+                            disabled={isLoading}
+                        >
                             <FcGoogle className="w-5 h-5 max-sm:w-4 max-sm:h-4" />
                             {t('google')}
                         </Button>
-                        <Button secondary className="flex items-center justify-center gap-2 max-sm:gap-1 py-3 max-sm:py-2 max-sm:text-sm">
+                        <Button 
+                            type="button"
+                            secondary 
+                            className="flex items-center justify-center gap-2 max-sm:gap-1 py-3 max-sm:py-2 max-sm:text-sm"
+                            onClick={loginWithGithub}
+                            disabled={isLoading}
+                        >
                             <FaGithub className="w-5 h-5 max-sm:w-4 max-sm:h-4" />
                             {t('github')}
                         </Button>
