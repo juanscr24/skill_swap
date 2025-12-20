@@ -10,7 +10,7 @@ import { Button, Input } from "@/components"
 import { Textarea } from "@/components/ui/Textarea"
 import { Select } from "@/components/ui/Select"
 import { Badge } from "@/components/ui/Badge"
-import { FiX, FiPlus, FiLoader, FiSave, FiArrowLeft } from "react-icons/fi"
+import { FiX, FiPlus, FiLoader, FiSave, FiArrowLeft, FiUpload } from "react-icons/fi"
 import Link from "next/link"
 
 export const EditProfileView = () => {
@@ -32,6 +32,7 @@ export const EditProfileView = () => {
     const [city, setCity] = useState('')
     const [bio, setBio] = useState('')
     const [imageUrl, setImageUrl] = useState('')
+    const [imagePublicId, setImagePublicId] = useState('')
 
     // New skill states
     const [newSkillName, setNewSkillName] = useState('')
@@ -42,6 +43,7 @@ export const EditProfileView = () => {
 
     // Loading states
     const [isSaving, setIsSaving] = useState(false)
+    const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [successMessage, setSuccessMessage] = useState('')
 
     // Cargar datos del perfil cuando esté disponible
@@ -71,7 +73,8 @@ export const EditProfileView = () => {
             name,
             city,
             bio,
-            image: imageUrl
+            image: imageUrl,
+            image_public_id: imagePublicId
         })
 
         setIsSaving(false)
@@ -81,6 +84,53 @@ export const EditProfileView = () => {
             setTimeout(() => {
                 router.push('/profile')
             }, 1500)
+        }
+    }
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        // Validar tipo de archivo
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+        if (!validTypes.includes(file.type)) {
+            alert('Por favor selecciona una imagen válida (JPG, PNG, WEBP o GIF)')
+            return
+        }
+
+        // Validar tamaño (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('La imagen no debe superar los 5MB')
+            return
+        }
+
+        setIsUploadingImage(true)
+
+        try {
+            const formData = new FormData()
+            formData.append('file', file)
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Error al subir la imagen')
+            }
+
+            setImageUrl(data.url)
+            setImagePublicId(data.publicId)
+            setSuccessMessage('Imagen subida correctamente')
+            setTimeout(() => setSuccessMessage(''), 3000)
+
+        } catch (error) {
+            console.error('Error uploading image:', error)
+            alert(error instanceof Error ? error.message : 'Error al subir la imagen. Intenta de nuevo.')
+        } finally {
+            setIsUploadingImage(false)
         }
     }
 
@@ -172,18 +222,49 @@ export const EditProfileView = () => {
                     </h2>
                     <div className="flex flex-col sm:flex-row items-center gap-4 max-sm:gap-3">
                         <Avatar src={imageUrl} alt={name} size="xl" />
-                        <div className="flex-1 w-full">
-                            <Input
-                                type="text"
-                                label="URL de la imagen"
-                                id="imageUrl"
-                                value={imageUrl}
-                                onChange={(e) => setImageUrl(e.target.value)}
-                                placeholder="https://ejemplo.com/tu-foto.jpg"
-                            />
-                            <p className="text-xs text-(--text-2) mt-1">
-                                Por ahora ingresa la URL de tu imagen. Pronto podrás subir archivos.
-                            </p>
+                        <div className="flex-1 w-full space-y-3">
+                            {/* Subir desde PC */}
+                            <div>
+                                <label 
+                                    htmlFor="file-upload" 
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-(--button-1) text-white rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                                >
+                                    {isUploadingImage ? (
+                                        <>
+                                            <FiLoader className="w-4 h-4 animate-spin" />
+                                            Subiendo...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FiUpload className="w-4 h-4" />
+                                            Subir desde PC
+                                        </>
+                                    )}
+                                </label>
+                                <input
+                                    id="file-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
+                                    className="hidden"
+                                    disabled={isUploadingImage}
+                                />
+                                <p className="text-xs text-(--text-2) mt-1">
+                                    JPG, PNG, WEBP o GIF (máx. 5MB)
+                                </p>
+                            </div>
+
+                            {/* O ingresar URL */}
+                            <div>
+                                <Input
+                                    type="text"
+                                    label="O ingresa una URL"
+                                    id="imageUrl"
+                                    value={imageUrl}
+                                    onChange={(e) => setImageUrl(e.target.value)}
+                                    placeholder="https://ejemplo.com/tu-foto.jpg"
+                                />
+                            </div>
                         </div>
                     </div>
                 </Card>

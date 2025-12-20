@@ -132,6 +132,7 @@ model users {
   email                                String             @unique
   email_verified                       DateTime?
   image                                String?
+  image_public_id                      String?
   bio                                  String?
   city                                 String?
   role                                 role_enum          @default(USER)
