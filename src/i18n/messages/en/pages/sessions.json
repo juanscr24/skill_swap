@@ -25,5 +25,6 @@
     "selectDate": "Select date",
     "selectTime": "Select time",
     "hours": "hours",
-    "minutes": "minutes"
+    "minutes": "minutes",
+    "loading": "Loading..."
 }

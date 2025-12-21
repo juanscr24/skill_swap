@@ -11,5 +11,6 @@
     "comment": "Comentario",
     "date": "Fecha",
     "thanksForReview": "¡Gracias por tu reseña!",
-    "ratingRequired": "La calificación es obligatoria"
+    "ratingRequired": "La calificación es obligatoria",
+    "loading": "Cargando..."
 }

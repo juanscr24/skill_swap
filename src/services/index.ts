@@ -9,3 +9,15 @@ export * from './skills'
 
 // Sessions services
 export * from './sessions'
+
+// Messages services
+export * from './messages'
+
+// Matches services
+export * from './matches'
+
+// Requests services
+export * from './requests'
+
+// Reviews services
+export * from './reviews'

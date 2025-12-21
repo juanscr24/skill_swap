@@ -10,5 +10,8 @@
     "matched": "¡Match!",
     "sendMessage": "Enviar mensaje",
     "teaches": "Enseña",
-    "wantsToLearn": "Quiere aprender"
+    "wantsToLearn": "Quiere aprender",
+    "loading": "Cargando...",
+    "noBio": "Sin biografía",
+    "matchRequestSent": "¡Solicitud de match enviada!"
 }

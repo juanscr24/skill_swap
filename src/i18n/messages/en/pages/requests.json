@@ -13,5 +13,7 @@
     "from": "From",
     "to": "To",
     "status": "Status",
-    "actions": "Actions"
+    "actions": "Actions",
+    "loading": "Loading...",
+    "sendMessage": "Send message"
 }
