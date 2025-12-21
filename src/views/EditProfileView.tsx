@@ -10,6 +10,8 @@ import { Button, Input } from "@/components"
 import { Textarea } from "@/components/ui/Textarea"
 import { Select } from "@/components/ui/Select"
 import { Badge } from "@/components/ui/Badge"
+import { SkillSelector } from "@/components/ui/SkillSelector"
+import { recommendedSkills } from "@/constants/recommendedSkills"
 import { FiX, FiPlus, FiLoader, FiSave, FiArrowLeft, FiUpload } from "react-icons/fi"
 import Link from "next/link"
 
@@ -34,12 +36,9 @@ export const EditProfileView = () => {
     const [imageUrl, setImageUrl] = useState('')
     const [imagePublicId, setImagePublicId] = useState('')
 
-    // New skill states
-    const [newSkillName, setNewSkillName] = useState('')
+    // New skill states (solo nivel para skills que enseño)
     const [newSkillLevel, setNewSkillLevel] = useState('')
-    const [newWantedSkill, setNewWantedSkill] = useState('')
-    const [showAddSkill, setShowAddSkill] = useState(false)
-    const [showAddWantedSkill, setShowAddWantedSkill] = useState(false)
+    const [skillToAddWithLevel, setSkillToAddWithLevel] = useState('')
 
     // Loading states
     const [isSaving, setIsSaving] = useState(false)
@@ -134,29 +133,34 @@ export const EditProfileView = () => {
         }
     }
 
-    const handleAddSkill = async () => {
-        if (!newSkillName.trim()) return
+    const handleAddSkill = async (skillName: string) => {
+        if (!skillName.trim()) return
+
+        // Guardar el nombre de la skill y esperar que el usuario seleccione el nivel
+        setSkillToAddWithLevel(skillName)
+    }
+
+    const handleConfirmAddSkill = async () => {
+        if (!skillToAddWithLevel || !newSkillLevel) return
 
         const result = await addSkill({
-            name: newSkillName.trim(),
+            name: skillToAddWithLevel.trim(),
             level: newSkillLevel as 'beginner' | 'intermediate' | 'advanced' | 'expert'
         })
 
         if (result.success) {
-            setNewSkillName('')
+            setSkillToAddWithLevel('')
             setNewSkillLevel('')
-            setShowAddSkill(false)
         }
     }
 
-    const handleAddWantedSkill = async () => {
-        if (!newWantedSkill.trim()) return
+    const handleAddWantedSkill = async (skillName: string) => {
+        if (!skillName.trim()) return
 
-        const result = await addWantedSkill(newWantedSkill.trim())
+        const result = await addWantedSkill(skillName.trim())
 
-        if (result.success) {
-            setNewWantedSkill('')
-            setShowAddWantedSkill(false)
+        if (!result.success) {
+            alert('Error al agregar la habilidad')
         }
     }
 
@@ -209,9 +213,9 @@ export const EditProfileView = () => {
 
             {/* Success Message */}
             {successMessage && (
-                <Card className="mb-6 bg-green-50 border-green-500">
-                    <p className="text-green-700 font-medium">{successMessage}</p>
-                </Card>
+                <div className="mb-6 p-4 bg-green-100 dark:bg-green-900/30 border-2 border-green-500 rounded-lg">
+                    <p className="text-green-800 dark:text-green-200 font-medium">{successMessage}</p>
+                </div>
             )}
 
             <form onSubmit={handleSaveProfile} className="space-y-6 max-md:space-y-4 max-sm:space-y-3">
@@ -220,14 +224,19 @@ export const EditProfileView = () => {
                     <h2 className="text-xl max-md:text-lg max-sm:text-base font-bold text-(--text-1) mb-4 max-sm:mb-3">
                         {t('uploadPhoto')}
                     </h2>
-                    <div className="flex flex-col sm:flex-row items-center gap-4 max-sm:gap-3">
-                        <Avatar src={imageUrl} alt={name} size="xl" />
+                    <div className="flex flex-col sm:flex-row items-center gap-6 max-sm:gap-4">
+                        <div className="relative">
+                            <Avatar src={imageUrl} alt={name} size="xl" />
+                            <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-(--button-1) rounded-full flex items-center justify-center shadow-lg">
+                                <FiUpload className="w-4 h-4 text-(--button-1-text)" />
+                            </div>
+                        </div>
                         <div className="flex-1 w-full space-y-3">
                             {/* Subir desde PC */}
                             <div>
                                 <label 
                                     htmlFor="file-upload" 
-                                    className="inline-flex items-center gap-2 px-4 py-2 bg-(--button-1) text-white rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-(--button-1) text-(--button-1-text) rounded-lg cursor-pointer hover:opacity-90 transition-opacity font-medium shadow-sm"
                                 >
                                     {isUploadingImage ? (
                                         <>
@@ -249,7 +258,7 @@ export const EditProfileView = () => {
                                     className="hidden"
                                     disabled={isUploadingImage}
                                 />
-                                <p className="text-xs text-(--text-2) mt-1">
+                                <p className="text-xs text-(--text-2) mt-2">
                                     JPG, PNG, WEBP o GIF (máx. 5MB)
                                 </p>
                             </div>
@@ -302,53 +311,59 @@ export const EditProfileView = () => {
 
                 {/* Skills I Teach */}
                 <Card>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 max-sm:mb-3 gap-3">
-                        <h2 className="text-xl max-md:text-lg max-sm:text-base font-bold text-(--text-1)">
+                    <div className="mb-6">
+                        <h2 className="text-xl max-md:text-lg max-sm:text-base font-bold text-(--text-1) mb-2">
                             {t('skillsTeach')}
                         </h2>
-                        <Button 
-                            secondary 
-                            type="button" 
-                            onClick={() => setShowAddSkill(!showAddSkill)}
-                            className="flex items-center gap-2 max-sm:gap-1 max-sm:text-sm max-sm:w-full"
-                        >
-                            <FiPlus className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
-                            {t('addSkill')}
-                        </Button>
+                        <p className="text-sm text-(--text-2)">
+                            Selecciona las habilidades que puedes enseñar a otros
+                        </p>
                     </div>
 
-                    {/* Add New Skill Form */}
-                    {showAddSkill && (
-                        <div className="mb-4 p-4 bg-(--bg-1) rounded-lg border border-(--border-1)">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-                                <Input
-                                    type="text"
-                                    placeholder={t('skillName')}
-                                    value={newSkillName}
-                                    onChange={(e) => setNewSkillName(e.target.value)}
-                                />
-                                <Select
-                                    options={levelOptions}
-                                    value={newSkillLevel}
-                                    onChange={(e) => setNewSkillLevel(e.target.value)}
-                                    placeholder={t('skillLevel')}
-                                />
+                    {/* Skill Selector */}
+                    <SkillSelector
+                        onAdd={handleAddSkill}
+                        placeholder="Buscar o agregar habilidad que enseñas..."
+                        recommendations={recommendedSkills}
+                    />
+
+                    {/* Level Selection (aparece cuando se selecciona una skill) */}
+                    {skillToAddWithLevel && (
+                        <div className="mt-4 p-4 bg-(--bg-1) border-2 border-(--button-1) rounded-lg">
+                            <p className="text-sm font-medium text-(--text-1) mb-3">
+                                Selecciona tu nivel en: <span className="text-(--button-1)">{skillToAddWithLevel}</span>
+                            </p>
+                            <div className="flex gap-2 flex-wrap">
+                                {levelOptions.filter(opt => opt.value).map((option) => (
+                                    <button
+                                        key={option.value}
+                                        type="button"
+                                        onClick={() => setNewSkillLevel(option.value)}
+                                        className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                                            newSkillLevel === option.value
+                                                ? 'bg-(--button-1) text-(--button-1-text) scale-105'
+                                                : 'bg-(--bg-2) text-(--text-1) border border-(--border-1) hover:border-(--button-1)'
+                                        }`}
+                                    >
+                                        {option.label}
+                                    </button>
+                                ))}
                             </div>
-                            <div className="flex gap-2">
-                                <Button 
-                                    type="button" 
-                                    onClick={handleAddSkill}
-                                    disabled={!newSkillName.trim()}
+                            <div className="flex gap-2 mt-3">
+                                <Button
+                                    type="button"
+                                    onClick={handleConfirmAddSkill}
+                                    disabled={!newSkillLevel}
                                     className="flex-1"
+                                    primary
                                 >
-                                    Agregar
+                                    Confirmar
                                 </Button>
-                                <Button 
-                                    secondary 
-                                    type="button" 
+                                <Button
+                                    secondary
+                                    type="button"
                                     onClick={() => {
-                                        setShowAddSkill(false)
-                                        setNewSkillName('')
+                                        setSkillToAddWithLevel('')
                                         setNewSkillLevel('')
                                     }}
                                 >
@@ -359,24 +374,28 @@ export const EditProfileView = () => {
                     )}
 
                     {/* Skills List */}
-                    <div className="space-y-3 max-sm:space-y-2">
+                    <div className="mt-6 space-y-3 max-sm:space-y-2">
                         {skills.length === 0 ? (
-                            <p className="text-(--text-2) text-sm text-center py-4">
-                                No tienes skills agregadas. Haz clic en "Agregar Skill" para añadir una.
-                            </p>
+                            <div className="text-center py-8 px-4 bg-(--bg-1) rounded-lg border-2 border-dashed border-(--border-1)">
+                                <p className="text-(--text-2) text-sm">
+                                    No tienes habilidades agregadas. Usa el selector para añadir habilidades que puedes enseñar.
+                                </p>
+                            </div>
                         ) : (
                             skills.map((skill) => (
-                                <div key={skill.id} className="flex items-center gap-3 max-sm:gap-2 p-3 max-sm:p-2 bg-(--bg-1) rounded-lg border border-(--border-1)">
+                                <div key={skill.id} className="flex items-center gap-3 max-sm:gap-2 p-4 max-sm:p-3 bg-(--bg-1) rounded-lg border border-(--border-1) hover:border-(--button-1) transition-colors group">
                                     <div className="flex-1">
-                                        <p className="font-medium text-(--text-1)">{skill.name}</p>
-                                        <p className="text-sm text-(--text-2)">
-                                            Nivel: {skill.level || 'No especificado'}
-                                        </p>
+                                        <p className="font-semibold text-(--text-1) text-lg max-sm:text-base">{skill.name}</p>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <Badge variant="warning" className="text-xs">
+                                                {skill.level || 'No especificado'}
+                                            </Badge>
+                                        </div>
                                     </div>
                                     <button
                                         type="button"
                                         onClick={() => handleDeleteSkill(skill.id)}
-                                        className="text-red-500 hover:text-red-700 p-2"
+                                        className="text-(--text-2) hover:text-red-500 p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
                                     >
                                         <FiX className="w-5 h-5 max-sm:w-4 max-sm:h-4" />
                                     </button>
@@ -388,70 +407,44 @@ export const EditProfileView = () => {
 
                 {/* Skills I Want to Learn */}
                 <Card>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 max-sm:mb-3 gap-3">
-                        <h2 className="text-xl max-md:text-lg max-sm:text-base font-bold text-(--text-1)">
+                    <div className="mb-6">
+                        <h2 className="text-xl max-md:text-lg max-sm:text-base font-bold text-(--text-1) mb-2">
                             {t('skillsLearn')}
                         </h2>
-                        <Button 
-                            secondary 
-                            type="button" 
-                            onClick={() => setShowAddWantedSkill(!showAddWantedSkill)}
-                            className="flex items-center gap-2 max-sm:gap-1 max-sm:text-sm max-sm:w-full"
-                        >
-                            <FiPlus className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
-                            {t('addSkill')}
-                        </Button>
+                        <p className="text-sm text-(--text-2)">
+                            Selecciona las habilidades que quieres aprender de otros
+                        </p>
                     </div>
 
-                    {/* Add New Wanted Skill Form */}
-                    {showAddWantedSkill && (
-                        <div className="mb-4 p-4 bg-(--bg-1) rounded-lg border border-(--border-1)">
-                            <Input
-                                type="text"
-                                placeholder="Nombre de la skill que quieres aprender"
-                                value={newWantedSkill}
-                                onChange={(e) => setNewWantedSkill(e.target.value)}
-                                className="mb-3"
-                            />
-                            <div className="flex gap-2">
-                                <Button 
-                                    type="button" 
-                                    onClick={handleAddWantedSkill}
-                                    disabled={!newWantedSkill.trim()}
-                                    className="flex-1"
-                                >
-                                    Agregar
-                                </Button>
-                                <Button 
-                                    secondary 
-                                    type="button" 
-                                    onClick={() => {
-                                        setShowAddWantedSkill(false)
-                                        setNewWantedSkill('')
-                                    }}
-                                >
-                                    Cancelar
-                                </Button>
-                            </div>
-                        </div>
-                    )}
+                    {/* Skill Selector */}
+                    <SkillSelector
+                        onAdd={handleAddWantedSkill}
+                        placeholder="Buscar o agregar habilidad que quieres aprender..."
+                        recommendations={recommendedSkills}
+                    />
 
                     {/* Wanted Skills List */}
-                    <div className="flex flex-wrap gap-2">
+                    <div className="mt-6 flex flex-wrap gap-3 max-sm:gap-2">
                         {wantedSkills.length === 0 ? (
-                            <p className="text-(--text-2) text-sm text-center py-4 w-full">
-                                No tienes skills que quieras aprender. Haz clic en "Agregar Skill" para añadir una.
-                            </p>
+                            <div className="w-full text-center py-8 px-4 bg-(--bg-1) rounded-lg border-2 border-dashed border-(--border-1)">
+                                <p className="text-(--text-2) text-sm">
+                                    No tienes habilidades que quieras aprender. Usa el selector para añadir habilidades que te interesan.
+                                </p>
+                            </div>
                         ) : (
                             wantedSkills.map((skill) => (
-                                <Badge key={skill.id} variant="warning" className="flex items-center gap-2 max-sm:gap-1">
-                                    <span className="max-sm:text-xs">{skill.name}</span>
+                                <Badge 
+                                    key={skill.id} 
+                                    variant="warning" 
+                                    className="flex items-center gap-2 max-sm:gap-1 px-4 py-2 text-base max-sm:text-sm group hover:scale-105 transition-transform cursor-pointer"
+                                >
+                                    <span className="font-medium">{skill.name}</span>
                                     <button
                                         type="button"
                                         onClick={() => handleDeleteWantedSkill(skill.id)}
-                                        className="hover:text-red-500"
+                                        className="hover:text-red-500 transition-colors"
                                     >
-                                        <FiX className="w-3 h-3 max-sm:w-2.5 max-sm:h-2.5" />
+                                        <FiX className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
                                     </button>
                                 </Badge>
                             ))
@@ -460,27 +453,27 @@ export const EditProfileView = () => {
                 </Card>
 
                 {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 max-sm:gap-3">
+                <div className="flex flex-col sm:flex-row gap-4 max-sm:gap-3 pt-4">
                     <Button 
                         primary 
                         type="submit"
                         disabled={isSaving}
-                        className="flex-1 py-3 max-sm:py-2 flex items-center justify-center gap-2"
+                        className="flex-1 py-4 max-sm:py-3 flex items-center justify-center gap-2 font-semibold text-lg max-sm:text-base shadow-lg hover:shadow-xl transition-all"
                     >
                         {isSaving ? (
                             <>
-                                <FiLoader className="w-4 h-4 animate-spin" />
+                                <FiLoader className="w-5 h-5 animate-spin" />
                                 Guardando...
                             </>
                         ) : (
                             <>
-                                <FiSave className="w-4 h-4" />
+                                <FiSave className="w-5 h-5" />
                                 {t('saveChanges')}
                             </>
                         )}
                     </Button>
                     <Link href="/profile" className="sm:w-auto w-full">
-                        <Button secondary className="w-full px-8 max-sm:px-4 py-3 max-sm:py-2">
+                        <Button secondary className="w-full px-8 max-sm:px-4 py-4 max-sm:py-3 font-semibold text-lg max-sm:text-base">
                             {t('cancel')}
                         </Button>
                     </Link>

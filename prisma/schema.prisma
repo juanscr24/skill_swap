@@ -96,7 +96,7 @@ model sessions {
   description                    String?
   start_at                       DateTime
   end_at                         DateTime
-  status                         String?  @default("scheduled")
+  status                         String?  @default("pending")  // pending, scheduled, completed, cancelled, rejected
   created_at                     DateTime @default(now())
   users_sessions_guest_idTousers users?   @relation("sessions_guest_idTousers", fields: [guest_id], references: [id])
   users_sessions_host_idTousers  users?   @relation("sessions_host_idTousers", fields: [host_id], references: [id], onDelete: Cascade)

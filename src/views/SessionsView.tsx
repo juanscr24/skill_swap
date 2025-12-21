@@ -32,7 +32,11 @@ interface SessionData {
 export const SessionsView = () => {
     const t = useTranslations('sessions')
     const { data: session } = useSession()
-    const { sessions, isLoading, cancelSession } = useSessions('all')
+    const { sessions, isLoading, cancelSession, updateSessionStatus } = useSessions('all')
+
+    const pendingSessions = sessions.filter(
+        (s) => s.status === 'pending'
+    )
 
     const upcomingSessions = sessions.filter(
         (s) => s.status === 'scheduled'
@@ -45,18 +49,46 @@ export const SessionsView = () => {
     const SessionCard = ({ sessionData }: { sessionData: SessionData }) => {
         const currentUserId = session?.user?.id
         const isHost = sessionData.users_sessions_host_idTousers?.id === currentUserId
+        const isGuest = sessionData.users_sessions_guest_idTousers?.id === currentUserId
         const otherUser = isHost ? sessionData.users_sessions_guest_idTousers : sessionData.users_sessions_host_idTousers
 
         const statusVariant = {
+            pending: 'warning',
             scheduled: 'warning',
             completed: 'success',
-            cancelled: 'error'
+            cancelled: 'error',
+            rejected: 'error'
         } as const
 
         const handleCancel = async () => {
+            if (!confirm('¿Estás seguro de cancelar esta sesión?')) return
+            
             const result = await cancelSession(sessionData.id)
             if (!result.success) {
                 alert(t('errorCancelling'))
+            }
+        }
+
+        const handleApprove = async () => {
+            const result = await updateSessionStatus(sessionData.id, 'scheduled')
+            if (!result.success) {
+                alert('Error al aprobar la sesión')
+            }
+        }
+
+        const handleReject = async () => {
+            if (!confirm('¿Estás seguro de rechazar esta sesión?')) return
+            
+            const result = await updateSessionStatus(sessionData.id, 'rejected')
+            if (!result.success) {
+                alert('Error al rechazar la sesión')
+            }
+        }
+
+        const handleComplete = async () => {
+            const result = await updateSessionStatus(sessionData.id, 'completed')
+            if (!result.success) {
+                alert('Error al marcar como completada')
             }
         }
 
@@ -107,9 +139,32 @@ export const SessionsView = () => {
                                 </div>
                             </div>
 
+                            {/* Botones según el estado y rol */}
+                            {sessionData.status === 'pending' && isGuest && (
+                                <div className="flex gap-2 max-sm:gap-1 flex-wrap">
+                                    <Button primary onClick={handleApprove} className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs">
+                                        Aprobar
+                                    </Button>
+                                    <Button secondary onClick={handleReject} className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs">
+                                        Rechazar
+                                    </Button>
+                                </div>
+                            )}
+                            
+                            {sessionData.status === 'pending' && isHost && (
+                                <div className="flex gap-2 max-sm:gap-1 flex-wrap">
+                                    <span className="text-sm max-sm:text-xs text-(--text-2) italic">
+                                        Esperando aprobación
+                                    </span>
+                                    <Button secondary onClick={handleCancel} className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs">
+                                        {t('cancel')}
+                                    </Button>
+                                </div>
+                            )}
+
                             {sessionData.status === 'scheduled' && (
                                 <div className="flex gap-2 max-sm:gap-1 flex-wrap">
-                                    <Button primary className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs">
+                                    <Button primary onClick={handleComplete} className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs">
                                         {t('markAsCompleted')}
                                     </Button>
                                     <Button secondary onClick={handleCancel} className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs">
@@ -125,6 +180,23 @@ export const SessionsView = () => {
     }
 
     const tabs = [
+        {
+            id: 'pending',
+            label: 'Pendientes',
+            content: (
+                <div className="space-y-4 max-sm:space-y-3">
+                    {isLoading ? (
+                        <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('loading')}</p>
+                    ) : pendingSessions.length === 0 ? (
+                        <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">No hay sesiones pendientes</p>
+                    ) : (
+                        pendingSessions.map((sessionData) => (
+                            <SessionCard key={sessionData.id} sessionData={sessionData} />
+                        ))
+                    )}
+                </div>
+            )
+        },
         {
             id: 'upcoming',
             label: t('upcomingSessions'),
@@ -172,7 +244,7 @@ export const SessionsView = () => {
                 </Link>
             </div>
 
-            <Tabs tabs={tabs} defaultTab="upcoming" />
+            <Tabs tabs={tabs} defaultTab="pending" />
         </div>
     )
 }

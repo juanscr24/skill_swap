@@ -7,6 +7,7 @@ import {
   createSession,
   cancelSession,
 } from '@/services/sessions'
+import { prisma } from '@/lib/prisma'
 
 /**
  * GET /api/sessions
@@ -108,6 +109,52 @@ export async function DELETE(request: NextRequest) {
     console.error('Error cancelling session:', error)
     return NextResponse.json(
       { message: error.message || 'Error al cancelar sesión' },
+      { status: 500 }
+    )
+  }
+}
+
+/**
+ * PATCH /api/sessions
+ * Actualiza el estado de una sesión (aprobar, rechazar, completar)
+ */
+export async function PATCH(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ message: 'No autenticado' }, { status: 401 })
+    }
+
+    const body = await request.json()
+    const { sessionId, status } = body
+
+    if (!sessionId || !status) {
+      return NextResponse.json(
+        { message: 'Datos incompletos' },
+        { status: 400 }
+      )
+    }
+
+    // Validar estados permitidos
+    const allowedStatuses = ['scheduled', 'completed', 'cancelled', 'rejected']
+    if (!allowedStatuses.includes(status)) {
+      return NextResponse.json(
+        { message: 'Estado no válido' },
+        { status: 400 }
+      )
+    }
+
+    const updatedSession = await prisma.sessions.update({
+      where: { id: sessionId },
+      data: { status },
+    })
+
+    return NextResponse.json(updatedSession)
+  } catch (error: any) {
+    console.error('Error updating session:', error)
+    return NextResponse.json(
+      { message: error.message || 'Error al actualizar sesión' },
       { status: 500 }
     )
   }
