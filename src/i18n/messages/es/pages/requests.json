@@ -13,5 +13,6 @@
     "from": "De",
     "to": "Para",
     "status": "Estado",
-    "actions": "Acciones"
+    "actions": "Acciones",
+    "loading": "Cargando..."
 }

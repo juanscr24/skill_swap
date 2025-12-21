@@ -8,5 +8,8 @@
     "typing": "Escribiendo...",
     "today": "Hoy",
     "yesterday": "Ayer",
-    "selectChat": "Selecciona una conversación para comenzar"
+    "selectChat": "Selecciona una conversación para comenzar",
+    "loading": "Cargando...",
+    "noConversations": "No tienes conversaciones",
+    "selectConversation": "Selecciona una conversación para comenzar"
 }

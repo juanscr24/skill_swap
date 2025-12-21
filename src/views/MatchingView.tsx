@@ -1,7 +1,7 @@
 'use client'
 import { useState } from "react"
 import { useTranslations } from "next-intl"
-import { mockUsers } from "@/constants/mockUsers"
+import { useMatches } from "@/hooks"
 import { Card } from "@/components/ui/Card"
 import { Avatar } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
@@ -10,19 +10,38 @@ import { FiX, FiHeart, FiMapPin } from "react-icons/fi"
 
 export const MatchingView = () => {
     const t = useTranslations('matching')
+    const { matches, isLoading, sendMatchRequest } = useMatches()
     const [currentIndex, setCurrentIndex] = useState(0)
-    
-    const availableUsers = mockUsers.filter((_, index) => index !== 0) // Exclude current user
 
-    const currentProfile = availableUsers[currentIndex]
+    const currentProfile = matches[currentIndex]
 
-    const handleSwipe = (direction: 'left' | 'right') => {
-        if (currentIndex < availableUsers.length - 1) {
+    const handleSwipe = async (direction: 'left' | 'right') => {
+        if (direction === 'right' && currentProfile) {
+            // Enviar solicitud de match con la primera habilidad del perfil
+            const firstSkill = currentProfile.skills.find(s => s.level !== 'wanted')
+            if (firstSkill) {
+                const result = await sendMatchRequest(currentProfile.id, firstSkill.name)
+                if (result.success) {
+                    // Mostrar mensaje de éxito
+                    alert(t('matchRequestSent'))
+                }
+            }
+        }
+
+        if (currentIndex < matches.length - 1) {
             setCurrentIndex(currentIndex + 1)
         }
     }
 
-    if (!currentProfile) {
+    if (isLoading) {
+        return (
+            <div className="p-8 max-md:p-6 max-sm:p-4 flex items-center justify-center min-h-[80vh]">
+                <p className="text-(--text-2) max-sm:text-sm">{t('loading')}</p>
+            </div>
+        )
+    }
+
+    if (!currentProfile || matches.length === 0) {
         return (
             <div className="p-8 max-md:p-6 max-sm:p-4 flex items-center justify-center min-h-[80vh]">
                 <Card className="text-center py-12 max-md:py-8 max-sm:py-6">
@@ -35,6 +54,10 @@ export const MatchingView = () => {
         )
     }
 
+    // Separar habilidades que enseña (no wanted) de las que quiere aprender (wanted)
+    const teachingSkills = currentProfile.skills.filter(s => s.level !== 'wanted')
+    const learningSkills = currentProfile.skills.filter(s => s.level === 'wanted')
+
     return (
         <div className="p-8 max-md:p-6 max-sm:p-4">
             <h1 className="text-3xl max-md:text-2xl max-sm:text-xl font-bold text-(--text-1) mb-8 max-md:mb-6 max-sm:mb-4">{t('matching')}</h1>
@@ -45,46 +68,50 @@ export const MatchingView = () => {
                     <div className="text-center">
                         <div className="bg-(--bg-1) p-8 max-md:p-6 max-sm:p-4 mb-6 max-sm:mb-4">
                             <Avatar 
-                                src={currentProfile.image} 
-                                alt={currentProfile.name} 
+                                src={currentProfile.image || ''} 
+                                alt={currentProfile.name || 'User'} 
                                 size="xl"
                                 className="mx-auto mb-4 max-sm:mb-3"
                             />
                             <h2 className="text-2xl max-md:text-xl max-sm:text-lg font-bold text-(--text-1) mb-2 max-sm:mb-1">
-                                {currentProfile.name}
+                                {currentProfile.name || 'Unknown User'}
                             </h2>
                             <div className="flex items-center justify-center gap-2 max-sm:gap-1 text-(--text-2)">
                                 <FiMapPin className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
-                                <span className="max-sm:text-sm">{currentProfile.city}</span>
+                                <span className="max-sm:text-sm">{currentProfile.city || 'Unknown'}</span>
                             </div>
                         </div>
 
                         <div className="px-8 max-md:px-6 max-sm:px-4 pb-8 max-md:pb-6 max-sm:pb-4">
-                            <p className="text-(--text-2) mb-6 max-sm:mb-4 max-sm:text-sm">{currentProfile.bio}</p>
+                            <p className="text-(--text-2) mb-6 max-sm:mb-4 max-sm:text-sm">{currentProfile.bio || t('noBio')}</p>
 
                             {/* Skills they teach */}
-                            <div className="mb-6 max-sm:mb-4">
-                                <h3 className="font-semibold text-(--text-1) mb-3 max-sm:mb-2 max-sm:text-sm">{t('teaches')}</h3>
-                                <div className="flex flex-wrap gap-2 justify-center">
-                                    {currentProfile.skills.map((skill) => (
-                                        <Badge key={skill.id} variant="success">
-                                            {skill.name}
-                                        </Badge>
-                                    ))}
+                            {teachingSkills.length > 0 && (
+                                <div className="mb-6 max-sm:mb-4">
+                                    <h3 className="font-semibold text-(--text-1) mb-3 max-sm:mb-2 max-sm:text-sm">{t('teaches')}</h3>
+                                    <div className="flex flex-wrap gap-2 justify-center">
+                                        {teachingSkills.map((skill) => (
+                                            <Badge key={skill.id} variant="success">
+                                                {skill.name}
+                                            </Badge>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                             {/* Skills they want to learn */}
-                            <div className="mb-8 max-md:mb-6 max-sm:mb-4">
-                                <h3 className="font-semibold text-(--text-1) mb-3 max-sm:mb-2 max-sm:text-sm">{t('wantsToLearn')}</h3>
-                                <div className="flex flex-wrap gap-2 justify-center">
-                                    {currentProfile.wanted_skills.map((skill) => (
-                                        <Badge key={skill.id} variant="warning">
-                                            {skill.name}
-                                        </Badge>
-                                    ))}
+                            {learningSkills.length > 0 && (
+                                <div className="mb-8 max-md:mb-6 max-sm:mb-4">
+                                    <h3 className="font-semibold text-(--text-1) mb-3 max-sm:mb-2 max-sm:text-sm">{t('wantsToLearn')}</h3>
+                                    <div className="flex flex-wrap gap-2 justify-center">
+                                        {learningSkills.map((skill) => (
+                                            <Badge key={skill.id} variant="warning">
+                                                {skill.name}
+                                            </Badge>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                             {/* Action Buttons */}
                             <div className="flex gap-4 max-sm:gap-3 justify-center">
@@ -111,7 +138,7 @@ export const MatchingView = () => {
 
                 {/* Progress */}
                 <div className="mt-6 max-sm:mt-4 text-center text-(--text-2) max-sm:text-sm">
-                    {currentIndex + 1} / {availableUsers.length}
+                    {currentIndex + 1} / {matches.length}
                 </div>
             </div>
         </div>

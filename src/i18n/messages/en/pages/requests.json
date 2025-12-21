@@ -13,5 +13,6 @@
     "from": "From",
     "to": "To",
     "status": "Status",
-    "actions": "Actions"
+    "actions": "Actions",
+    "loading": "Loading..."
 }

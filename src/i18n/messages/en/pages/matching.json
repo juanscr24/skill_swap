@@ -10,5 +10,6 @@
     "matched": "Match!",
     "sendMessage": "Send message",
     "teaches": "Teaches",
-    "wantsToLearn": "Wants to learn"
+    "wantsToLearn": "Wants to learn",
+    "loading": "Loading..."
 }

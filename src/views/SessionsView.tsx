@@ -1,6 +1,6 @@
 'use client'
 import { useTranslations } from "next-intl"
-import { mockSessions } from "@/constants/mockSessions"
+import { useSessions } from "@/hooks"
 import { Card } from "@/components/ui/Card"
 import { Avatar } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
@@ -8,32 +8,59 @@ import { Tabs } from "@/components/ui/Tabs"
 import { Button } from "@/components"
 import Link from "next/link"
 import { FiCalendar, FiClock } from "react-icons/fi"
-import { currentUser } from "@/constants/mockUsers"
+import { useSession } from "next-auth/react"
+
+interface SessionData {
+    id: string
+    title: string
+    description: string | null
+    start_at: Date
+    end_at: Date
+    status: string | null
+    users_sessions_host_idTousers: {
+        id: string
+        name: string | null
+        image: string | null
+    } | null
+    users_sessions_guest_idTousers: {
+        id: string
+        name: string | null
+        image: string | null
+    } | null
+}
 
 export const SessionsView = () => {
     const t = useTranslations('sessions')
+    const { data: session } = useSession()
+    const { sessions, isLoading, cancelSession } = useSessions('all')
 
-    const upcomingSessions = mockSessions.filter(
-        session => 
-            session.status === 'scheduled' &&
-            (session.host.id === currentUser.id || session.guest.id === currentUser.id)
+    const upcomingSessions = sessions.filter(
+        (s) => s.status === 'scheduled'
     )
 
-    const pastSessions = mockSessions.filter(
-        session => 
-            session.status === 'completed' &&
-            (session.host.id === currentUser.id || session.guest.id === currentUser.id)
+    const pastSessions = sessions.filter(
+        (s) => s.status === 'completed'
     )
 
-    const SessionCard = ({ session }: { session: typeof mockSessions[0] }) => {
-        const isHost = session.host.id === currentUser.id
-        const otherUser = isHost ? session.guest : session.host
+    const SessionCard = ({ sessionData }: { sessionData: SessionData }) => {
+        const currentUserId = session?.user?.id
+        const isHost = sessionData.users_sessions_host_idTousers?.id === currentUserId
+        const otherUser = isHost ? sessionData.users_sessions_guest_idTousers : sessionData.users_sessions_host_idTousers
 
         const statusVariant = {
             scheduled: 'warning',
             completed: 'success',
             cancelled: 'error'
         } as const
+
+        const handleCancel = async () => {
+            const result = await cancelSession(sessionData.id)
+            if (!result.success) {
+                alert(t('errorCancelling'))
+            }
+        }
+
+        const startAt = new Date(sessionData.start_at)
 
         return (
             <Card hover>
@@ -45,23 +72,23 @@ export const SessionsView = () => {
                     <div className="flex-1 w-full">
                         <div className="flex flex-col sm:flex-row items-start justify-between mb-2 gap-2">
                             <div>
-                                <h3 className="text-lg max-md:text-base max-sm:text-sm font-bold text-(--text-1)">{session.title}</h3>
-                                <p className="text-sm max-sm:text-xs text-(--text-2)">{session.description}</p>
+                                <h3 className="text-lg max-md:text-base max-sm:text-sm font-bold text-(--text-1)">{sessionData.title}</h3>
+                                <p className="text-sm max-sm:text-xs text-(--text-2)">{sessionData.description}</p>
                             </div>
-                            <Badge variant={statusVariant[session.status]}>
-                                {t(session.status)}
+                            <Badge variant={statusVariant[sessionData.status as keyof typeof statusVariant] || 'warning'}>
+                                {t(sessionData.status || 'scheduled')}
                             </Badge>
                         </div>
 
                         <div className="flex flex-wrap items-center gap-4 max-sm:gap-2 text-sm max-sm:text-xs text-(--text-2) mb-3 max-sm:mb-2">
                             <div className="flex items-center gap-2 max-sm:gap-1">
                                 <FiCalendar className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
-                                <span>{session.start_at.toLocaleDateString()}</span>
+                                <span>{startAt.toLocaleDateString()}</span>
                             </div>
                             <div className="flex items-center gap-2 max-sm:gap-1">
                                 <FiClock className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
                                 <span>
-                                    {session.start_at.toLocaleTimeString('es-ES', { 
+                                    {startAt.toLocaleTimeString('es-ES', { 
                                         hour: '2-digit', 
                                         minute: '2-digit' 
                                     })}
@@ -71,21 +98,21 @@ export const SessionsView = () => {
 
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                             <div className="flex items-center gap-2">
-                                <Avatar src={otherUser.image} alt={otherUser.name} size="sm" />
+                                <Avatar src={otherUser?.image || ''} alt={otherUser?.name || 'User'} size="sm" />
                                 <div>
-                                    <p className="text-sm max-sm:text-xs font-medium text-(--text-1)">{otherUser.name}</p>
+                                    <p className="text-sm max-sm:text-xs font-medium text-(--text-1)">{otherUser?.name || 'Unknown'}</p>
                                     <p className="text-xs max-sm:text-[10px] text-(--text-2)">
                                         {isHost ? t('guest') : t('host')}
                                     </p>
                                 </div>
                             </div>
 
-                            {session.status === 'scheduled' && (
+                            {sessionData.status === 'scheduled' && (
                                 <div className="flex gap-2 max-sm:gap-1 flex-wrap">
                                     <Button primary className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs">
                                         {t('markAsCompleted')}
                                     </Button>
-                                    <Button secondary className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs">
+                                    <Button secondary onClick={handleCancel} className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs">
                                         {t('cancel')}
                                     </Button>
                                 </div>
@@ -103,11 +130,13 @@ export const SessionsView = () => {
             label: t('upcomingSessions'),
             content: (
                 <div className="space-y-4 max-sm:space-y-3">
-                    {upcomingSessions.length === 0 ? (
+                    {isLoading ? (
+                        <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('loading')}</p>
+                    ) : upcomingSessions.length === 0 ? (
                         <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('noSessions')}</p>
                     ) : (
-                        upcomingSessions.map((session) => (
-                            <SessionCard key={session.id} session={session} />
+                        upcomingSessions.map((sessionData) => (
+                            <SessionCard key={sessionData.id} sessionData={sessionData} />
                         ))
                     )}
                 </div>
@@ -118,11 +147,13 @@ export const SessionsView = () => {
             label: t('pastSessions'),
             content: (
                 <div className="space-y-4 max-sm:space-y-3">
-                    {pastSessions.length === 0 ? (
+                    {isLoading ? (
+                        <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('loading')}</p>
+                    ) : pastSessions.length === 0 ? (
                         <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('noSessions')}</p>
                     ) : (
-                        pastSessions.map((session) => (
-                            <SessionCard key={session.id} session={session} />
+                        pastSessions.map((sessionData) => (
+                            <SessionCard key={sessionData.id} sessionData={sessionData} />
                         ))
                     )}
                 </div>
