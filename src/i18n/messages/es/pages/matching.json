@@ -11,5 +11,7 @@
     "sendMessage": "Enviar mensaje",
     "teaches": "Enseña",
     "wantsToLearn": "Quiere aprender",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "noBio": "Sin biografía",
+    "matchRequestSent": "¡Solicitud de match enviada!"
 }

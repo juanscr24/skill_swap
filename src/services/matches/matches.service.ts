@@ -16,11 +16,10 @@ export interface PotentialMatch {
 
 export const matchesService = {
   async getPotentialMatches(userId: string): Promise<PotentialMatch[]> {
-    // Obtener las habilidades que el usuario quiere aprender
-    const userWantedSkills = await prisma.skills.findMany({
+    // Obtener las habilidades que el usuario quiere aprender (de wanted_skills)
+    const userWantedSkills = await prisma.wanted_skills.findMany({
       where: {
-        owner_id: userId,
-        level: 'wanted'
+        user_id: userId
       },
       select: {
         name: true
@@ -29,16 +28,42 @@ export const matchesService = {
 
     const wantedSkillNames = userWantedSkills.map((s: any) => s.name)
 
+    // Si el usuario no tiene habilidades que quiere aprender, retornar vacío
+    if (wantedSkillNames.length === 0) {
+      return []
+    }
+
+    // Obtener IDs de usuarios con los que ya tiene solicitudes (pendientes o aceptadas)
+    const existingMatches = await prisma.matches.findMany({
+      where: {
+        OR: [
+          { sender_id: userId },
+          { receiver_id: userId }
+        ]
+      },
+      select: {
+        sender_id: true,
+        receiver_id: true
+      }
+    })
+
+    // Crear lista de IDs a excluir
+    const excludedUserIds = new Set<string>()
+    existingMatches.forEach((match: any) => {
+      if (match.sender_id !== userId) excludedUserIds.add(match.sender_id)
+      if (match.receiver_id !== userId) excludedUserIds.add(match.receiver_id)
+    })
+
     // Obtener usuarios que NO son el usuario actual y tienen habilidades que coinciden
     const potentialMatches = await prisma.users.findMany({
       where: {
         AND: [
           { id: { not: userId } },
+          { id: { notIn: Array.from(excludedUserIds) } }, // Excluir usuarios con match existente
           {
             skills: {
               some: {
-                name: { in: wantedSkillNames },
-                level: { not: 'wanted' }
+                name: { in: wantedSkillNames }
               }
             }
           }

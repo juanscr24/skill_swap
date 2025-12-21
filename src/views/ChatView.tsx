@@ -1,5 +1,5 @@
 'use client'
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useTranslations } from "next-intl"
 import { useMessages } from "@/hooks"
 import { Card } from "@/components/ui/Card"
@@ -12,13 +12,41 @@ export const ChatView = () => {
     const { data: session } = useSession()
     const [selectedUserId, setSelectedUserId] = useState<string | undefined>()
     const [message, setMessage] = useState('')
+    const messagesEndRef = useRef<HTMLDivElement>(null)
 
     // Obtener conversaciones
-    const { conversations, isLoading: conversationsLoading } = useMessages()
+    const { conversations, isLoading: conversationsLoading, refetch: refetchConversations } = useMessages()
     
     // Obtener mensajes del chat seleccionado
-    const { messages, sendMessage: sendMessageApi, isLoading: messagesLoading } = useMessages(selectedUserId)
+    const { messages, sendMessage: sendMessageApi, isLoading: messagesLoading, refetch: refetchMessages } = useMessages(selectedUserId)
 
+    // Auto-refresh de conversaciones cada 5 segundos
+    useEffect(() => {
+        const interval = setInterval(() => {
+            refetchConversations()
+        }, 5000)
+        
+        return () => clearInterval(interval)
+    }, [refetchConversations])
+
+    // Auto-refresh de mensajes cada 3 segundos cuando hay una conversación seleccionada
+    useEffect(() => {
+        if (!selectedUserId || !refetchMessages) return
+
+        const interval = setInterval(() => {
+            refetchMessages()
+        }, 3000)
+        
+        return () => clearInterval(interval)
+    }, [selectedUserId, refetchMessages])
+// Scroll automático al final cuando cambian los mensajes o se selecciona una conversación
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+        }
+    }, [messages, selectedUserId])
+
+    
     const selectedConversation = conversations.find(c => c.userId === selectedUserId)
 
     const handleSendMessage = async () => {
@@ -74,7 +102,7 @@ export const ChatView = () => {
                                             )}
                                         </div>
                                         <p className="text-sm max-sm:text-xs truncate opacity-80">
-                                            {conversation.lastMessage.content}
+                                            {conversation.lastMessage.content || t('noMessages')}
                                         </p>
                                     </div>
                                 </div>
@@ -140,6 +168,7 @@ export const ChatView = () => {
                                 )
                             })
                         )}
+                        <div ref={messagesEndRef} />
                     </div>
 
                     {/* Input */}

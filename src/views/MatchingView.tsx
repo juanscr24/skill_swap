@@ -20,10 +20,15 @@ export const MatchingView = () => {
             // Enviar solicitud de match con la primera habilidad del perfil
             const firstSkill = currentProfile.skills.find(s => s.level !== 'wanted')
             if (firstSkill) {
-                const result = await sendMatchRequest(currentProfile.id, firstSkill.name)
-                if (result.success) {
-                    // Mostrar mensaje de éxito
-                    alert(t('matchRequestSent'))
+                try {
+                    const result = await sendMatchRequest(currentProfile.id, firstSkill.name)
+                    if (result.success) {
+                        // Mostrar mensaje de éxito
+                        alert(t('matchRequestSent'))
+                    }
+                } catch (error) {
+                    // Si ya existe una solicitud, simplemente continuar sin mostrar error
+                    console.log('Solicitud ya existe o error:', error)
                 }
             }
         }

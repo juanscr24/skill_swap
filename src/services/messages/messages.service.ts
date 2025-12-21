@@ -86,7 +86,59 @@ export const messagesService = {
       }
     }
 
-    return Array.from(conversationsMap.values())
+    // Obtener matches aceptados que no tienen mensajes aún
+    const acceptedMatches = await prisma.matches.findMany({
+      where: {
+        OR: [
+          { sender_id: userId, status: 'accepted' },
+          { receiver_id: userId, status: 'accepted' }
+        ]
+      },
+      include: {
+        users_matches_sender_idTousers: {
+          select: {
+            id: true,
+            name: true,
+            image: true
+          }
+        },
+        users_matches_receiver_idTousers: {
+          select: {
+            id: true,
+            name: true,
+            image: true
+          }
+        }
+      }
+    })
+
+    // Agregar matches aceptados sin mensajes como conversaciones vacías
+    for (const match of acceptedMatches) {
+      const otherUserId = match.sender_id === userId ? match.receiver_id : match.sender_id
+      const otherUser = match.sender_id === userId 
+        ? match.users_matches_receiver_idTousers
+        : match.users_matches_sender_idTousers
+
+      if (!otherUserId || !otherUser) continue
+
+      // Solo agregar si no existe ya en el map (no hay mensajes)
+      if (!conversationsMap.has(otherUserId)) {
+        conversationsMap.set(otherUserId, {
+          userId: otherUserId,
+          userName: otherUser.name,
+          userImage: otherUser.image,
+          lastMessage: {
+            content: '', // Sin mensajes aún
+            createdAt: match.created_at
+          },
+          unreadCount: 0
+        })
+      }
+    }
+
+    return Array.from(conversationsMap.values()).sort((a, b) => 
+      b.lastMessage.createdAt.getTime() - a.lastMessage.createdAt.getTime()
+    )
   },
 
   async getMessages(userId: string, otherUserId: string): Promise<Message[]> {

@@ -1,12 +1,13 @@
 'use client'
 import { useTranslations } from "next-intl"
+import { useRouter } from "next/navigation"
 import { useRequests } from "@/hooks"
 import { Card } from "@/components/ui/Card"
 import { Avatar } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
 import { Tabs } from "@/components/ui/Tabs"
 import { Button } from "@/components"
-import { FiCheck, FiX } from "react-icons/fi"
+import { FiCheck, FiX, FiMessageSquare } from "react-icons/fi"
 
 interface MatchRequest {
   id: string
@@ -29,6 +30,7 @@ interface MatchRequest {
 
 const ReceivedRequestsList = () => {
     const t = useTranslations('requests')
+    const router = useRouter()
     const { requests, isLoading, acceptRequest, rejectRequest } = useRequests('received')
 
     const RequestCard = ({ match }: { match: MatchRequest }) => {
@@ -54,6 +56,10 @@ const ReceivedRequestsList = () => {
             }
         }
 
+        const handleSendMessage = () => {
+            router.push(`/chats`)
+        }
+
         const createdAt = new Date(match.createdAt)
 
         return (
@@ -74,6 +80,17 @@ const ReceivedRequestsList = () => {
                     <Badge variant={statusVariant[match.status as keyof typeof statusVariant] || 'warning'}>
                         {t(match.status || 'pending')}
                     </Badge>
+
+                    {match.status === 'accepted' && (
+                        <Button 
+                            primary 
+                            onClick={handleSendMessage}
+                            className="flex items-center gap-2 max-sm:gap-1 px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs"
+                        >
+                            <FiMessageSquare className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
+                            {t('sendMessage')}
+                        </Button>
+                    )}
 
                     {match.status === 'pending' && (
                         <div className="flex gap-2 max-sm:gap-1 flex-wrap max-sm:w-full">

@@ -14,5 +14,6 @@
     "to": "Para",
     "status": "Estado",
     "actions": "Acciones",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "sendMessage": "Enviar mensaje"
 }

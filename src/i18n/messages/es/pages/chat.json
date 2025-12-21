@@ -11,5 +11,6 @@
     "selectChat": "Selecciona una conversación para comenzar",
     "loading": "Cargando...",
     "noConversations": "No tienes conversaciones",
-    "selectConversation": "Selecciona una conversación para comenzar"
+    "selectConversation": "Selecciona una conversación para comenzar",
+    "noMessages": "Sin mensajes aún"
 }

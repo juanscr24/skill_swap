@@ -129,7 +129,6 @@ export function useMessages(otherUserId?: string) {
     isLoading,
     error,
     sendMessage,
-    refetchConversations: fetchConversations,
-    refetchMessages: otherUserId ? () => fetchMessages(otherUserId) : undefined,
+    refetch: otherUserId ? () => fetchMessages(otherUserId) : fetchConversations,
   }
 }
