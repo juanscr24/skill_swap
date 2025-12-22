@@ -9,6 +9,7 @@ import { ButtonMode } from "../ui/ButtonMode"
 import { LanguageSwitcher } from "../ui/LanguageSwitcher"
 import { NAVBAR_ITEMS } from "@/constants/navbar_item"
 import { scrollToTop, scrollToElement } from "@/utils/scroll"
+import { SkillSwapLogo } from "../ui/SkillSwapLogo"
 
 export const LandingNavbar = () => {
     const t = useTranslations("landingNavbar")
@@ -42,36 +43,7 @@ export const LandingNavbar = () => {
                     className="flex items-center gap-3 max-sm:gap-2 text-(--text-1)"
                 >
                     {mounted && (
-                        <>
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{
-                                    duration: 0.5,
-                                    ease: [0, 0.71, 0.2, 1.01],
-                                    scale: {
-                                        type: "spring",
-                                        damping: 10,
-                                        stiffness: 100,
-                                    }
-                                }}
-                            >
-                                <Component className="text-(--button-1) max-sm:w-5 max-sm:h-5" />
-                            </motion.div>
-
-                            <motion.h1
-                                className="font-bold text-xl max-sm:text-lg"
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{
-                                    duration: 0.6,
-                                    delay: 0.2,
-                                    ease: "easeOut"
-                                }}
-                            >
-                                SkillSwap
-                            </motion.h1>
-                        </>
+                        <SkillSwapLogo className="w-40 max-xl:w-35" />
                     )}
                 </Link>
 
