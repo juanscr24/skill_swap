@@ -1,5 +1,6 @@
 'use client'
 import { FiMenu, FiX } from "react-icons/fi"
+import { SkillSwapLogo } from "../ui/SkillSwapLogo"
 
 interface DashboardNavbarProps {
     isOpen: boolean
@@ -20,10 +21,7 @@ export const DashboardNavbar = ({ isOpen, setIsOpen }: DashboardNavbarProps) => 
                 </button>
 
                 {/* Logo */}
-                <h1 className="text-2xl max-md:text-xl max-sm:text-lg font-bold text-(--button-1)">
-                    SkillSwap
-                </h1>
-
+                <SkillSwapLogo className="w-40 max-xl:w-35 max-md:w-30" />
                 {/* Spacer */}
                 <div className="flex-1" />
 

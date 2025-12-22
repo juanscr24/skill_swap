@@ -79,6 +79,37 @@ export function useSessions(type: 'all' | 'upcoming' = 'all') {
     }
   }
 
+  const updateSessionStatus = async (sessionId: string, status: string) => {
+    try {
+      setError(null)
+
+      const response = await fetch('/api/sessions', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sessionId, status }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar sesión')
+      }
+
+      // Actualizar la lista local
+      setSessions(
+        sessions.map((s) =>
+          s.id === sessionId ? { ...s, status } : s
+        )
+      )
+
+      return { success: true }
+    } catch (err: any) {
+      console.error('Error updating session:', err)
+      setError(err.message || 'Error al actualizar sesión')
+      return { success: false, error: err.message }
+    }
+  }
+
   useEffect(() => {
     fetchSessions()
   }, [status, type])
@@ -88,6 +119,7 @@ export function useSessions(type: 'all' | 'upcoming' = 'all') {
     isLoading,
     error,
     cancelSession,
+    updateSessionStatus,
     refetch: fetchSessions,
   }
 }

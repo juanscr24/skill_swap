@@ -9,12 +9,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { loginSchema, type LoginInput } from "@/validations/auth"
 import { useAuth } from "@/hooks/useAuth"
 import { useState } from "react"
+import { SkillSwapLogo } from "@/components/ui/SkillSwapLogo"
 
 export const LoginView = () => {
     const t = useTranslations('auth')
     const { login, loginWithGoogle, loginWithGithub, isLoading, error: authError } = useAuth()
     const [submitError, setSubmitError] = useState<string | null>(null)
-    
+
     const {
         register,
         handleSubmit,
@@ -27,9 +28,9 @@ export const LoginView = () => {
     const onSubmit = async (data: LoginInput) => {
         try {
             setSubmitError(null)
-            
+
             const result = await login(data)
-            
+
             if (!result.success) {
                 setSubmitError(result.error || 'Error al iniciar sesión')
             }
@@ -41,13 +42,9 @@ export const LoginView = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-(--bg-1) px-4 max-sm:px-2">
             <div className="max-w-md w-full bg-(--bg-2) border border-(--border-1) rounded-lg p-8 max-md:p-6 max-sm:p-4">
-                <h1 className="text-3xl max-md:text-2xl max-sm:text-xl font-bold text-(--text-1) text-center mb-2 max-sm:mb-1">
-                    {t('login')}
-                </h1>
-                <p className="text-(--text-2) text-center mb-8 max-md:mb-6 max-sm:mb-4 max-sm:text-sm">
-                    SkillSwap
-                </p>
-
+                <div className="flex justify-center">
+                    <SkillSwapLogo className="w-50 max-xl:w-45 max-md:w-40 max-sm:w-35 mb-8 max-xl:mb-7 max-md:mb-6 max-sm:mb-5" />
+                </div>
                 {(submitError || authError) && (
                     <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-sm">
                         {submitError || authError}
@@ -85,9 +82,9 @@ export const LoginView = () => {
                         </Link>
                     </div>
 
-                    <Button 
+                    <Button
                         type="submit"
-                        primary 
+                        primary
                         className="w-full py-3 max-sm:py-2"
                         disabled={isLoading || isSubmitting}
                     >
@@ -108,9 +105,9 @@ export const LoginView = () => {
                     </div>
 
                     <div className="mt-6 max-sm:mt-4 grid grid-cols-2 gap-3 max-sm:gap-2">
-                        <Button 
+                        <Button
                             type="button"
-                            secondary 
+                            secondary
                             className="flex items-center justify-center gap-2 max-sm:gap-1 py-3 max-sm:py-2 max-sm:text-sm"
                             onClick={loginWithGoogle}
                             disabled={isLoading}
@@ -118,9 +115,9 @@ export const LoginView = () => {
                             <FcGoogle className="w-5 h-5 max-sm:w-4 max-sm:h-4" />
                             {t('google')}
                         </Button>
-                        <Button 
+                        <Button
                             type="button"
-                            secondary 
+                            secondary
                             className="flex items-center justify-center gap-2 max-sm:gap-1 py-3 max-sm:py-2 max-sm:text-sm"
                             onClick={loginWithGithub}
                             disabled={isLoading}

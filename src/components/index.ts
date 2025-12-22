@@ -16,6 +16,7 @@ export { Modal } from './ui/Modal'
 export { Tabs } from './ui/Tabs'
 export { SearchBar } from './ui/SearchBar'
 export { PasswordStrength } from './ui/PasswordStrength'
+export { SkillSelector } from './ui/SkillSelector'
 
 // Features
 export { LandingNavbar } from './features/LandingNavbar'
