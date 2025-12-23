@@ -264,10 +264,10 @@ export const EditProfileView = () => {
                             </div>
 
                             {/* O ingresar URL */}
-                            <div>
+                            <div className="text-(--text-2)">
                                 <Input
                                     type="text"
-                                    label="O ingresa una URL"
+                                    label={t('orEnterUrl')}
                                     id="imageUrl"
                                     value={imageUrl}
                                     onChange={(e) => setImageUrl(e.target.value)}
@@ -280,7 +280,7 @@ export const EditProfileView = () => {
 
                 {/* Basic Info */}
                 <Card>
-                    <div className="space-y-4 max-sm:space-y-3">
+                    <div className="space-y-4 max-sm:space-y-3 text-(--text-1)">
                         <Input
                             type="text"
                             label={t('name')}
@@ -316,14 +316,14 @@ export const EditProfileView = () => {
                             {t('skillsTeach')}
                         </h2>
                         <p className="text-sm text-(--text-2)">
-                            Selecciona las habilidades que puedes enseñar a otros
+                            {t('selectSkillsYouTeach')}
                         </p>
                     </div>
 
                     {/* Skill Selector */}
                     <SkillSelector
                         onAdd={handleAddSkill}
-                        placeholder="Buscar o agregar habilidad que enseñas..."
+                        placeholder={t('searchOrAddSkillTeach')}
                         recommendations={recommendedSkills}
                     />
 
@@ -331,7 +331,7 @@ export const EditProfileView = () => {
                     {skillToAddWithLevel && (
                         <div className="mt-4 p-4 bg-(--bg-1) border-2 border-(--button-1) rounded-lg">
                             <p className="text-sm font-medium text-(--text-1) mb-3">
-                                Selecciona tu nivel en: <span className="text-(--button-1)">{skillToAddWithLevel}</span>
+                                {t('selectYourLevelIn')}: <span className="text-(--button-1)">{skillToAddWithLevel}</span>
                             </p>
                             <div className="flex gap-2 flex-wrap">
                                 {levelOptions.filter(opt => opt.value).map((option) => (
@@ -412,14 +412,14 @@ export const EditProfileView = () => {
                             {t('skillsLearn')}
                         </h2>
                         <p className="text-sm text-(--text-2)">
-                            Selecciona las habilidades que quieres aprender de otros
+                            {t('selectSkillsYouLearn')}
                         </p>
                     </div>
 
                     {/* Skill Selector */}
                     <SkillSelector
                         onAdd={handleAddWantedSkill}
-                        placeholder="Buscar o agregar habilidad que quieres aprender..."
+                        placeholder={t('searchOrAddSkillLearn')}
                         recommendations={recommendedSkills}
                     />
 

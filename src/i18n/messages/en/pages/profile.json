@@ -22,5 +22,11 @@
     "beginner": "Beginner",
     "intermediate": "Intermediate",
     "advanced": "Advanced",
-    "description": "Description"
+    "description": "Description",
+    "orEnterUrl": "Or enter a URL",
+    "selectSkillsYouTeach": "Select the skills you can teach others",
+    "selectYourLevelIn": "Select your level in",
+    "searchOrAddSkillTeach": "Search or add skill you teach...",
+    "selectSkillsYouLearn": "Select the skills you want to learn from others",
+    "searchOrAddSkillLearn": "Search or add skill you want to learn..."
 }
