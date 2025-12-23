@@ -166,10 +166,10 @@ export const LandingNavbar = () => {
 
                             {/* Auth Buttons */}
                             <div className="flex flex-col gap-3">
-                                <Link href="/auth" className="w-full">
+                                <Link href="/login" className="w-full">
                                     <Button secondary children={t("login")} className="w-full" />
                                 </Link>
-                                <Link href="/auth" className="w-full">
+                                <Link href="/register" className="w-full">
                                     <Button primary children={t("register")} className="w-full" />
                                 </Link>
                             </div>

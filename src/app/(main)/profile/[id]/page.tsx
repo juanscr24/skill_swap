@@ -1,0 +1,12 @@
+import { UserProfileView } from '@/views/UserProfileView'
+
+interface ProfilePageProps {
+  params: Promise<{
+    id: string
+  }>
+}
+
+export default async function ProfilePage({ params }: ProfilePageProps) {
+  const { id } = await params
+  return <UserProfileView userId={id} />
+}

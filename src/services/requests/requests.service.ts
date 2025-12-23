@@ -23,7 +23,8 @@ export const requestsService = {
   async getReceivedRequests(userId: string): Promise<MatchRequest[]> {
     const requests = await prisma.matches.findMany({
       where: {
-        receiver_id: userId
+        receiver_id: userId,
+        status: 'pending' // Solo mostrar pendientes en recibidas
       },
       include: {
         users_matches_sender_idTousers: {
@@ -43,6 +44,48 @@ export const requestsService = {
       },
       orderBy: {
         created_at: 'desc'
+      }
+    })
+
+    return requests.map((r: any) => ({
+      id: r.id,
+      senderId: r.sender_id || '',
+      receiverId: r.receiver_id || '',
+      skill: r.skill,
+      status: r.status,
+      createdAt: r.created_at,
+      sender: r.users_matches_sender_idTousers,
+      receiver: r.users_matches_receiver_idTousers
+    }))
+  },
+
+  async getAcceptedRequests(userId: string): Promise<MatchRequest[]> {
+    const requests = await prisma.matches.findMany({
+      where: {
+        status: 'accepted',
+        OR: [
+          { sender_id: userId },
+          { receiver_id: userId }
+        ]
+      },
+      include: {
+        users_matches_sender_idTousers: {
+          select: {
+            id: true,
+            name: true,
+            image: true
+          }
+        },
+        users_matches_receiver_idTousers: {
+          select: {
+            id: true,
+            name: true,
+            image: true
+          }
+        }
+      },
+      orderBy: {
+        updated_at: 'desc'
       }
     })
 

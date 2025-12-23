@@ -24,7 +24,12 @@ export async function GET(request: NextRequest) {
     const city = searchParams.get('city') || undefined
     const role = searchParams.get('role') as 'MENTOR' | 'STUDENT' | 'USER' | undefined
 
-    const mentors = await getMentors({ skill, city, role })
+    const mentors = await getMentors({ 
+      skill, 
+      city, 
+      role,
+      userId: session.user.id // Filtrar solo matches aceptados
+    })
 
     // Excluir al usuario actual
     const filteredMentors = mentors.filter(

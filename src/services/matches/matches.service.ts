@@ -93,13 +93,12 @@ export const matchesService = {
   },
 
   async sendMatchRequest(senderId: string, receiverId: string, skill: string): Promise<any> {
-    // Verificar si ya existe una solicitud
+    // Verificar si ya existe una solicitud del sender al receiver
     const existingMatch = await prisma.matches.findFirst({
       where: {
-        OR: [
-          { sender_id: senderId, receiver_id: receiverId, skill },
-          { sender_id: receiverId, receiver_id: senderId, skill }
-        ]
+        sender_id: senderId,
+        receiver_id: receiverId,
+        skill
       }
     })
 
@@ -107,7 +106,56 @@ export const matchesService = {
       throw new Error('Ya existe una solicitud con este usuario para esta habilidad')
     }
 
-    // Crear nueva solicitud
+    // Verificar si existe una solicitud inversa (del receiver al sender)
+    const inverseMatch = await prisma.matches.findFirst({
+      where: {
+        sender_id: receiverId,
+        receiver_id: senderId,
+        skill
+      }
+    })
+
+    // Si existe solicitud inversa y está pendiente, aceptar ambas automáticamente
+    if (inverseMatch && inverseMatch.status === 'pending') {
+      // Actualizar la solicitud inversa a accepted
+      await prisma.matches.update({
+        where: { id: inverseMatch.id },
+        data: { 
+          status: 'accepted',
+          updated_at: new Date()
+        }
+      })
+
+      // Crear la nueva solicitud directamente como accepted
+      const match = await prisma.matches.create({
+        data: {
+          sender_id: senderId,
+          receiver_id: receiverId,
+          skill,
+          status: 'accepted'
+        },
+        include: {
+          users_matches_sender_idTousers: {
+            select: {
+              id: true,
+              name: true,
+              image: true
+            }
+          },
+          users_matches_receiver_idTousers: {
+            select: {
+              id: true,
+              name: true,
+              image: true
+            }
+          }
+        }
+      })
+
+      return match
+    }
+
+    // Si no existe solicitud inversa, crear solicitud normal como pending
     const match = await prisma.matches.create({
       data: {
         sender_id: senderId,
