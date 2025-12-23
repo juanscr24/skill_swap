@@ -9,11 +9,15 @@
     "reject": "Reject",
     "cancel": "Cancel",
     "noRequests": "You have no requests",
+    "noReceivedRequests": "You have no received requests",
+    "noAcceptedRequests": "You have no accepted requests",
     "skill": "Skill",
     "from": "From",
     "to": "To",
     "status": "Status",
     "actions": "Actions",
     "loading": "Loading...",
-    "sendMessage": "Send message"
+    "sendMessage": "Send message",
+    "errorAccepting": "Error accepting request",
+    "errorRejecting": "Error rejecting request"
 }

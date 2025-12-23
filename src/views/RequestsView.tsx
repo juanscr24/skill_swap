@@ -1,6 +1,7 @@
 'use client'
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { useRequests } from "@/hooks"
 import { Card } from "@/components/ui/Card"
 import { Avatar } from "@/components/ui/Avatar"
@@ -122,7 +123,7 @@ const ReceivedRequestsList = () => {
             {isLoading ? (
                 <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('loading')}</p>
             ) : requests.length === 0 ? (
-                <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('noRequests')}</p>
+                <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('noReceivedRequests')}</p>
             ) : (
                 requests.map((match) => (
                     <RequestCard key={match.id} match={match} />
@@ -132,24 +133,19 @@ const ReceivedRequestsList = () => {
     )
 }
 
-const SentRequestsList = () => {
+const AcceptedRequestsList = () => {
     const t = useTranslations('requests')
-    const { requests, isLoading, cancelRequest } = useRequests('sent')
+    const router = useRouter()
+    const { requests, isLoading } = useRequests('accepted')
 
     const RequestCard = ({ match }: { match: MatchRequest }) => {
-        const otherUser = match.receiver
+        // Determinar quién es el otro usuario
+        const { data: session } = useSession()
+        const isCurrentUserSender = match.senderId === session?.user?.id
+        const otherUser = isCurrentUserSender ? match.receiver : match.sender
         
-        const statusVariant = {
-            pending: 'warning',
-            accepted: 'success',
-            rejected: 'error'
-        } as const
-
-        const handleCancel = async () => {
-            const result = await cancelRequest(match.id)
-            if (!result.success) {
-                alert(t('errorCancelling'))
-            }
+        const handleSendMessage = () => {
+            router.push(`/chats`)
         }
 
         const createdAt = new Date(match.createdAt)
@@ -169,19 +165,18 @@ const SentRequestsList = () => {
                         </p>
                     </div>
 
-                    <Badge variant={statusVariant[match.status as keyof typeof statusVariant] || 'warning'}>
-                        {t(match.status || 'pending')}
+                    <Badge variant="success">
+                        {t('accepted')}
                     </Badge>
 
-                    {match.status === 'pending' && (
-                        <Button 
-                            secondary 
-                            onClick={handleCancel}
-                            className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs max-sm:w-full"
-                        >
-                            {t('cancel')}
-                        </Button>
-                    )}
+                    <Button 
+                        primary 
+                        onClick={handleSendMessage}
+                        className="flex items-center gap-2 max-sm:gap-1 px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs max-sm:w-full"
+                    >
+                        <FiMessageSquare className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
+                        {t('sendMessage')}
+                    </Button>
                 </div>
             </Card>
         )
@@ -192,7 +187,7 @@ const SentRequestsList = () => {
             {isLoading ? (
                 <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('loading')}</p>
             ) : requests.length === 0 ? (
-                <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('noRequests')}</p>
+                <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('noAcceptedRequests')}</p>
             ) : (
                 requests.map((match) => (
                     <RequestCard key={match.id} match={match} />
@@ -212,9 +207,9 @@ export const RequestsView = () => {
             content: <ReceivedRequestsList />
         },
         {
-            id: 'sent',
-            label: t('sent'),
-            content: <SentRequestsList />
+            id: 'accepted',
+            label: t('accepted'),
+            content: <AcceptedRequestsList />
         }
     ]
 

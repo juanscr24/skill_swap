@@ -22,7 +22,7 @@ interface MatchRequest {
   } | null
 }
 
-export function useRequests(type: 'received' | 'sent' = 'received') {
+export function useRequests(type: 'received' | 'sent' | 'accepted' = 'received') {
   const { data: session, status } = useSession()
   const [requests, setRequests] = useState<MatchRequest[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -38,7 +38,13 @@ export function useRequests(type: 'received' | 'sent' = 'received') {
       setIsLoading(true)
       setError(null)
 
-      const endpoint = type === 'received' ? '/api/matches/received' : '/api/matches/sent'
+      let endpoint = '/api/matches/received'
+      if (type === 'sent') {
+        endpoint = '/api/matches/sent'
+      } else if (type === 'accepted') {
+        endpoint = '/api/matches/accepted'
+      }
+      
       const response = await fetch(endpoint)
 
       if (!response.ok) {
