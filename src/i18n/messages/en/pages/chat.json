@@ -1,0 +1,16 @@
+{
+    "chats": "Messages",
+    "noChats": "No conversations",
+    "typeMessage": "Type a message...",
+    "send": "Send",
+    "online": "Online",
+    "offline": "Offline",
+    "typing": "Typing...",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "selectChat": "Select a conversation to start",
+    "loading": "Loading...",
+    "noConversations": "No conversations",
+    "selectConversation": "Select a conversation to start",
+    "noMessages": "No messages yet"
+}

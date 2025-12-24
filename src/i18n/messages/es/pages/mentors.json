@@ -1,0 +1,16 @@
+{
+    "mentors": "Catálogo de Mentores",
+    "search": "Buscar mentores...",
+    "filters": "Filtros",
+    "allSkills": "Todas las habilidades",
+    "allCities": "Todas las ciudades",
+    "allRatings": "Todas las calificaciones",
+    "availability": "Disponibilidad",
+    "available": "Disponible",
+    "notAvailable": "No disponible",
+    "clearFilters": "Limpiar filtros",
+    "results": "resultados",
+    "noResults": "No se encontraron mentores",
+    "viewProfile": "Ver perfil",
+    "rating": "Calificación"
+}

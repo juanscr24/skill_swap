@@ -1,0 +1,182 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model account_sessions {
+  id            String    @id
+  session_token String?   @unique
+  user_id       String?   @db.Uuid
+  expires       DateTime?
+  users         users?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model accounts {
+  id                  String  @id
+  user_id             String? @db.Uuid
+  type                String?
+  provider            String?
+  provider_account_id String?
+  refresh_token       String?
+  access_token        String?
+  expires_at          Int?
+  token_type          String?
+  scope               String?
+  id_token            String?
+  session_state       String?
+  users               users?  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([provider, provider_account_id])
+}
+
+model matches {
+  id                               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sender_id                        String?  @db.Uuid
+  receiver_id                      String?  @db.Uuid
+  skill                            String
+  status                           String?  @default("pending")
+  created_at                       DateTime @default(now())
+  updated_at                       DateTime @default(now())
+  users_matches_receiver_idTousers users?   @relation("matches_receiver_idTousers", fields: [receiver_id], references: [id], onDelete: Cascade)
+  users_matches_sender_idTousers   users?   @relation("matches_sender_idTousers", fields: [sender_id], references: [id], onDelete: Cascade)
+
+  @@index([receiver_id], map: "idx_matches_receiver")
+  @@index([sender_id], map: "idx_matches_sender")
+}
+
+model messages {
+  id                                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sender_id                         String?  @db.Uuid
+  receiver_id                       String?  @db.Uuid
+  content                           String
+  read                              Boolean  @default(false)
+  created_at                        DateTime @default(now())
+  users_messages_receiver_idTousers users?   @relation("messages_receiver_idTousers", fields: [receiver_id], references: [id], onDelete: Cascade)
+  users_messages_sender_idTousers   users?   @relation("messages_sender_idTousers", fields: [sender_id], references: [id], onDelete: Cascade)
+
+  @@index([created_at], map: "idx_messages_created")
+  @@index([receiver_id], map: "idx_messages_receiver")
+  @@index([sender_id], map: "idx_messages_sender")
+}
+
+model notifications {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String?  @db.Uuid
+  type       String
+  data       Json?
+  read       Boolean  @default(false)
+  created_at DateTime @default(now())
+  users      users?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, read], map: "idx_notifications_user_read")
+}
+
+model reviews {
+  id                             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  author_id                      String?  @db.Uuid
+  target_id                      String?  @db.Uuid
+  rating                         Int
+  comment                        String?
+  created_at                     DateTime @default(now())
+  users_reviews_author_idTousers users?   @relation("reviews_author_idTousers", fields: [author_id], references: [id], onDelete: Cascade)
+  users_reviews_target_idTousers users?   @relation("reviews_target_idTousers", fields: [target_id], references: [id], onDelete: Cascade)
+
+  @@index([target_id], map: "idx_reviews_target")
+}
+
+model sessions {
+  id                             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  host_id                        String?  @db.Uuid
+  guest_id                       String?  @db.Uuid
+  title                          String
+  description                    String?
+  start_at                       DateTime
+  end_at                         DateTime
+  status                         String?  @default("pending")  // pending, scheduled, completed, cancelled, rejected
+  created_at                     DateTime @default(now())
+  users_sessions_guest_idTousers users?   @relation("sessions_guest_idTousers", fields: [guest_id], references: [id])
+  users_sessions_host_idTousers  users?   @relation("sessions_host_idTousers", fields: [host_id], references: [id], onDelete: Cascade)
+
+  @@index([host_id, start_at], map: "idx_sessions_host_start")
+}
+
+model skills {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  owner_id    String?  @db.Uuid
+  name        String
+  description String?
+  level       String?
+  created_at  DateTime @default(now())
+  users       users?   @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+
+  @@index([name], map: "idx_skills_name")
+  @@index([owner_id], map: "idx_skills_owner")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model spatial_ref_sys {
+  srid      Int     @id
+  auth_name String? @db.VarChar(256)
+  auth_srid Int?
+  srtext    String? @db.VarChar(2048)
+  proj4text String? @db.VarChar(2048)
+}
+
+model users {
+  id                                   String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                                 String?
+  email                                String             @unique
+  email_verified                       DateTime?
+  image                                String?
+  image_public_id                      String?
+  bio                                  String?
+  city                                 String?
+  role                                 role_enum          @default(USER)
+  created_at                           DateTime           @default(now())
+  updated_at                           DateTime           @default(now())
+  password                             String?
+  account_sessions                     account_sessions[]
+  accounts                             accounts[]
+  matches_matches_receiver_idTousers   matches[]          @relation("matches_receiver_idTousers")
+  matches_matches_sender_idTousers     matches[]          @relation("matches_sender_idTousers")
+  messages_messages_receiver_idTousers messages[]         @relation("messages_receiver_idTousers")
+  messages_messages_sender_idTousers   messages[]         @relation("messages_sender_idTousers")
+  notifications                        notifications[]
+  reviews_reviews_author_idTousers     reviews[]          @relation("reviews_author_idTousers")
+  reviews_reviews_target_idTousers     reviews[]          @relation("reviews_target_idTousers")
+  sessions_sessions_guest_idTousers    sessions[]         @relation("sessions_guest_idTousers")
+  sessions_sessions_host_idTousers     sessions[]         @relation("sessions_host_idTousers")
+  skills                               skills[]
+  wanted_skills                        wanted_skills[]
+
+  @@index([email], map: "idx_users_email")
+}
+
+model verification_tokens {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model wanted_skills {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String?  @db.Uuid
+  name       String
+  created_at DateTime @default(now())
+  users      users?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([name], map: "idx_wanted_name")
+}
+
+enum role_enum {
+  USER
+  MENTOR
+  STUDENT
+  ADMIN
+}

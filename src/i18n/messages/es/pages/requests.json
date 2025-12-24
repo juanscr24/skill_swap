@@ -1,0 +1,23 @@
+{
+    "requests": "Solicitudes de Intercambio",
+    "received": "Recibidas",
+    "sent": "Enviadas",
+    "pending": "Pendiente",
+    "accepted": "Aceptadas",
+    "rejected": "Rechazada",
+    "accept": "Aceptar",
+    "reject": "Rechazar",
+    "cancel": "Cancelar",
+    "noRequests": "No tienes solicitudes",
+    "noReceivedRequests": "No tienes solicitudes recibidas",
+    "noAcceptedRequests": "No tienes solicitudes aceptadas",
+    "skill": "Habilidad",
+    "from": "De",
+    "to": "Para",
+    "status": "Estado",
+    "actions": "Acciones",
+    "loading": "Cargando...",
+    "sendMessage": "Enviar mensaje",
+    "errorAccepting": "Error al aceptar la solicitud",
+    "errorRejecting": "Error al rechazar la solicitud"
+}

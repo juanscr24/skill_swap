@@ -1,0 +1,17 @@
+{
+    "matching": "Matching",
+    "matches": "Matches",
+    "swipeLeft": "Swipe left to reject",
+    "swipeRight": "Swipe right to accept",
+    "noMoreUsers": "No more users available",
+    "viewMatches": "View matches",
+    "startMatching": "Start matching",
+    "noMatches": "You don't have matches yet",
+    "matched": "Match!",
+    "sendMessage": "Send message",
+    "teaches": "Teaches",
+    "wantsToLearn": "Wants to learn",
+    "loading": "Loading...",
+    "noBio": "No bio",
+    "matchRequestSent": "Match request sent!"
+}

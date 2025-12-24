@@ -1,0 +1,21 @@
+{
+    "dashboard": "Panel de Control",
+    "statistics": "Estadísticas",
+    "classesTaken": "Clases Tomadas",
+    "classesGiven": "Clases Impartidas",
+    "hoursTeaching": "Horas Enseñando",
+    "progressLevel": "Nivel de Progreso",
+    "upcomingSessions": "Próximas Sesiones",
+    "noUpcomingSessions": "No tienes sesiones próximas",
+    "viewAll": "Ver todas",
+    "hoursPerMonth": "Horas por Mes",
+    "skillsDistribution": "Distribución de Habilidades",
+    "profile": "Perfil",
+    "mentors": "Mentores",
+    "matching": "Matching",
+    "requests": "Solicitudes",
+    "chats": "Mensajes",
+    "sessions": "Sesiones",
+    "settings": "Configuración",
+    "logout": "Cerrar sesión"
+}

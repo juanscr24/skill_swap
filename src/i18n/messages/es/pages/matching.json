@@ -1,0 +1,17 @@
+{
+    "matching": "Matching",
+    "matches": "Coincidencias",
+    "swipeLeft": "Desliza izquierda para rechazar",
+    "swipeRight": "Desliza derecha para aceptar",
+    "noMoreUsers": "No hay más usuarios disponibles",
+    "viewMatches": "Ver coincidencias",
+    "startMatching": "Comenzar matching",
+    "noMatches": "Aún no tienes coincidencias",
+    "matched": "¡Match!",
+    "sendMessage": "Enviar mensaje",
+    "teaches": "Enseña",
+    "wantsToLearn": "Quiere aprender",
+    "loading": "Cargando...",
+    "noBio": "Sin biografía",
+    "matchRequestSent": "¡Solicitud de match enviada!"
+}

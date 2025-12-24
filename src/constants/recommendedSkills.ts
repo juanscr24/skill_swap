@@ -1,0 +1,112 @@
+export const recommendedSkills = [
+    // Desarrollo Web
+    'JavaScript',
+    'TypeScript',
+    'React',
+    'Next.js',
+    'Vue.js',
+    'Angular',
+    'Node.js',
+    'HTML',
+    'CSS',
+    'Tailwind CSS',
+    'Bootstrap',
+    'SASS/SCSS',
+    
+    // Backend
+    'Python',
+    'Django',
+    'Flask',
+    'FastAPI',
+    'Java',
+    'Spring Boot',
+    'C#',
+    '.NET',
+    'PHP',
+    'Laravel',
+    'Ruby',
+    'Ruby on Rails',
+    
+    // Bases de Datos
+    'SQL',
+    'PostgreSQL',
+    'MySQL',
+    'MongoDB',
+    'Redis',
+    'Firebase',
+    'Prisma',
+    'TypeORM',
+    
+    // Mobile
+    'React Native',
+    'Flutter',
+    'Swift',
+    'Kotlin',
+    'Ionic',
+    
+    // DevOps & Cloud
+    'Docker',
+    'Kubernetes',
+    'AWS',
+    'Azure',
+    'Google Cloud',
+    'CI/CD',
+    'Jenkins',
+    'Git',
+    'GitHub Actions',
+    
+    // Data Science & AI
+    'Machine Learning',
+    'Deep Learning',
+    'TensorFlow',
+    'PyTorch',
+    'Data Analysis',
+    'Pandas',
+    'NumPy',
+    'Scikit-learn',
+    
+    // Diseño
+    'UI/UX Design',
+    'Figma',
+    'Adobe XD',
+    'Photoshop',
+    'Illustrator',
+    'Sketch',
+    'InVision',
+    'Prototyping',
+    
+    // Marketing & Business
+    'Marketing Digital',
+    'SEO',
+    'SEM',
+    'Google Analytics',
+    'Content Marketing',
+    'Social Media Marketing',
+    'Email Marketing',
+    'Copywriting',
+    
+    // Idiomas
+    'Inglés',
+    'Español',
+    'Francés',
+    'Alemán',
+    'Italiano',
+    'Portugués',
+    'Chino',
+    'Japonés',
+    
+    // Otros
+    'Testing',
+    'Jest',
+    'Cypress',
+    'Selenium',
+    'Agile',
+    'Scrum',
+    'Product Management',
+    'Project Management',
+    'Blockchain',
+    'GraphQL',
+    'REST APIs',
+    'Microservices',
+    'WebSockets',
+]
