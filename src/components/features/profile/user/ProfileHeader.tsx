@@ -26,7 +26,7 @@ export const ProfileHeader = ({
 
     return (
         <div className="bg-(--bg-2) rounded-2xl p-6 border border-(--border-1) text-center flex flex-col items-center">
-            <div className="relative w-full flex justify-end mb-[-20px] z-10">
+            <div className="relative w-full flex justify-end -mb-5 z-10">
                 <button className="text-(--text-2) hover:text-(--text-1) transition-colors">
                     <FiShare2 size={20} />
                 </button>
