@@ -37,11 +37,22 @@ interface UserProfile {
   role: string
   created_at: Date
   updated_at: Date
+  title: string | null
+  social_links: {
+    linkedin?: string
+    github?: string
+    website?: string
+  } | null
+  availability: {
+    [key: string]: string // e.g., "mon": "10am - 5pm" or "busy"
+  } | null
   skills: Skill[]
   wanted_skills: WantedSkill[]
   reviews: Review[]
   averageRating: number
   totalReviews: number
+  totalSessions: number
+  totalHours: number
 }
 
 export function useProfile() {
@@ -82,6 +93,9 @@ export function useProfile() {
     city?: string
     image?: string
     image_public_id?: string
+    title?: string
+    social_links?: any
+    availability?: any
   }) => {
     try {
       setError(null)
@@ -99,7 +113,7 @@ export function useProfile() {
       }
 
       const updatedData = await response.json()
-      
+
       // Actualizar el perfil local
       if (profile) {
         setProfile({ ...profile, ...updatedData })
@@ -113,6 +127,68 @@ export function useProfile() {
     }
   }
 
+  const addSkill = async (name: string, level: string = 'intermediate') => {
+    try {
+      const response = await fetch('/api/skills', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, level })
+      })
+      if (!response.ok) throw new Error('Failed to add skill')
+      const newSkill = await response.json()
+      if (profile) {
+        setProfile({ ...profile, skills: [...profile.skills, newSkill] })
+      }
+      return { success: true }
+    } catch (err: any) {
+      return { success: false, error: err.message }
+    }
+  }
+
+  const removeSkill = async (id: string) => {
+    try {
+      const response = await fetch(`/api/skills?id=${id}`, { method: 'DELETE' })
+      if (!response.ok) throw new Error('Failed to remove skill')
+      if (profile) {
+        setProfile({ ...profile, skills: profile.skills.filter(s => s.id !== id) })
+      }
+      return { success: true }
+    } catch (err: any) {
+      return { success: false, error: err.message }
+    }
+  }
+
+  const addWantedSkill = async (name: string) => {
+    try {
+      const response = await fetch('/api/skills/wanted', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      })
+      if (!response.ok) throw new Error('Failed to add wanted skill')
+      const newSkill = await response.json()
+      if (profile) {
+        setProfile({ ...profile, wanted_skills: [...profile.wanted_skills, newSkill] })
+      }
+      return { success: true }
+    } catch (err: any) {
+      return { success: false, error: err.message }
+    }
+  }
+
+  const removeWantedSkill = async (id: string) => {
+    try {
+      const response = await fetch(`/api/skills/wanted?id=${id}`, { method: 'DELETE' })
+      if (!response.ok) throw new Error('Failed to remove wanted skill')
+      if (profile) {
+        setProfile({ ...profile, wanted_skills: profile.wanted_skills.filter(s => s.id !== id) })
+      }
+      return { success: true }
+    } catch (err: any) {
+      return { success: false, error: err.message }
+    }
+  }
+
   useEffect(() => {
     fetchProfile()
   }, [status])
@@ -122,6 +198,10 @@ export function useProfile() {
     isLoading,
     error,
     updateProfile,
+    addSkill,
+    removeSkill,
+    addWantedSkill,
+    removeWantedSkill,
     refetch: fetchProfile,
   }
 }

@@ -28,5 +28,26 @@
     "selectYourLevelIn": "Selecciona tu nivel en",
     "searchOrAddSkillTeach": "Buscar o agregar habilidad que enseñas...",
     "selectSkillsYouLearn": "Selecciona las habilidades que quieres aprender de otros",
-    "searchOrAddSkillLearn": "Buscar o agregar habilidad que quieres aprender..."
+    "searchOrAddSkillLearn": "Buscar o agregar habilidad que quieres aprender...",
+    "socialLinks": "Redes Sociales",
+    "hours": "Horas",
+    "sessions": "Sesiones",
+    "skillsExpertise": "Habilidades y Experiencia",
+    "addNew": "AGREGAR",
+    "typeSkill": "Escribe una habilidad...",
+    "noSkillsTeach": "No hay habilidades agregadas aún",
+    "noSkillsLearn": "No hay habilidades agregadas aún",
+    "reviewsBreakdown": "Desglose de Reseñas",
+    "basedOnReviews": "Basado en {count} reseñas",
+    "weeklyAvailability": "Disponibilidad Semanal",
+    "acceptingRequests": "ACEPTANDO SOLICITUDES",
+    "aboutMe": "Sobre Mí",
+    "days": {
+        "mon": "LUN",
+        "tue": "MAR",
+        "wed": "MIE",
+        "thu": "JUE",
+        "fri": "VIE"
+    },
+    "addSocialLinks": "Agregar Redes Sociales"
 }
