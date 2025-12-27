@@ -49,5 +49,24 @@
         "thu": "JUE",
         "fri": "VIE"
     },
-    "addSocialLinks": "Agregar Redes Sociales"
+    "addSocialLinks": "Agregar Redes Sociales",
+    "bookSession": "Reservar Sesión",
+    "message": "Mensaje",
+    "skills": "Habilidades",
+    "whatITeach": "LO QUE ENSEÑO",
+    "whatILearn": "LO QUE APRENDO",
+    "recentReviews": "Reseñas recientes",
+    "viewAll": "Ver todas",
+    "writeReview": "Escribir una reseña",
+    "deleteReview": "Eliminar reseña",
+    "nextAvailability": "Próxima Disponibilidad",
+    "viewFullCalendar": "Ver calendario completo",
+    "similarTo": "Similares a",
+    "deleteReviewConfirm": "¿Estás seguro de que quieres eliminar tu reseña?",
+    "mustDeleteToAdd": "Debes eliminar tu reseña actual para agregar una nueva",
+    "yourRating": "Tu Calificación",
+    "yourComment": "Tu Comentario",
+    "submit": "Enviar",
+    "ratingRequired": "La calificación es obligatoria",
+    "loading": "Cargando..."
 }

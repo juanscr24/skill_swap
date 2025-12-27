@@ -2,12 +2,12 @@
 import { useTranslations } from "next-intl"
 import { useProfile } from "@/hooks/useProfile"
 import { FiLoader, FiClock, FiCheckCircle } from "react-icons/fi"
-import { ProfileHeader } from "@/components/features/profile/ProfileHeader"
-import { SocialLinks } from "@/components/features/profile/SocialLinks"
-import { StatsCard } from "@/components/features/profile/StatsCard"
-import { SkillsSection } from "@/components/features/profile/SkillsSection"
-import { ReviewsChart } from "@/components/features/profile/ReviewsChart"
-import { AvailabilitySchedule } from "@/components/features/profile/AvailabilitySchedule"
+import { ProfileHeader } from "@/components/features/profile/user/ProfileHeader"
+import { SocialLinks } from "@/components/features/profile/user/SocialLinks"
+import { StatsCard } from "@/components/features/profile/user/StatsCard"
+import { SkillsSection } from "@/components/features/profile/user/SkillsSection"
+import { ReviewsChart } from "@/components/features/profile/user/ReviewsChart"
+import { AvailabilitySchedule } from "@/components/features/profile/user/AvailabilitySchedule"
 import { Card } from "@/components/ui/Card"
 import Link from "next/link"
 import { Pencil } from "lucide-react"
@@ -82,7 +82,7 @@ export const ProfileView = () => {
                         <div className="flex justify-between items-start mb-4">
                             <h2 className="text-xl font-bold text-(--text-1)">{t('aboutMe')}</h2>
                             <Link href="/profile/edit" className="text-[#3B82F6] hover:underline">
-                                <Pencil className="h-4 w-4"/>
+                                <Pencil className="h-4 w-4" />
                             </Link>
                         </div>
                         <p className="text-(--text-2) leading-relaxed whitespace-pre-line">
