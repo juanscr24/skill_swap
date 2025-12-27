@@ -1,23 +1,26 @@
 'use client'
 import { useTranslations } from "next-intl"
 import { useProfile } from "@/hooks/useProfile"
-import { Avatar } from "@/components/ui/Avatar"
+import { FiLoader, FiClock, FiCheckCircle } from "react-icons/fi"
+import { ProfileHeader } from "@/components/features/profile/ProfileHeader"
+import { SocialLinks } from "@/components/features/profile/SocialLinks"
+import { StatsCard } from "@/components/features/profile/StatsCard"
+import { SkillsSection } from "@/components/features/profile/SkillsSection"
+import { ReviewsChart } from "@/components/features/profile/ReviewsChart"
+import { AvailabilitySchedule } from "@/components/features/profile/AvailabilitySchedule"
 import { Card } from "@/components/ui/Card"
-import { Button } from "@/components"
-import { Badge } from "@/components/ui/Badge"
-import { Rating } from "@/components/ui/Rating"
 import Link from "next/link"
-import { FiMapPin, FiEdit, FiLoader } from "react-icons/fi"
+import { Pencil } from "lucide-react"
 
 export const ProfileView = () => {
     const t = useTranslations('profile')
-    const { profile, isLoading, error } = useProfile()
+    const { profile, isLoading, error, updateProfile, addSkill, removeSkill, addWantedSkill, removeWantedSkill } = useProfile()
 
     // Loading state
     if (isLoading) {
         return (
-            <div className="p-8 max-md:p-6 max-sm:p-4 max-w-5xl mx-auto">
-                <div className="flex items-center justify-center min-h-[400px]">
+            <div className="p-8 max-md:p-6 max-sm:p-4 max-w-7xl mx-auto">
+                <div className="flex items-center justify-center min-h-100">
                     <FiLoader className="w-8 h-8 animate-spin text-(--button-1)" />
                 </div>
             </div>
@@ -27,7 +30,7 @@ export const ProfileView = () => {
     // Error state
     if (error || !profile) {
         return (
-            <div className="p-8 max-md:p-6 max-sm:p-4 max-w-5xl mx-auto">
+            <div className="p-8 max-md:p-6 max-sm:p-4 max-w-7xl mx-auto">
                 <Card className="p-6 text-center">
                     <p className="text-red-500">{error || 'Error al cargar el perfil'}</p>
                 </Card>
@@ -36,85 +39,75 @@ export const ProfileView = () => {
     }
 
     return (
-        <div className="p-8 max-md:p-6 max-sm:p-4 max-w-5xl mx-auto">
-            {/* Header */}
-            <Card className="mb-6 max-sm:mb-4">
-                <div className="flex flex-col md:flex-row gap-6 max-md:gap-4">
-                    <Avatar src={profile.image || ''} alt={profile.name || 'User'} size="xl" />
-                    
-                    <div className="flex-1">
-                        <div className="flex flex-col sm:flex-row items-start justify-between mb-2 gap-3">
-                            <div>
-                                <h1 className="text-3xl max-md:text-2xl max-sm:text-xl font-bold text-(--text-1)">
-                                    {profile.name || 'Sin nombre'}
-                                </h1>
-                                <div className="flex items-center gap-2 text-(--text-2) mt-1">
-                                    <FiMapPin className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
-                                    <span className="max-sm:text-sm">{profile.city || 'Sin ubicación'}</span>
-                                </div>
-                            </div>
-                            <Link href="/profile/edit">
-                                <Button secondary className="flex items-center gap-2 max-sm:text-sm">
-                                    <FiEdit className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
-                                    {t('editProfile')}
-                                </Button>
-                            </Link>
-                        </div>
-                        
-                        <div className="flex items-center gap-4 max-sm:gap-3 my-4 max-sm:my-3 flex-wrap">
-                            <div className="flex items-center gap-2 max-sm:gap-1">
-                                <Rating value={profile.averageRating} readonly size="sm" />
-                                <span className="font-semibold text-(--text-1) max-sm:text-sm">
-                                    {profile.averageRating.toFixed(1)}
-                                </span>
-                                <span className="text-(--text-2) text-sm max-sm:text-xs">
-                                    ({profile.totalReviews} {t('reviews')})
-                                </span>
-                            </div>
-                        </div>
-                        
-                        <p className="text-(--text-2) max-sm:text-sm">
-                            {profile.bio || 'Sin descripción'}
-                        </p>
+        <div className="px-30 max-2xl:px-14 max-lg:px-10 max-md:px-6 max-sm:px-4 py-8 max-md:py-6 max-sm:py-4 mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                {/* Left Column */}
+                <div className="lg:col-span-4 space-y-6">
+                    <ProfileHeader
+                        name={profile.name || ''}
+                        title={profile.title}
+                        city={profile.city}
+                        image={profile.image}
+                        rating={profile.averageRating}
+                        totalReviews={profile.totalReviews}
+                    />
+
+                    <SocialLinks
+                        links={profile.social_links}
+                        onUpdate={updateProfile}
+                    />
+
+                    <div className="flex gap-4">
+                        <StatsCard
+                            icon={FiClock}
+                            value={profile.totalHours || 0}
+                            label={t('hours')}
+                            color="text-[#3B82F6]"
+                            bgColor="bg-[#3B82F6]/10"
+                        />
+                        <StatsCard
+                            icon={FiCheckCircle}
+                            value={profile.totalSessions || 0} // Using totalSessions instead of sessions count if relevant
+                            label={t('sessions')}
+                            color="text-[#10B981]"
+                            bgColor="bg-[#10B981]/10"
+                        />
                     </div>
                 </div>
-            </Card>
 
-            {/* Skills I Teach */}
-            <Card className="mb-6 max-sm:mb-4">
-                <h2 className="text-2xl max-md:text-xl max-sm:text-lg font-bold text-(--text-1) mb-4 max-sm:mb-3">
-                    {t('skillsTeach')}
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                    {profile.skills.length > 0 ? (
-                        profile.skills.map((skill) => (
-                            <Badge key={skill.id} variant="info">
-                                {skill.name} {skill.level ? `- ${skill.level}` : ''}
-                            </Badge>
-                        ))
-                    ) : (
-                        <p className="text-(--text-2) text-sm">No tienes skills agregadas</p>
-                    )}
-                </div>
-            </Card>
+                {/* Right Column */}
+                <div className="lg:col-span-8 space-y-6">
+                    {/* About Me */}
+                    <div className="bg-(--bg-2) rounded-2xl p-6 border border-(--border-1)">
+                        <div className="flex justify-between items-start mb-4">
+                            <h2 className="text-xl font-bold text-(--text-1)">{t('aboutMe')}</h2>
+                            <Link href="/profile/edit" className="text-[#3B82F6] hover:underline">
+                                <Pencil className="h-4 w-4"/>
+                            </Link>
+                        </div>
+                        <p className="text-(--text-2) leading-relaxed whitespace-pre-line">
+                            {profile.bio || 'No bio provided yet.'}
+                        </p>
+                    </div>
 
-            {/* Skills I Want to Learn */}
-            <Card>
-                <h2 className="text-2xl max-md:text-xl max-sm:text-lg font-bold text-(--text-1) mb-4 max-sm:mb-3">
-                    {t('skillsLearn')}
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                    {profile.wanted_skills.length > 0 ? (
-                        profile.wanted_skills.map((skill) => (
-                            <Badge key={skill.id} variant="warning">
-                                {skill.name}
-                            </Badge>
-                        ))
-                    ) : (
-                        <p className="text-(--text-2) text-sm">No tienes skills que quieras aprender</p>
-                    )}
+                    <SkillsSection
+                        skillsTeach={profile.skills}
+                        skillsLearn={profile.wanted_skills}
+                        onAddSkill={addSkill}
+                        onRemoveSkill={removeSkill}
+                        onAddWantedSkill={addWantedSkill}
+                        onRemoveWantedSkill={removeWantedSkill}
+                    />
+
+                    <ReviewsChart
+                        reviews={profile.reviews}
+                        averageRating={profile.averageRating}
+                        totalReviews={profile.totalReviews}
+                    />
+
+                    <AvailabilitySchedule availability={profile.availability} />
                 </div>
-            </Card>
+            </div>
         </div>
     )
 }

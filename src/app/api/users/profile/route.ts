@@ -46,7 +46,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { name, bio, city, image, image_public_id } = body
+    const { name, bio, city, image, image_public_id, title, social_links, availability } = body
 
     const updatedProfile = await updateUserProfile(session.user.id, {
       name,
@@ -54,6 +54,9 @@ export async function PATCH(request: NextRequest) {
       city,
       image,
       image_public_id,
+      title,
+      social_links,
+      availability,
     })
 
     return NextResponse.json(updatedProfile)
