@@ -9,9 +9,15 @@
     "noMatches": "Aún no tienes coincidencias",
     "matched": "¡Match!",
     "sendMessage": "Enviar mensaje",
-    "teaches": "Enseña",
-    "wantsToLearn": "Quiere aprender",
+    "teaches": "Lo Que Enseño",
+    "wantsToLearn": "Lo Que Quiero Aprender",
     "loading": "Cargando...",
     "noBio": "Sin biografía",
-    "matchRequestSent": "¡Solicitud de match enviada!"
+    "matchRequestSent": "¡Solicitud de match enviada!",
+    "noTitle": "Profesional",
+    "yearsExp": "AÑOS EXP",
+    "about": "Sobre Mí",
+    "rating": "Reseñas",
+    "swipeInstructions": "Desliza izquierda para pasar, derecha para conectar",
+    "unknown": "No definida"
 }

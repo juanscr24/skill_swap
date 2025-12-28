@@ -9,9 +9,15 @@
     "noMatches": "You don't have matches yet",
     "matched": "Match!",
     "sendMessage": "Send message",
-    "teaches": "Teaches",
-    "wantsToLearn": "Wants to learn",
+    "teaches": "What I Teach",
+    "wantsToLearn": "What I Want to Learn",
     "loading": "Loading...",
     "noBio": "No bio",
-    "matchRequestSent": "Match request sent!"
+    "matchRequestSent": "Match request sent!",
+    "noTitle": "Professional",
+    "yearsExp": "YEARS EXP",
+    "about": "About Me",
+    "rating": "Reviews",
+    "swipeInstructions": "Swipe left to pass, right to connect",
+    "unknown": "Not set"
 }
