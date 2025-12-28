@@ -45,7 +45,7 @@ export const ProfileHeader = ({
                     <span>{city}</span>
                 </div>
             )}
-            
+
             <div className="flex items-center gap-2 mb-6 bg-(--bg-1) px-4 py-2 rounded-full">
                 <span className="font-bold text-(--text-1)">{rating.toFixed(1)}</span>
 
@@ -53,7 +53,7 @@ export const ProfileHeader = ({
                     {[1, 2, 3, 4, 5].map((star) => (
                         <Star
                             key={star}
-                            className={`w-4 h-4 ${star <= Math.round(rating) ? 'text-[#3B82F6]' : 'text-gray-600'
+                            className={`w-4 h-4 ${star <= Math.round(rating) ? 'text-yellow-500' : 'text-gray-500'
                                 }`}
                             fill={star <= Math.round(rating) ? 'currentColor' : 'none'}
                             strokeWidth={star <= Math.round(rating) ? 0 : 2}
@@ -65,7 +65,7 @@ export const ProfileHeader = ({
 
 
             <Link href="/profile/edit" className="w-full">
-                <Button className="w-full flex items-center justify-center gap-2 bg-[#3B82F6] hover:bg-[#2563EB] text-white border-none py-3">
+                <Button primary className="w-full flex items-center justify-center gap-2 py-2.5">
                     <FiEdit />
                     {t('editProfile')}
                 </Button>

@@ -118,7 +118,7 @@ export const MentorReviewsSection = ({
                         className="w-full bg-(--bg-1) hover:bg-(--border-1) text-(--text-1) border border-(--border-1) py-3 font-semibold flex items-center justify-center gap-2"
                     >
                         <Edit3 size={18} />
-                        ✏️ Escribir una reseña
+                        Escribir una reseña
                     </Button>
                 </div>
             )}

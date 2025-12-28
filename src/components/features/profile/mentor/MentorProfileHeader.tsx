@@ -48,7 +48,7 @@ export const MentorProfileHeader = ({
                     <div className="flex-1">
                         {/* Name and Title */}
                         <h1 className="text-xl md:text-2xl font-bold text-(--text-1) mb-1 text-center md:text-left">{name}</h1>
-                        <p className="text-(--button-1) mb-3 font-medium text-center md:text-left">{title || 'Mentor'}</p>
+                        <p className="text-(--text-2) text-lg mb-3 italic text-center md:text-left">{title || 'Mentor'}</p>
 
 
                         <div className="flex flex-wrap gap-4 justify-center md:justify-start">
@@ -66,7 +66,7 @@ export const MentorProfileHeader = ({
                                 <span className="font-bold text-(--text-1)">{rating.toFixed(1)}</span>
 
                                 <Star
-                                    className="w-5 h-5 text-(--button-1)"
+                                    className="w-5 h-5 text-yellow-500"
                                     fill="currentColor"
                                     strokeWidth={0}
                                 />
