@@ -36,6 +36,13 @@ export async function getUserProfile(userId: string) {
           name: true,
         },
       },
+      languages: {
+        select: {
+          id: true,
+          name: true,
+          level: true,
+        },
+      },
       reviews_reviews_target_idTousers: {
         select: {
           id: true,

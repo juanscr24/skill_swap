@@ -155,6 +155,7 @@ model users {
   sessions_sessions_host_idTousers     sessions[]         @relation("sessions_host_idTousers")
   skills                               skills[]
   wanted_skills                        wanted_skills[]
+  languages                            languages[]
 
   @@index([email], map: "idx_users_email")
 }
@@ -175,6 +176,17 @@ model wanted_skills {
   users      users?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([name], map: "idx_wanted_name")
+}
+
+model languages {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String?  @db.Uuid
+  name       String
+  level      String?
+  created_at DateTime @default(now())
+  users      users?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id], map: "idx_languages_user")
 }
 
 enum role_enum {

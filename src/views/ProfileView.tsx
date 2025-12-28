@@ -8,6 +8,7 @@ import { StatsCard } from "@/components/features/profile/user/StatsCard"
 import { SkillsSection } from "@/components/features/profile/user/SkillsSection"
 import { ReviewsChart } from "@/components/features/profile/user/ReviewsChart"
 import { AvailabilitySchedule } from "@/components/features/profile/user/AvailabilitySchedule"
+import { LanguagesSection } from "@/components/features/profile/user/LanguagesSection"
 import { Card } from "@/components/ui/Card"
 import Link from "next/link"
 import { Pencil } from "lucide-react"
@@ -90,6 +91,10 @@ export const ProfileView = () => {
                         </p>
                     </div>
 
+                    {profile.languages && profile.languages.length > 0 && (
+                        <LanguagesSection languages={profile.languages} />
+                    )}
+
                     <SkillsSection
                         skillsTeach={profile.skills}
                         skillsLearn={profile.wanted_skills}
@@ -98,6 +103,7 @@ export const ProfileView = () => {
                         onAddWantedSkill={addWantedSkill}
                         onRemoveWantedSkill={removeWantedSkill}
                     />
+
 
                     <ReviewsChart
                         reviews={profile.reviews}
