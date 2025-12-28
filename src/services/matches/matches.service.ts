@@ -17,6 +17,11 @@ export interface PotentialMatch {
     id: string
     name: string
   }>
+  languages: Array<{
+    id: string
+    name: string
+    level: string | null
+  }>
 }
 
 export const matchesService = {
@@ -87,6 +92,13 @@ export const matchesService = {
             id: true,
             name: true
           }
+        },
+        languages: {
+          select: {
+            id: true,
+            name: true,
+            level: true
+          }
         }
       },
       take: 50 // Limitar a 50 usuarios
@@ -101,7 +113,8 @@ export const matchesService = {
       bio: user.bio,
       city: user.city,
       title: user.title,
-      skills: user.skills
+      skills: user.skills,
+      languages: user.languages
     }))
   },
 
@@ -133,7 +146,7 @@ export const matchesService = {
       // Actualizar la solicitud inversa a accepted
       await prisma.matches.update({
         where: { id: inverseMatch.id },
-        data: { 
+        data: {
           status: 'accepted',
           updated_at: new Date()
         }
