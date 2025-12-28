@@ -7,10 +7,15 @@ export interface PotentialMatch {
   image: string | null
   bio: string | null
   city: string | null
+  title: string | null
   skills: Array<{
     id: string
     name: string
     level: string | null
+  }>
+  wantedSkills: Array<{
+    id: string
+    name: string
   }>
 }
 
@@ -76,6 +81,12 @@ export const matchesService = {
             name: true,
             level: true
           }
+        },
+        wanted_skills: {
+          select: {
+            id: true,
+            name: true
+          }
         }
       },
       take: 50 // Limitar a 50 usuarios
@@ -84,10 +95,12 @@ export const matchesService = {
     return potentialMatches.map((user: any) => ({
       id: user.id,
       name: user.name,
+      wantedSkills: user.wanted_skills,
       email: user.email,
       image: user.image,
       bio: user.bio,
       city: user.city,
+      title: user.title,
       skills: user.skills
     }))
   },

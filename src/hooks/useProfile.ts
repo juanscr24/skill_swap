@@ -15,6 +15,12 @@ interface WantedSkill {
   name: string
 }
 
+interface Language {
+  id: string
+  name: string
+  level: string | null
+}
+
 interface Review {
   id: string
   rating: number
@@ -48,6 +54,7 @@ interface UserProfile {
   } | null
   skills: Skill[]
   wanted_skills: WantedSkill[]
+  languages: Language[]
   reviews: Review[]
   averageRating: number
   totalReviews: number

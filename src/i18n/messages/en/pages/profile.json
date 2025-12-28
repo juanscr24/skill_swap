@@ -49,5 +49,24 @@
         "thu": "THU",
         "fri": "FRI"
     },
-    "addSocialLinks": "Add Social Links"
+    "addSocialLinks": "Add Social Links",
+    "bookSession": "Book Session",
+    "message": "Message",
+    "skills": "Skills",
+    "whatITeach": "WHAT I TEACH",
+    "whatILearn": "WHAT I LEARN",
+    "recentReviews": "Recent Reviews",
+    "viewAll": "View All",
+    "writeReview": "Write a Review",
+    "deleteReview": "Delete Review",
+    "nextAvailability": "Next Availability",
+    "viewFullCalendar": "View Full Calendar",
+    "similarTo": "Similar to",
+    "deleteReviewConfirm": "Are you sure you want to delete your review?",
+    "mustDeleteToAdd": "You must delete your current review to add a new one",
+    "yourRating": "Your Rating",
+    "yourComment": "Your Comment",
+    "submit": "Submit",
+    "ratingRequired": "Rating is required",
+    "loading": "Loading..."
 }

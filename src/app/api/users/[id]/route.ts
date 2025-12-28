@@ -35,6 +35,15 @@ export async function GET(
     return NextResponse.json(profile)
   } catch (error: any) {
     console.error('Error getting user profile:', error)
+    
+    // Handle specific errors
+    if (error.message === 'Usuario no encontrado') {
+      return NextResponse.json(
+        { message: error.message },
+        { status: 404 }
+      )
+    }
+    
     return NextResponse.json(
       { message: error.message || 'Error al obtener el perfil' },
       { status: 500 }

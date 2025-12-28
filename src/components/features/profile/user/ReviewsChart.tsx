@@ -26,7 +26,7 @@ export const ReviewsChart = ({ reviews, averageRating, totalReviews }: ReviewsCh
 
             <div className="flex flex-col md:flex-row gap-8 items-center">
                 {/* Summary */}
-                <div className="flex flex-col items-center justify-center min-w-[150px]">
+                <div className="flex flex-col items-center justify-center min-w-37.5">
                     <span className="text-6xl font-bold text-(--text-1) leading-none">{averageRating.toFixed(1)}</span>
                     <div className="my-2">
                         <Rating value={averageRating} readonly size="md" />
@@ -47,7 +47,7 @@ export const ReviewsChart = ({ reviews, averageRating, totalReviews }: ReviewsCh
                                 <span className="font-medium text-(--text-2) w-3 text-right">{star}</span>
                                 <div className="flex-1 h-2 bg-(--bg-1) rounded-full overflow-hidden">
                                     <div
-                                        className="h-full bg-[#3B82F6] rounded-full transition-all duration-500 ease-out"
+                                        className="h-full bg-(--button-1) rounded-full transition-all duration-500 ease-out"
                                         style={{ width: `${percentage}%` }}
                                     />
                                 </div>
