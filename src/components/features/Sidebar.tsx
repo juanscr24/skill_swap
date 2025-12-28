@@ -95,14 +95,6 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
 
                 {/* Bottom Items */}
                 <div className="p-4 max-md:p-3 border-t border-(--border-1) space-y-2">
-                    {/* Dark Mode & Language Switcher in one row */}
-                    <div className="flex items-center justify-between gap-2 px-4 max-md:px-3 py-2">
-                        <div className="flex items-center gap-2">
-                            <ButtonMode className="w-6 h-6" />
-                            <LanguageSwitcher className="p-0" />
-                        </div>
-                    </div>
-                    
                     {/* Settings */}
                     <Link
                         href={settingsItem.href}
@@ -122,7 +114,7 @@ export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
                         <span className="font-medium max-md:text-sm">{t('logout')}</span>
                     </button>
                 </div>
-            </aside>
+            </aside >
         </>
     )
 }
