@@ -22,6 +22,11 @@ interface PotentialMatch {
     id: string
     name: string
   }>
+  languages: Array<{
+    id: string
+    name: string
+    level: string | null
+  }>
 }
 
 export function useMatches() {

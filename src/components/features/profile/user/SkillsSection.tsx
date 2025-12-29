@@ -2,7 +2,6 @@ import { useState } from "react"
 import { Badge } from "@/components/ui/Badge"
 import { useTranslations } from "next-intl"
 import { FiPlus, FiBookOpen, FiZap, FiX, FiCheck } from "react-icons/fi"
-import { useProfile } from "@/hooks/useProfile"
 
 interface Skill {
     id: string
@@ -91,7 +90,7 @@ export const SkillsSection = ({
                     ) : (
                         <button
                             onClick={() => setAddingTeach(true)}
-                            className="px-3 py-1.5 rounded-full border border-dashed border-(--border-1) text-(--text-2) text-sm hover:text-(--text-1) hover:border-[#3B82F6] hover:text-[#3B82F6] transition-all flex items-center gap-1"
+                            className="px-3 py-1.5 rounded-full border border-dashed border-(--border-1) text-(--text-2) text-sm hover:text-(--text-1) hover:border-[#3B82F6] transition-all flex items-center gap-1"
                         >
                             <FiPlus size={14} /> {t('add')}
                         </button>
@@ -139,7 +138,7 @@ export const SkillsSection = ({
                     ) : (
                         <button
                             onClick={() => setAddingLearn(true)}
-                            className="px-3 py-1.5 rounded-full border border-dashed border-(--border-1) text-(--text-2) text-sm hover:text-(--text-1) hover:border-[#F59E0B] hover:text-[#F59E0B] transition-all flex items-center gap-1"
+                            className="px-3 py-1.5 rounded-full border border-dashed border-(--border-1) text-(--text-2) text-sm hover:text-(--text-1) hover:border-[#F59E0B] transition-all flex items-center gap-1"
                         >
                             <FiPlus size={14} /> {t('add')}
                         </button>

@@ -21,3 +21,6 @@ export * from './requests'
 
 // Reviews services
 export * from './reviews'
+
+// Availability services
+export * from './availability'

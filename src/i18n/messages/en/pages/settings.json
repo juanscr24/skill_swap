@@ -1,0 +1,57 @@
+{
+    "title": "Settings",
+    "preferences": {
+        "title": "Display Preferences",
+        "theme": "Theme",
+        "themeDescription": "Select your preferred theme",
+        "language": "Language",
+        "languageDescription": "Select application language",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System",
+        "es": "Spanish",
+        "en": "English"
+    },
+    "notifications": {
+        "title": "Notifications",
+        "email": "Email",
+        "emailDescription": "Receive updates about your activity",
+        "push": "Push Notifications",
+        "pushDescription": "Receive notifications on your device",
+        "news": "News and offers",
+        "security": "Security alerts",
+        "mentors": "Mentor activity",
+        "messages": "New messages"
+    },
+    "security": {
+        "title": "Security",
+        "password": "Change Password",
+        "passwordDescription": "Update your password periodically",
+        "sessions": "Active Sessions",
+        "sessionsDescription": "Log out from all other devices",
+        "changePassword": "Change password",
+        "closeSessions": "Close all sessions",
+        "sessionsClosed": "All active sessions except current one have been closed"
+    },
+    "privacy": {
+        "title": "Privacy",
+        "visibility": "Profile Visibility",
+        "visibilityDescription": "Control who can see your profile",
+        "messages": "Messages",
+        "messagesDescription": "Control who can send you messages",
+        "public": "Public",
+        "mentorsOnly": "Mentors Only",
+        "private": "Private",
+        "everyone": "Everyone",
+        "matchesOnly": "Matches Only"
+    },
+    "danger": {
+        "title": "Danger Zone",
+        "deleteAccount": "Delete Account",
+        "deleteDescription": "This action is irreversible. You will lose all your data.",
+        "deleteButton": "Delete my account",
+        "confirmDelete": "Are you sure? This action cannot be undone."
+    },
+    "save": "Save changes",
+    "saved": "Changes saved successfully"
+}

@@ -18,6 +18,7 @@ interface MatchCardProps {
         learningSkills: string[]
         matchPercentage?: number
         yearsExperience?: number
+        languages?: string[]
     }
     onAccept: () => void
     onReject: () => void
@@ -92,10 +93,12 @@ export const MatchCard = ({ user, onAccept, onReject }: MatchCardProps) => {
                             <span className="text-4xl max-lg:text-3xl max-md:tex-2xl max-sm:text-xl">{user.city || (t('unknown'))}</span>
                         </div>
                         {/* Languages */}
-                        <div className="flex gap-2 text-(--text-1)">
-                            <Languages />
-                            <h3>Español / English</h3>
-                        </div>
+                        {user.languages && user.languages.length > 0 && (
+                            <div className="flex gap-2 text-(--text-1)">
+                                <Languages />
+                                <h3>{user.languages.join(' / ')}</h3>
+                            </div>
+                        )}
                     </div>
                     {/* About Me - with invisible scroll */}
                     {user.bio && (

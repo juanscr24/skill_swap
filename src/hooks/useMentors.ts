@@ -55,7 +55,14 @@ export function useMentors(filters?: {
       }
 
       const data = await response.json()
-      setMentors(data)
+      
+      // Filtrar al usuario actual de la lista de mentores
+      const currentUserId = session?.user?.id
+      const filteredMentors = currentUserId 
+        ? data.filter((mentor: Mentor) => mentor.id !== currentUserId)
+        : data
+      
+      setMentors(filteredMentors)
     } catch (err: any) {
       console.error('Error fetching mentors:', err)
       setError(err.message || 'Error al cargar mentores')

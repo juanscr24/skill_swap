@@ -125,7 +125,11 @@ export const UserProfileView = ({ userId }: UserProfileViewProps) => {
 
         {/* Right Column */}
         <div className="lg:col-span-4 space-y-6">
-          <MentorAvailability availability={profile.availability} />
+          <MentorAvailability 
+            mentorId={userId}
+            mentorName={profile.name || 'this mentor'}
+            availability={profile.availability} 
+          />
 
           <MentorStats
             totalSessions={profile.totalSessions}

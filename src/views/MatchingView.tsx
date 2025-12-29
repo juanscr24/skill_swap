@@ -59,6 +59,7 @@ export const MatchingView = () => {
     // Separar habilidades que enseña (no wanted) de las que quiere aprender (wanted_skills)
     const teachingSkills = currentProfile.skills.map(s => s.name)
     const learningSkills = currentProfile.wantedSkills.map(s => s.name)
+    const languages = currentProfile.languages?.map(l => l.name) || []
 
     // Preparar datos del usuario para el MatchCard
     const userData = {
@@ -73,11 +74,12 @@ export const MatchingView = () => {
         learningSkills,
         matchPercentage: undefined,
         yearsExperience: undefined,
+        languages,
     }
 
     return (
         <div className="h-[calc(100dvh-4rem)] bg-(--bg-1) flex items-center justify-center px-6">
-            <MatchCard 
+            <MatchCard
                 user={userData}
                 onAccept={() => handleSwipe('right')}
                 onReject={() => handleSwipe('left')}

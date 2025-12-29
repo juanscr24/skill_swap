@@ -6,33 +6,40 @@ import { Card } from "@/components/ui/Card"
 import { Button, Input } from "@/components"
 import { Textarea } from "@/components/ui/Textarea"
 import { Select } from "@/components/ui/Select"
-import { useMentors } from "@/hooks"
-import { FiLoader, FiArrowLeft } from "react-icons/fi"
+import { useMentors, useAvailability } from "@/hooks"
+import { FiLoader, FiArrowLeft, FiCalendar, FiClock } from "react-icons/fi"
 import Link from "next/link"
 
 export const ScheduleSessionView = () => {
     const t = useTranslations('sessions')
     const router = useRouter()
-    const { mentors, isLoading: loadingMentors } = useMentors()
+    const { mentors, isLoading: loadingMentors } = useMentors({})
 
     const [selectedMentor, setSelectedMentor] = useState('')
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
-    const [date, setDate] = useState('')
-    const [time, setTime] = useState('')
-    const [hours, setHours] = useState('1')
-    const [minutes, setMinutes] = useState('0')
+    const [selectedAvailability, setSelectedAvailability] = useState('')
+    const [duration, setDuration] = useState('30')
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [error, setError] = useState('')
     const [successMessage, setSuccessMessage] = useState('')
 
-    // Obtener fecha mínima (hoy)
-    const today = new Date().toISOString().split('T')[0]
+    const { availability, isLoading: loadingAvailability } = useAvailability(selectedMentor || undefined)
 
     const mentorOptions = mentors.map(mentor => ({
         value: mentor.id,
         label: mentor.name || mentor.email
     }))
+
+    const availableSlots = availability.filter(slot => !slot.is_booked)
+
+    const formatDate = (dateString: string | Date) => {
+        return new Date(dateString).toLocaleDateString('es-ES', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric',
+        })
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -48,53 +55,53 @@ export const ScheduleSessionView = () => {
             setError('Por favor ingresa un título')
             return
         }
-        if (!date || !time) {
-            setError('Por favor selecciona fecha y hora')
+        if (!selectedAvailability) {
+            setError('Por favor selecciona un horario disponible')
             return
         }
 
-        // Crear fechas de inicio y fin
-        const startDateTime = new Date(`${date}T${time}`)
-        const durationInMinutes = parseInt(hours) * 60 + parseInt(minutes)
-        const endDateTime = new Date(startDateTime.getTime() + durationInMinutes * 60000)
+        const durationNum = parseInt(duration)
+        if (durationNum < 30) {
+            setError(t('minimumDuration'))
+            return
+        }
 
-        // Validar que la fecha sea futura
-        if (startDateTime <= new Date()) {
-            setError('La fecha y hora deben ser futuras')
+        if (durationNum % 10 !== 0) {
+            setError(t('invalidTimeFormat'))
             return
         }
 
         setIsSubmitting(true)
 
         try {
-            const response = await fetch('/api/sessions', {
+            const response = await fetch('/api/sessions/request', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    guest_id: selectedMentor,
+                    mentor_id: selectedMentor,
+                    availability_id: selectedAvailability,
                     title,
                     description: description.trim() || undefined,
-                    start_at: startDateTime.toISOString(),
-                    end_at: endDateTime.toISOString(),
+                    duration_minutes: durationNum,
                 }),
             })
 
             const data = await response.json()
 
             if (!response.ok) {
-                throw new Error(data.message || 'Error al crear la sesión')
+                throw new Error(data.message || 'Error al solicitar la sesión')
             }
 
-            setSuccessMessage('¡Sesión agendada correctamente! Redirigiendo...')
+            setSuccessMessage('¡Solicitud de sesión enviada correctamente! Redirigiendo...')
             setTimeout(() => {
                 router.push('/sessions')
             }, 1500)
 
         } catch (err: any) {
             console.error('Error scheduling session:', err)
-            setError(err.message || 'Error al agendar la sesión. Intenta de nuevo.')
+            setError(err.message || 'Error al solicitar la sesión. Intenta de nuevo.')
         } finally {
             setIsSubmitting(false)
         }
@@ -152,7 +159,10 @@ export const ScheduleSessionView = () => {
                                         ...mentorOptions
                                     ]}
                                     value={selectedMentor}
-                                    onChange={(e) => setSelectedMentor(e.target.value)}
+                                    onChange={(e) => {
+                                        setSelectedMentor(e.target.value)
+                                        setSelectedAvailability('') // Reset availability when mentor changes
+                                    }}
                                     required
                                 />
                                 {mentors.length > 0 && (
@@ -162,98 +172,125 @@ export const ScheduleSessionView = () => {
                                 )}
                             </div>
 
-                            <div>
-                                <Input
-                                    type="text"
-                                    label={t('title')}
-                                    id="title"
-                                    placeholder="Ej: Introducción a React Hooks"
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                    required
-                                />
-                            </div>
+                            {selectedMentor && (
+                                <>
+                                    <div>
+                                        <Input
+                                            type="text"
+                                            label={t('topic')}
+                                            id="title"
+                                            placeholder={t('topicPlaceholder')}
+                                            value={title}
+                                            onChange={(e) => setTitle(e.target.value)}
+                                            required
+                                        />
+                                    </div>
 
-                            <div>
-                                <Textarea
-                                    label={t('description')}
-                                    id="description"
-                                    placeholder={t('description')}
-                                    rows={4}
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                />
-                                <p className="mt-2 text-xs text-(--text-2)">Describe brevemente el contenido de la sesión</p>
-                            </div>
+                                    <div>
+                                        <Textarea
+                                            label={t('description')}
+                                            id="description"
+                                            placeholder={t('descriptionPlaceholder')}
+                                            rows={4}
+                                            value={description}
+                                            onChange={(e) => setDescription(e.target.value)}
+                                        />
+                                    </div>
 
-                            <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-5 max-sm:gap-4">
-                                <Input
-                                    type="date"
-                                    label={t('date')}
-                                    id="date"
-                                    value={date}
-                                    onChange={(e) => setDate(e.target.value)}
-                                    min={today}
-                                    required
-                                />
-                                <Input
-                                    type="time"
-                                    label={t('time')}
-                                    id="time"
-                                    value={time}
-                                    onChange={(e) => setTime(e.target.value)}
-                                    required
-                                />
-                            </div>
+                                    {/* Availability Selection */}
+                                    <div>
+                                        <label className="font-semibold text-(--text-1) block mb-3 max-sm:text-sm">
+                                            {t('selectAvailability')}
+                                        </label>
+                                        
+                                        {loadingAvailability ? (
+                                            <div className="flex items-center justify-center py-8">
+                                                <FiLoader className="w-6 h-6 animate-spin text-(--button-1)" />
+                                            </div>
+                                        ) : availableSlots.length === 0 ? (
+                                            <div className="text-center py-8 px-4 bg-(--bg-1) rounded-lg border-2 border-dashed border-(--border-1)">
+                                                <FiCalendar className="w-12 h-12 mx-auto mb-3 text-(--text-2)" />
+                                                <p className="text-(--text-2) font-medium">{t('noAvailableSlots')}</p>
+                                            </div>
+                                        ) : (
+                                            <div className="grid grid-cols-1 gap-3 max-h-96 overflow-y-auto">
+                                                {availableSlots.map((slot) => (
+                                                    <button
+                                                        key={slot.id}
+                                                        type="button"
+                                                        onClick={() => setSelectedAvailability(slot.id)}
+                                                        className={`p-4 rounded-lg border-2 text-left transition-all ${
+                                                            selectedAvailability === slot.id
+                                                                ? 'border-(--button-1) bg-(--button-1)/10'
+                                                                : 'border-(--border-1) hover:border-(--button-1)/50'
+                                                        }`}
+                                                    >
+                                                        <p className="font-semibold text-(--text-1) mb-1 flex items-center gap-2">
+                                                            <FiCalendar className="w-4 h-4" />
+                                                            {formatDate(slot.date)}
+                                                        </p>
+                                                        <p className="text-(--text-2) text-sm flex items-center gap-2">
+                                                            <FiClock className="w-4 h-4" />
+                                                            {slot.start_time} - {slot.end_time}
+                                                        </p>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
 
-                            <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-4 max-sm:gap-3">
-                                <Input
-                                    type="number"
-                                    label={`${t('duration')} (${t('hours')})`}
-                                    id="hours"
-                                    placeholder="1"
-                                    value={hours}
-                                    onChange={(e) => setHours(e.target.value)}
-                                    min="0"
-                                    max="8"
-                                />
-                                <Input
-                                    type="number"
-                                    label={`${t('duration')} (${t('minutes')})`}
-                                    id="minutes"
-                                    placeholder="0"
-                                    value={minutes}
-                                    onChange={(e) => setMinutes(e.target.value)}
-                                    min="0"
-                                    max="59"
-                                    step="15"
-                                />
-                            </div>
+                                    {/* Duration Selection */}
+                                    {selectedAvailability && (
+                                        <div>
+                                            <label
+                                                htmlFor="duration"
+                                                className="font-semibold text-(--text-1) block mb-2 max-sm:text-sm"
+                                            >
+                                                {t('selectDuration')}
+                                            </label>
+                                            <select
+                                                id="duration"
+                                                value={duration}
+                                                onChange={(e) => setDuration(e.target.value)}
+                                                className="bg-(--bg-2) border border-(--border-1) text-(--text-1) w-full outline-none px-4 py-4 max-sm:py-3 max-sm:text-sm rounded-md"
+                                            >
+                                                <option value="30">30 {t('minutes')}</option>
+                                                <option value="40">40 {t('minutes')}</option>
+                                                <option value="50">50 {t('minutes')}</option>
+                                                <option value="60">60 {t('minutes')}</option>
+                                                <option value="90">90 {t('minutes')}</option>
+                                                <option value="120">120 {t('minutes')}</option>
+                                            </select>
+                                        </div>
+                                    )}
+                                </>
+                            )}
 
-                            <div className="flex flex-col sm:flex-row gap-4 max-sm:gap-3 pt-4 border-t border-(--border-1)">
-                                <Button 
-                                    primary 
-                                    type="submit" 
-                                    className="flex-1 py-4 max-sm:py-3 flex items-center justify-center gap-2 font-semibold text-lg max-sm:text-base shadow-lg hover:shadow-xl transition-all"
-                                    disabled={isSubmitting || loadingMentors}
+                            {/* Action Buttons */}
+                            <div className="flex gap-4 max-sm:gap-3 pt-4">
+                                <Button
+                                    type="button"
+                                    secondary
+                                    onClick={handleCancel}
+                                    disabled={isSubmitting}
+                                    className="flex-1"
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    primary
+                                    disabled={!selectedMentor || !title || !selectedAvailability || isSubmitting}
+                                    className="flex-1"
                                 >
                                     {isSubmitting ? (
-                                        <>
-                                            <FiLoader className="w-5 h-5 animate-spin" />
-                                            Agendando...
-                                        </>
+                                        <span className="flex items-center justify-center gap-2">
+                                            <FiLoader className="w-4 h-4 animate-spin" />
+                                            Solicitando...
+                                        </span>
                                     ) : (
-                                        t('schedule')
+                                        t('requestSession')
                                     )}
-                                </Button>
-                                <Button 
-                                    secondary 
-                                    type="button"
-                                    onClick={handleCancel}
-                                    className="px-8 max-sm:px-4 py-4 max-sm:py-3 font-semibold text-lg max-sm:text-base shadow-sm"
-                                    disabled={isSubmitting}
-                                >
-                                    {t('cancel')}
                                 </Button>
                             </div>
                         </>
