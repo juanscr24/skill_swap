@@ -47,6 +47,19 @@ export async function createSkill(
     level?: 'beginner' | 'intermediate' | 'advanced' | 'expert'
   }
 ) {
+  // Promover usuario a MENTOR si no lo es
+  const user = await prisma.users.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  })
+
+  if (user && user.role !== 'MENTOR' && user.role !== 'ADMIN') {
+    await prisma.users.update({
+      where: { id: userId },
+      data: { role: 'MENTOR' },
+    })
+  }
+
   return prisma.skills.create({
     data: {
       owner_id: userId,

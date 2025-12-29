@@ -124,11 +124,6 @@ export const MentorProfileHeader = ({
 
                     {/* Right: Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-2 md:gap-4 w-5/10 max-2xl:w-7/10 max-xl:w-full mt-4">
-                        <Button className="flex-1 bg-(--button-1) text-(--button-1-text) border-none py-2.5 font-semibold flex items-center justify-center gap-2 text-sm md:text-base">
-                            <Calendar size={16} className="md:w-4.5 md:h-4.5" />
-                            <span className="hidden sm:inline">Reservar Sesión</span>
-                            <span className="sm:hidden">Reservar</span>
-                        </Button>
                         <Button className="flex-1 bg-(--bg-1) hover:bg-(--border-1) text-(--text-1) border border-(--border-1) py-2.5 font-semibold flex items-center justify-center gap-2 text-sm md:text-base">
                             <MessageSquare size={16} className="md:w-4.5 md:h-4.5" />
                             Mensaje

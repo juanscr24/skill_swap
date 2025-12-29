@@ -1,58 +1,121 @@
-import { useTranslations } from "next-intl"
-import { FiCalendar, FiClock, FiChevronRight } from "react-icons/fi"
+'use client'
 
-interface AvailabilitySlot {
-    date: string
-    time: string
-}
+import { useState } from 'react'
+import { useTranslations } from 'next-intl'
+import { FiCalendar, FiClock } from 'react-icons/fi'
+import { useAvailability } from '@/hooks'
+import { Button } from '@/components/ui/Button'
+import { BookSessionModal } from '@/components/features/availability'
 
 interface MentorAvailabilityProps {
-    availability: {
-        [key: string]: string
-    } | null
-    upcomingSlots?: AvailabilitySlot[]
+  mentorId: string
+  mentorName: string
+  availability?: any
 }
 
-export const MentorAvailability = ({ availability, upcomingSlots = [] }: MentorAvailabilityProps) => {
-    const t = useTranslations('profile')
+export const MentorAvailability = ({
+  mentorId,
+  mentorName,
+  availability: legacyAvailability,
+}: MentorAvailabilityProps) => {
+  const t = useTranslations('sessions')
+  const { availability, isLoading } = useAvailability(mentorId)
+  const [showBookingModal, setShowBookingModal] = useState(false)
 
-    // Generate some example upcoming slots if none provided
-    const defaultSlots: AvailabilitySlot[] = [
-        { date: 'Mañana, 14 Oct', time: '10:00 - 11:00AM' },
-        { date: 'Jueves, 16 Oct', time: '14:00 - 15:00PM' },
-    ]
+  const formatDate = (dateString: string | Date) => {
+    return new Date(dateString).toLocaleDateString('es-ES', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+    })
+  }
 
-    const slots = upcomingSlots.length > 0 ? upcomingSlots : defaultSlots
+  const getNextSlots = () => {
+    return availability.filter((slot) => !slot.is_booked).slice(0, 5)
+  }
 
-    return (
-        <div className="bg-(--bg-2) rounded-2xl p-6 border border-(--border-1)">
-            <div className="flex items-center gap-2 mb-4">
-                <FiCalendar className="text-(--button-1)" size={20} />
-                <h2 className="text-lg font-bold text-(--text-1)">{t('nextAvailability')}</h2>
-            </div>
+  const nextSlots = getNextSlots()
 
-            <div className="space-y-3 mb-4">
-                {slots.map((slot, index) => (
-                    <div
-                        key={index}
-                        className="flex items-center justify-between p-3 bg-(--bg-1) rounded-lg border border-(--border-1) hover:border-(--button-1) transition-colors cursor-pointer"
-                    >
-                        <div>
-                            <p className="text-(--text-1) font-medium text-sm">{slot.date}</p>
-                            <p className="text-(--text-2) text-xs flex items-center gap-1 mt-1">
-                                <FiClock size={12} />
-                                {slot.time}
-                            </p>
-                        </div>
-                        <FiChevronRight className="text-(--text-2)" />
-                    </div>
-                ))}
-            </div>
+  const translations = {
+    bookSession: t('bookSession'),
+    selectAvailability: t('selectAvailability'),
+    topic: t('topic'),
+    topicPlaceholder: t('topicPlaceholder'),
+    description: t('description'),
+    descriptionPlaceholder: t('descriptionPlaceholder'),
+    selectDuration: t('selectDuration'),
+    requestSession: t('requestSession'),
+    minimumDuration: t('minimumDuration'),
+    invalidTimeFormat: t('invalidTimeFormat'),
+    sessionRequested: t('sessionRequested'),
+    errorRequestingSession: t('errorRequestingSession'),
+    noAvailableSlots: t('noAvailableSlots'),
+    minutes: t('minutes'),
+  }
 
-            <button className="w-full text-(--button-1) text-sm font-medium hover:underline flex items-center justify-center gap-1">
-                {t('viewFullCalendar')}
-                <FiChevronRight size={14} />
-            </button>
+  return (
+    <>
+      <div className="bg-(--bg-2) rounded-2xl p-6 border border-(--border-1)">
+        <div className="flex items-center gap-2 mb-4">
+          <FiCalendar className="text-(--button-1)" size={20} />
+          <h2 className="text-lg font-bold text-(--text-1)">
+            {t('nextAvailability')}
+          </h2>
         </div>
-    )
+
+        {isLoading ? (
+          <div className="text-center py-4 text-(--text-2)">
+            {t('loading')}
+          </div>
+        ) : nextSlots.length === 0 ? (
+          <div className="text-center py-8 text-(--text-2)">
+            <p className="text-sm">{t('noAvailableSlots')}</p>
+          </div>
+        ) : (
+          <>
+            <div className="space-y-3 mb-4">
+              {nextSlots.map((slot) => (
+                <div
+                  key={slot.id}
+                  className="flex items-center justify-between p-3 bg-(--bg-1) rounded-lg border border-(--border-1)"
+                >
+                  <div>
+                    <p className="text-(--text-1) font-medium text-sm">
+                      {formatDate(slot.date)}
+                    </p>
+                    <p className="text-(--text-2) text-xs flex items-center gap-1 mt-1">
+                      <FiClock size={12} />
+                      {slot.start_time} - {slot.end_time}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Button
+              primary
+              onClick={() => setShowBookingModal(true)}
+              className="w-full"
+            >
+              {t('bookSession')}
+            </Button>
+          </>
+        )}
+      </div>
+
+      {showBookingModal && (
+        <BookSessionModal
+          mentorId={mentorId}
+          mentorName={mentorName}
+          availability={availability.filter((slot) => !slot.is_booked)}
+          onClose={() => setShowBookingModal(false)}
+          onSuccess={() => {
+            alert(t('sessionRequested'))
+          }}
+          translations={translations}
+        />
+      )}
+    </>
+  )
 }
+

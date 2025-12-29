@@ -1,6 +1,7 @@
 'use client'
 import { useTranslations } from "next-intl"
 import { useProfile } from "@/hooks/useProfile"
+import { useSession } from "next-auth/react"
 import { FiLoader, FiClock, FiCheckCircle } from "react-icons/fi"
 import { ProfileHeader } from "@/components/features/profile/user/ProfileHeader"
 import { SocialLinks } from "@/components/features/profile/user/SocialLinks"
@@ -9,13 +10,20 @@ import { SkillsSection } from "@/components/features/profile/user/SkillsSection"
 import { ReviewsChart } from "@/components/features/profile/user/ReviewsChart"
 import { AvailabilitySchedule } from "@/components/features/profile/user/AvailabilitySchedule"
 import { LanguagesSection } from "@/components/features/profile/user/LanguagesSection"
+import { AvailabilityManager } from "@/components/features/availability"
+import { PendingRequestsList } from "@/components/features/availability"
 import { Card } from "@/components/ui/Card"
 import Link from "next/link"
 import { Pencil } from "lucide-react"
 
 export const ProfileView = () => {
     const t = useTranslations('profile')
+    const tSessions = useTranslations('sessions')
+    const { data: session } = useSession()
     const { profile, isLoading, error, updateProfile, addSkill, removeSkill, addWantedSkill, removeWantedSkill } = useProfile()
+
+    // Un usuario es mentor si tiene skills para enseñar o si su role es MENTOR/ADMIN
+    const isMentor = (profile?.skills && profile.skills.length > 0) || profile?.role === 'MENTOR' || profile?.role === 'ADMIN'
 
     // Loading state
     if (isLoading) {
@@ -111,7 +119,44 @@ export const ProfileView = () => {
                         totalReviews={profile.totalReviews}
                     />
 
-                    <AvailabilitySchedule availability={profile.availability} />
+                    {isMentor && profile.id && (
+                        <>
+                            <AvailabilityManager
+                                mentorId={profile.id}
+                                translations={{
+                                    manageAvailability: tSessions('manageAvailability'),
+                                    addAvailability: tSessions('addAvailability'),
+                                    date: tSessions('date'),
+                                    startTime: tSessions('startTime'),
+                                    endTime: tSessions('endTime'),
+                                    deleteAvailability: tSessions('deleteAvailability'),
+                                    availabilityAdded: tSessions('availabilityAdded'),
+                                    availabilityDeleted: tSessions('availabilityDeleted'),
+                                    errorAddingAvailability: tSessions('errorAddingAvailability'),
+                                    errorDeletingAvailability: tSessions('errorDeletingAvailability'),
+                                }}
+                            />
+
+                            <PendingRequestsList
+                                translations={{
+                                    pendingRequests: tSessions('pendingRequests'),
+                                    acceptRequest: tSessions('acceptRequest'),
+                                    rejectRequest: tSessions('rejectRequest'),
+                                    requestAccepted: tSessions('requestAccepted'),
+                                    requestRejected: tSessions('requestRejected'),
+                                    errorManagingRequest: tSessions('errorManagingRequest'),
+                                    topic: tSessions('topic'),
+                                    description: tSessions('description'),
+                                    duration: tSessions('duration'),
+                                    minutes: tSessions('minutes'),
+                                    date: tSessions('date'),
+                                    time: tSessions('time'),
+                                }}
+                            />
+                        </>
+                    )}
+
+                    {!isMentor && <AvailabilitySchedule availability={profile.availability} />}
                 </div>
             </div>
         </div>

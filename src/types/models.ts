@@ -54,8 +54,35 @@ export interface Session {
     description?: string
     start_at: Date
     end_at: Date
-    status: 'scheduled' | 'completed' | 'cancelled'
+    status: 'pending' | 'scheduled' | 'completed' | 'cancelled' | 'rejected'
     created_at: Date
+    availability_id?: string
+}
+
+export interface MentorAvailability {
+    id: string
+    mentor_id: string
+    date: Date
+    start_time: string // Format: "HH:mm"
+    end_time: string // Format: "HH:mm"
+    is_booked: boolean
+    created_at: Date
+}
+
+export interface AvailabilitySlot {
+    id: string
+    date: string
+    start_time: string
+    end_time: string
+    is_booked: boolean
+}
+
+export interface SessionRequest {
+    mentor_id: string
+    title: string
+    description?: string
+    availability_id: string
+    duration_minutes: number
 }
 
 export interface Review {
