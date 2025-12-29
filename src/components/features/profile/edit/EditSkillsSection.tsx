@@ -58,7 +58,7 @@ export const EditSkillsSection = ({
 
     const result = await onAddSkill({
       name: skillToAddWithLevel.trim(),
-      level: newSkillLevel
+      level: newSkillLevel as 'beginner' | 'intermediate' | 'advanced' | 'expert'
     })
 
     if (result.success) {
