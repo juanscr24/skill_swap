@@ -16,7 +16,17 @@ interface PotentialMatch {
   image: string | null
   bio: string | null
   city: string | null
+  title: string | null
   skills: Skill[]
+  wantedSkills: Array<{
+    id: string
+    name: string
+  }>
+  languages: Array<{
+    id: string
+    name: string
+    level: string | null
+  }>
 }
 
 export function useMatches() {

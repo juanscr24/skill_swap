@@ -2,7 +2,7 @@
 import Link from "next/link"
 import { motion, AnimatePresence } from "motion/react"
 import { useEffect, useState } from "react"
-import { Component, Menu, X } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Button } from "../ui/Button"
 import { ButtonMode } from "../ui/ButtonMode"

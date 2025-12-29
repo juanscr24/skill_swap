@@ -17,6 +17,8 @@ export { Tabs } from './ui/Tabs'
 export { SearchBar } from './ui/SearchBar'
 export { PasswordStrength } from './ui/PasswordStrength'
 export { SkillSelector } from './ui/SkillSelector'
+export { MentorCard } from './ui/MentorCard'
+export { MoreMentorsCard } from './ui/MoreMentorsCard'
 
 // Features
 export { LandingNavbar } from './features/LandingNavbar'

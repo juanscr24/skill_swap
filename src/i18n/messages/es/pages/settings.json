@@ -1,0 +1,57 @@
+{
+    "title": "Configuración",
+    "preferences": {
+        "title": "Preferencias de Visualización",
+        "theme": "Tema",
+        "themeDescription": "Selecciona tu tema preferido",
+        "language": "Idioma",
+        "languageDescription": "Selecciona el idioma de la aplicación",
+        "light": "Claro",
+        "dark": "Oscuro",
+        "system": "Sistema",
+        "es": "Español",
+        "en": "Inglés"
+    },
+    "notifications": {
+        "title": "Notificaciones",
+        "email": "Correo Electrónico",
+        "emailDescription": "Recibe actualizaciones sobre tu actividad",
+        "push": "Notificaciones Push",
+        "pushDescription": "Recibe notificaciones en tu dispositivo",
+        "news": "Novedades y ofertas",
+        "security": "Alertas de seguridad",
+        "mentors": "Actividad de mentores",
+        "messages": "Nuevos mensajes"
+    },
+    "security": {
+        "title": "Seguridad",
+        "password": "Cambiar Contraseña",
+        "passwordDescription": "Actualiza tu contraseña periódicamente",
+        "sessions": "Sesiones Activas",
+        "sessionsDescription": "Cierra sesión en todos los otros dispositivos",
+        "changePassword": "Cambiar contraseña",
+        "closeSessions": "Cerrar todas las sesiones",
+        "sessionsClosed": "Se han cerrado todas las sesiones activas excepto la actual"
+    },
+    "privacy": {
+        "title": "Privacidad",
+        "visibility": "Visibilidad del Perfil",
+        "visibilityDescription": "Controla quién puede ver tu perfil",
+        "messages": "Mensajes",
+        "messagesDescription": "Controla quién puede enviarte mensajes",
+        "public": "Público",
+        "mentorsOnly": "Solo Mentores",
+        "private": "Privado",
+        "everyone": "Todos",
+        "matchesOnly": "Solo Matches"
+    },
+    "danger": {
+        "title": "Zona de Peligro",
+        "deleteAccount": "Eliminar Cuenta",
+        "deleteDescription": "Esta acción es irreversible. Perderás todos tus datos.",
+        "deleteButton": "Eliminar mi cuenta",
+        "confirmDelete": "¿Estás seguro? Esta acción no se puede deshacer."
+    },
+    "save": "Guardar cambios",
+    "saved": "Cambios guardados correctamente"
+}

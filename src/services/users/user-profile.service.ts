@@ -18,6 +18,9 @@ export async function getUserProfile(userId: string) {
       created_at: true,
       updated_at: true,
       email_verified: true,
+      title: true,
+      social_links: true,
+      availability: true,
       // Relaciones
       skills: {
         select: {
@@ -31,6 +34,13 @@ export async function getUserProfile(userId: string) {
         select: {
           id: true,
           name: true,
+        },
+      },
+      languages: {
+        select: {
+          id: true,
+          name: true,
+          level: true,
         },
       },
       reviews_reviews_target_idTousers: {
@@ -49,6 +59,15 @@ export async function getUserProfile(userId: string) {
         },
         orderBy: {
           created_at: 'desc',
+        },
+      },
+      sessions_sessions_host_idTousers: {
+        where: {
+          status: 'completed',
+        },
+        select: {
+          start_at: true,
+          end_at: true,
         },
       },
     },
@@ -70,6 +89,12 @@ export async function getUserProfile(userId: string) {
     reviews,
     averageRating: Number(averageRating.toFixed(1)),
     totalReviews: reviews.length,
+    // Calculated stats
+    totalSessions: user.sessions_sessions_host_idTousers.length,
+    totalHours: user.sessions_sessions_host_idTousers.reduce((acc, session) => {
+      const duration = (new Date(session.end_at).getTime() - new Date(session.start_at).getTime()) / (1000 * 60 * 60)
+      return acc + duration
+    }, 0),
   }
 }
 
@@ -84,6 +109,9 @@ export async function updateUserProfile(
     city?: string
     image?: string
     image_public_id?: string
+    title?: string
+    social_links?: any
+    availability?: any
   }
 ) {
   return prisma.users.update({
@@ -101,6 +129,9 @@ export async function updateUserProfile(
       bio: true,
       city: true,
       role: true,
+      title: true,
+      social_links: true,
+      availability: true,
       updated_at: true,
     },
   })
@@ -213,7 +244,7 @@ export async function getMentors(filters?: {
       const averageRating =
         reviews.length > 0
           ? reviews.reduce((acc, review) => acc + review.rating, 0) /
-            reviews.length
+          reviews.length
           : 0
 
       return {
@@ -285,7 +316,7 @@ export async function getMentors(filters?: {
     const averageRating =
       reviews.length > 0
         ? reviews.reduce((acc, review) => acc + review.rating, 0) /
-          reviews.length
+        reviews.length
         : 0
 
     return {

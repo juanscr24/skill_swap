@@ -140,10 +140,10 @@ export const SessionsView = () => {
                             </div>
 
                             {/* Botones según el estado y rol */}
-                            {sessionData.status === 'pending' && isGuest && (
+                            {sessionData.status === 'pending' && isHost && (
                                 <div className="flex gap-2 max-sm:gap-1 flex-wrap">
                                     <Button primary onClick={handleApprove} className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs">
-                                        Aprobar
+                                        Aceptar
                                     </Button>
                                     <Button secondary onClick={handleReject} className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs">
                                         Rechazar
@@ -151,10 +151,10 @@ export const SessionsView = () => {
                                 </div>
                             )}
                             
-                            {sessionData.status === 'pending' && isHost && (
+                            {sessionData.status === 'pending' && isGuest && (
                                 <div className="flex gap-2 max-sm:gap-1 flex-wrap">
                                     <span className="text-sm max-sm:text-xs text-(--text-2) italic">
-                                        Esperando aprobación
+                                        Esperando aprobación del mentor
                                     </span>
                                     <Button secondary onClick={handleCancel} className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs">
                                         {t('cancel')}

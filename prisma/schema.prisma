@@ -89,17 +89,19 @@ model reviews {
 }
 
 model sessions {
-  id                             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  host_id                        String?  @db.Uuid
-  guest_id                       String?  @db.Uuid
+  id                             String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  host_id                        String?              @db.Uuid
+  guest_id                       String?              @db.Uuid
   title                          String
   description                    String?
   start_at                       DateTime
   end_at                         DateTime
-  status                         String?  @default("pending")  // pending, scheduled, completed, cancelled, rejected
-  created_at                     DateTime @default(now())
-  users_sessions_guest_idTousers users?   @relation("sessions_guest_idTousers", fields: [guest_id], references: [id])
-  users_sessions_host_idTousers  users?   @relation("sessions_host_idTousers", fields: [host_id], references: [id], onDelete: Cascade)
+  status                         String?              @default("pending") // pending, scheduled, completed, cancelled, rejected
+  created_at                     DateTime             @default(now())
+  availability_id                String?              @db.Uuid
+  users_sessions_guest_idTousers users?               @relation("sessions_guest_idTousers", fields: [guest_id], references: [id])
+  users_sessions_host_idTousers  users?               @relation("sessions_host_idTousers", fields: [host_id], references: [id], onDelete: Cascade)
+  mentor_availability            mentor_availability? @relation(fields: [availability_id], references: [id], onDelete: SetNull)
 
   @@index([host_id, start_at], map: "idx_sessions_host_start")
 }
@@ -127,31 +129,36 @@ model spatial_ref_sys {
 }
 
 model users {
-  id                                   String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                                   String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name                                 String?
-  email                                String             @unique
+  email                                String                @unique
   email_verified                       DateTime?
   image                                String?
   image_public_id                      String?
   bio                                  String?
   city                                 String?
-  role                                 role_enum          @default(USER)
-  created_at                           DateTime           @default(now())
-  updated_at                           DateTime           @default(now())
+  role                                 role_enum             @default(USER)
+  created_at                           DateTime              @default(now())
+  updated_at                           DateTime              @default(now())
   password                             String?
+  title                                String?
+  social_links                         Json?
+  availability                         Json?
   account_sessions                     account_sessions[]
   accounts                             accounts[]
-  matches_matches_receiver_idTousers   matches[]          @relation("matches_receiver_idTousers")
-  matches_matches_sender_idTousers     matches[]          @relation("matches_sender_idTousers")
-  messages_messages_receiver_idTousers messages[]         @relation("messages_receiver_idTousers")
-  messages_messages_sender_idTousers   messages[]         @relation("messages_sender_idTousers")
+  matches_matches_receiver_idTousers   matches[]             @relation("matches_receiver_idTousers")
+  matches_matches_sender_idTousers     matches[]             @relation("matches_sender_idTousers")
+  messages_messages_receiver_idTousers messages[]            @relation("messages_receiver_idTousers")
+  messages_messages_sender_idTousers   messages[]            @relation("messages_sender_idTousers")
   notifications                        notifications[]
-  reviews_reviews_author_idTousers     reviews[]          @relation("reviews_author_idTousers")
-  reviews_reviews_target_idTousers     reviews[]          @relation("reviews_target_idTousers")
-  sessions_sessions_guest_idTousers    sessions[]         @relation("sessions_guest_idTousers")
-  sessions_sessions_host_idTousers     sessions[]         @relation("sessions_host_idTousers")
+  reviews_reviews_author_idTousers     reviews[]             @relation("reviews_author_idTousers")
+  reviews_reviews_target_idTousers     reviews[]             @relation("reviews_target_idTousers")
+  sessions_sessions_guest_idTousers    sessions[]            @relation("sessions_guest_idTousers")
+  sessions_sessions_host_idTousers     sessions[]            @relation("sessions_host_idTousers")
   skills                               skills[]
   wanted_skills                        wanted_skills[]
+  languages                            languages[]
+  mentor_availability                  mentor_availability[]
 
   @@index([email], map: "idx_users_email")
 }
@@ -172,6 +179,32 @@ model wanted_skills {
   users      users?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([name], map: "idx_wanted_name")
+}
+
+model languages {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String?  @db.Uuid
+  name       String
+  level      String?
+  created_at DateTime @default(now())
+  users      users?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id], map: "idx_languages_user")
+}
+
+model mentor_availability {
+  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  mentor_id  String     @db.Uuid
+  date       DateTime   @db.Date
+  start_time String // Format: "HH:mm"
+  end_time   String // Format: "HH:mm"
+  is_booked  Boolean    @default(false)
+  created_at DateTime   @default(now())
+  users      users      @relation(fields: [mentor_id], references: [id], onDelete: Cascade)
+  sessions   sessions[]
+
+  @@index([mentor_id, date], map: "idx_availability_mentor_date")
+  @@index([mentor_id, is_booked], map: "idx_availability_mentor_booked")
 }
 
 enum role_enum {

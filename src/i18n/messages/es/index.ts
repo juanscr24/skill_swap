@@ -11,6 +11,7 @@ import dashboard from './pages/dashboard.json';
 import profile from './pages/profile.json';
 import mentors from './pages/mentors.json';
 import matching from './pages/matching.json';
+import settings from './pages/settings.json';
 import requests from './pages/requests.json';
 import chat from './pages/chat.json';
 import sessions from './pages/sessions.json';
@@ -30,6 +31,7 @@ export default {
     profile,
     mentors,
     matching,
+    settings,
     requests,
     chat,
     sessions,

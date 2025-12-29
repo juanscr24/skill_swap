@@ -84,6 +84,30 @@ export function useReviews(targetUserId?: string) {
     }
   }
 
+  const deleteReview = async (reviewId: string) => {
+    try {
+      setError(null)
+
+      const response = await fetch(`/api/reviews/${reviewId}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Error al eliminar reseña')
+      }
+
+      // Eliminar la reseña de la lista local
+      setReviews((prev) => prev.filter((review) => review.id !== reviewId))
+
+      return { success: true }
+    } catch (err: any) {
+      console.error('Error deleting review:', err)
+      setError(err.message || 'Error al eliminar reseña')
+      return { success: false, error: err.message }
+    }
+  }
+
   useEffect(() => {
     if (targetUserId) {
       fetchReviews(targetUserId)
@@ -98,6 +122,7 @@ export function useReviews(targetUserId?: string) {
     isLoading,
     error,
     createReview,
+    deleteReview,
     refetch: targetUserId ? () => fetchReviews(targetUserId) : undefined,
   }
 }
