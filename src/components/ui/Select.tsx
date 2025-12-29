@@ -7,6 +7,7 @@ export interface SelectProps {
     placeholder?: string
     className?: string
     error?: string
+    required?: boolean
 }
 
 export const Select = ({
@@ -17,7 +18,8 @@ export const Select = ({
     options,
     placeholder,
     className = '',
-    error
+    error,
+    required
 }: SelectProps) => {
     return (
         <div className="w-full">
@@ -30,6 +32,7 @@ export const Select = ({
                 id={id}
                 value={value}
                 onChange={onChange}
+                required={required}
                 className={`bg-(--bg-2) border border-(--border-1) text-(--text-1) w-full outline-none px-4 max-sm:px-3 py-3 max-sm:py-2 max-sm:text-sm rounded-md focus:border-(--button-1) transition-colors cursor-pointer
                     ${error ? 'border-red-500' : ''}
                     ${className}`}
