@@ -217,6 +217,7 @@ export async function getPendingRequests(mentorId: string) {
         select: {
           id: true,
           name: true,
+          title: true,
           image: true,
           email: true,
         },

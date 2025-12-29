@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/Button'
 import { Avatar } from '@/components/ui/Avatar'
 import { useSessionRequests } from '@/hooks'
+import { FiCalendar } from 'react-icons/fi'
 
 interface PendingRequestsListProps {
   translations: {
@@ -49,8 +50,8 @@ export const PendingRequestsList = ({
 
   const formatDate = (dateString: string | Date) => {
     return new Date(dateString).toLocaleDateString('es-ES', {
-      weekday: 'long',
-      month: 'long',
+      weekday: 'short',
+      month: 'short',
       day: 'numeric',
     })
   }
@@ -62,120 +63,82 @@ export const PendingRequestsList = ({
     })
   }
 
-  const calculateDuration = (start: string | Date, end: string | Date) => {
-    const startTime = new Date(start).getTime()
-    const endTime = new Date(end).getTime()
-    return Math.round((endTime - startTime) / (1000 * 60))
-  }
-
   if (isLoading) {
     return (
-      <div className="text-center py-8 text-(--text-2)">Cargando...</div>
-    )
-  }
-
-  if (requests.length === 0) {
-    return (
-      <div className="text-center py-8 text-(--text-2)">
-        No tienes solicitudes pendientes
+      <div className="bg-[var(--bg-2)] border border-[var(--border-1)] rounded-xl p-6">
+        <div className="text-center py-8 text-[var(--text-2)]">Cargando...</div>
       </div>
     )
   }
 
+  if (requests.length === 0) {
+    return null
+  }
+
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-(--text-1)">
-        {translations.pendingRequests}
-      </h2>
+    <div className="bg-[var(--bg-2)] border border-[var(--border-1)] rounded-xl p-6">
+      <div className="flex items-center gap-2 mb-6">
+        <h2 className="text-xl font-semibold text-[var(--text-1)]">
+          {translations.pendingRequests}
+        </h2>
+        <span className="bg-[var(--button-1)] text-white text-xs font-bold px-2.5 py-1 rounded-full">
+          {requests.length}
+        </span>
+      </div>
 
       <div className="space-y-4">
-        {requests.map((request) => (
-          <div
-            key={request.id}
-            className="bg-(--bg-2) border border-(--border-1) rounded-lg p-6 space-y-4"
-          >
-            {/* Student Info */}
-            <div className="flex items-center gap-3">
-              <Avatar
-                src={request.users_sessions_guest_idTousers?.image}
-                alt={request.users_sessions_guest_idTousers?.name || 'Student'}
-                size="md"
-              />
-              <div>
-                <p className="font-semibold text-(--text-1)">
-                  {request.users_sessions_guest_idTousers?.name}
-                </p>
-                <p className="text-sm text-(--text-2)">
-                  {request.users_sessions_guest_idTousers?.email}
-                </p>
-              </div>
-            </div>
+        {requests.map((request) => {
+          const guest = request.users_sessions_guest_idTousers
+          return (
+            <div
+              key={request.id}
+              className="bg-[var(--bg-1)] border border-[var(--border-1)] rounded-xl p-5"
+            >
+              <div className="flex items-start justify-between gap-4">
+                {/* User Info */}
+                <div className="flex items-center gap-3 flex-1">
+                  <Avatar
+                    src={guest?.image}
+                    alt={guest?.name || 'User'}
+                    size="md"
+                  />
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-[var(--text-1)]">
+                      {guest?.name || 'Usuario'}
+                    </h3>
+                    <p className="text-sm text-[var(--text-2)]">
+                      {request.title || 'Sin tema'}
+                    </p>
 
-            {/* Session Details */}
-            <div className="space-y-2">
-              <div>
-                <p className="text-sm text-(--text-2)">{translations.topic}</p>
-                <p className="font-semibold text-(--text-1)">{request.title}</p>
-              </div>
-
-              {request.description && (
-                <div>
-                  <p className="text-sm text-(--text-2)">
-                    {translations.description}
-                  </p>
-                  <p className="text-(--text-1)">{request.description}</p>
-                </div>
-              )}
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-(--text-2)">{translations.date}</p>
-                  <p className="text-(--text-1)">
-                    {formatDate(request.start_at)}
-                  </p>
+                    {/* Date and Time */}
+                    <div className="flex items-center gap-2 mt-2 text-sm text-[var(--text-2)]">
+                      <FiCalendar className="text-[var(--button-1)]" />
+                      <span>
+                        {formatDate(request.start_at)} • {formatTime(request.start_at)}
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <p className="text-sm text-(--text-2)">{translations.time}</p>
-                  <p className="text-(--text-1)">
-                    {formatTime(request.start_at)} -{' '}
-                    {formatTime(request.end_at)}
-                  </p>
+                {/* Action Buttons */}
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={() => handleReject(request.id)}
+                    className="px-4 py-2 bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] rounded-lg hover:bg-[var(--bg-1)] transition-colors"
+                  >
+                    {translations.rejectRequest}
+                  </Button>
+                  <Button
+                    onClick={() => handleAccept(request.id)}
+                    className="px-4 py-2 bg-[var(--button-1)] text-white rounded-lg hover:opacity-90 transition-opacity"
+                  >
+                    {translations.acceptRequest}
+                  </Button>
                 </div>
               </div>
-
-              <div>
-                <p className="text-sm text-(--text-2)">
-                  {translations.duration}
-                </p>
-                <p className="text-(--text-1)">
-                  {calculateDuration(request.start_at, request.end_at)}{' '}
-                  {translations.minutes}
-                </p>
-              </div>
             </div>
-
-            {/* Actions */}
-            <div className="flex gap-3 pt-2">
-              <Button
-                primary
-                onClick={() => handleAccept(request.id)}
-                disabled={isLoading}
-                className="flex-1"
-              >
-                {translations.acceptRequest}
-              </Button>
-              <Button
-                secondary
-                onClick={() => handleReject(request.id)}
-                disabled={isLoading}
-                className="flex-1"
-              >
-                {translations.rejectRequest}
-              </Button>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

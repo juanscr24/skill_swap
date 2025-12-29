@@ -47,7 +47,7 @@ export function useAvailability(mentorId?: string) {
   }, [mentorId])
 
   const addAvailability = async (
-    date: Date,
+    date: Date | string,
     startTime: string,
     endTime: string
   ) => {
@@ -61,7 +61,7 @@ export function useAvailability(mentorId?: string) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          date: date.toISOString(),
+          date: typeof date === 'string' ? date : date.toISOString(),
           start_time: startTime,
           end_time: endTime,
         }),
