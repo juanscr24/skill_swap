@@ -91,24 +91,24 @@ export const AvailabilityManager = ({
   }
 
   return (
-    <div className="space-y-8 bg-[var(--bg-1)] rounded-2xl">
+    <div className="space-y-8 bg-(--bg-1) rounded-2xl">
       {/* Header */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-[var(--text-1)]">
+        <h1 className="text-3xl font-bold text-(--text-1)">
           {translations.manageAvailability}
         </h1>
-        <p className="text-[var(--text-2)]">
+        <p className="text-(--text-2)">
           {translations.manageScheduleSubtitle}
         </p>
       </div>
 
       {/* Add New Availability Section */}
-      <div className="bg-[var(--bg-2)] border border-[var(--border-1)] rounded-xl p-6">
+      <div className="bg-(--bg-2) border border-(--border-1) rounded-xl p-6">
         <div className="flex items-center gap-2 mb-6">
-          <div className="w-10 h-10 rounded-lg bg-[var(--button-1)] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-lg bg-(--button-1) flex items-center justify-center">
             <FiPlus className="text-white text-xl" />
           </div>
-          <h2 className="text-xl font-semibold text-[var(--text-1)]">
+          <h2 className="text-xl font-semibold text-(--text-1)">
             {translations.addNewAvailability}
           </h2>
         </div>
@@ -117,7 +117,7 @@ export const AvailabilityManager = ({
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Day Selector */}
             <div className="space-y-2">
-              <label className="text-sm text-[var(--text-2)]">
+              <label className="text-sm text-(--text-2)">
                 {translations.dayOfWeek}
               </label>
               <input
@@ -127,13 +127,13 @@ export const AvailabilityManager = ({
                   setNewSlot({ ...newSlot, date: e.target.value })
                 }
                 required
-                className="w-full px-4 py-3 bg-[var(--bg-1)] border border-[var(--border-1)] rounded-lg text-[var(--text-1)] focus:outline-none focus:ring-2 focus:ring-[var(--button-1)] transition-all"
+                className="w-full px-4 py-3 bg-(--bg-1) border border-(--border-1) rounded-lg text-(--text-1) focus:outline-none focus:ring-2 focus:ring-(--button-1) transition-all"
               />
             </div>
 
             {/* Start Time */}
             <div className="space-y-2">
-              <label className="text-sm text-[var(--text-2)]">
+              <label className="text-sm text-(--text-2)">
                 {translations.startTime}
               </label>
               <div className="relative">
@@ -144,16 +144,16 @@ export const AvailabilityManager = ({
                     setNewSlot({ ...newSlot, startTime: e.target.value })
                   }
                   required
-                  className="w-full px-4 py-3 bg-[var(--bg-1)] border border-[var(--border-1)] rounded-lg text-[var(--text-1)] focus:outline-none focus:ring-2 focus:ring-[var(--button-1)] transition-all"
+                  className="w-full px-4 py-3 bg-(--bg-1) border border-(--border-1) rounded-lg text-(--text-1) focus:outline-none focus:ring-2 focus:ring-(--button-1) transition-all"
                   placeholder="--:--"
                 />
-                <FiClock className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-2)] pointer-events-none" />
+                <FiClock className="absolute right-4 top-1/2 -translate-y-1/2 text-(--text-2) pointer-events-none" />
               </div>
             </div>
 
             {/* End Time */}
             <div className="space-y-2">
-              <label className="text-sm text-[var(--text-2)]">
+              <label className="text-sm text-(--text-2)">
                 {translations.endTime}
               </label>
               <div className="relative">
@@ -164,10 +164,10 @@ export const AvailabilityManager = ({
                     setNewSlot({ ...newSlot, endTime: e.target.value })
                   }
                   required
-                  className="w-full px-4 py-3 bg-[var(--bg-1)] border border-[var(--border-1)] rounded-lg text-[var(--text-1)] focus:outline-none focus:ring-2 focus:ring-[var(--button-1)] transition-all"
+                  className="w-full px-4 py-3 bg-(--bg-1) border border-(--border-1) rounded-lg text-(--text-1) focus:outline-none focus:ring-2 focus:ring-(--button-1) transition-all"
                   placeholder="--:--"
                 />
-                <FiClock className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-2)] pointer-events-none" />
+                <FiClock className="absolute right-4 top-1/2 -translate-y-1/2 text-(--text-2) pointer-events-none" />
               </div>
             </div>
 
@@ -175,7 +175,7 @@ export const AvailabilityManager = ({
             <div className="flex items-end">
               <Button
                 type="submit"
-                className="w-full py-3 bg-[var(--button-1)] hover:opacity-90 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 bg-(--button-1) hover:opacity-90 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2"
               >
                 <FiPlus className="text-xl" />
                 {translations.add}
@@ -186,39 +186,39 @@ export const AvailabilityManager = ({
       </div>
 
       {/* Current Availabilities */}
-      <div className="bg-[var(--bg-2)] border border-[var(--border-1)] rounded-xl p-6">
+      <div className="bg-(--bg-2) border border-(--border-1) rounded-xl p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-[var(--text-1)]">
+          <h2 className="text-xl font-semibold text-(--text-1)">
             {translations.currentAvailabilities}
           </h2>
-          <button className="text-[var(--button-1)] hover:underline text-sm font-medium">
+          <button className="text-(--button-1) hover:underline text-sm font-medium">
             {translations.viewFullCalendar}
           </button>
         </div>
 
         {isLoading ? (
-          <div className="text-center py-12 text-[var(--text-2)]">
+          <div className="text-center py-12 text-(--text-2)">
             Cargando...
           </div>
         ) : !availability || availability.length === 0 ? (
-          <div className="text-center py-12 text-[var(--text-2)]">
+          <div className="text-center py-12 text-(--text-2)">
             Mostrando 0 ranuras de disponibilidad
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[var(--border-1)]">
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-[var(--text-2)] uppercase tracking-wider">
+                <tr className="border-b border-(--border-1)">
+                  <th className="text-left py-3 px-4 text-xs font-semibold text-(--text-2) uppercase tracking-wider">
                     {translations.day}
                   </th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-[var(--text-2)] uppercase tracking-wider">
+                  <th className="text-left py-3 px-4 text-xs font-semibold text-(--text-2) uppercase tracking-wider">
                     {translations.schedule}
                   </th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-[var(--text-2)] uppercase tracking-wider">
+                  <th className="text-left py-3 px-4 text-xs font-semibold text-(--text-2) uppercase tracking-wider">
                     {translations.state}
                   </th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-[var(--text-2)] uppercase tracking-wider">
+                  <th className="text-left py-3 px-4 text-xs font-semibold text-(--text-2) uppercase tracking-wider">
                     {translations.actions}
                   </th>
                 </tr>
@@ -227,12 +227,12 @@ export const AvailabilityManager = ({
                 {availability.map((slot) => (
                   <tr
                     key={slot.id}
-                    className="border-b border-[var(--border-1)] hover:bg-[var(--bg-1)] transition-colors"
+                    className="border-b border-(--border-1) hover:bg-(--bg-1) transition-colors"
                   >
-                    <td className="py-4 px-4 text-[var(--text-1)] font-medium capitalize">
+                    <td className="py-4 px-4 text-(--text-1) font-medium capitalize">
                       {formatDate(slot.date)}
                     </td>
-                    <td className="py-4 px-4 text-[var(--text-1)]">
+                    <td className="py-4 px-4 text-(--text-1)">
                       {formatTime(slot.start_time)} - {formatTime(slot.end_time)}
                     </td>
                     <td className="py-4 px-4">
@@ -244,7 +244,7 @@ export const AvailabilityManager = ({
                     <td className="py-4 px-4">
                       <button
                         onClick={() => handleDelete(slot.id)}
-                        className="text-[var(--text-2)] hover:text-red-500 transition-colors"
+                        className="text-(--text-2) hover:text-red-500 transition-colors"
                       >
                         <FiTrash2 className="text-xl" />
                       </button>

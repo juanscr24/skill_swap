@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { Session } from '@/types/models'
 
 export function useSessionRequests() {
   const [requests, setRequests] = useState<any[]>([])
