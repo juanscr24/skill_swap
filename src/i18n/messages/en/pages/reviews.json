@@ -12,5 +12,8 @@
     "date": "Date",
     "thanksForReview": "Thanks for your review!",
     "ratingRequired": "Rating is required",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "selectUser": "Select User",
+    "userIdPlaceholder": "Select a user to review",
+    "cancel": "Cancel"
 }

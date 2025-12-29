@@ -12,5 +12,8 @@
     "date": "Fecha",
     "thanksForReview": "¡Gracias por tu reseña!",
     "ratingRequired": "La calificación es obligatoria",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "selectUser": "Seleccionar Usuario",
+    "userIdPlaceholder": "Selecciona un usuario para reseñar",
+    "cancel": "Cancelar"
 }
