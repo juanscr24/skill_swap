@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model account_sessions {
@@ -48,18 +49,44 @@ model matches {
   @@index([sender_id], map: "idx_matches_sender")
 }
 
-model messages {
-  id                                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  sender_id                         String?  @db.Uuid
-  receiver_id                       String?  @db.Uuid
-  content                           String
-  read                              Boolean  @default(false)
-  created_at                        DateTime @default(now())
-  users_messages_receiver_idTousers users?   @relation("messages_receiver_idTousers", fields: [receiver_id], references: [id], onDelete: Cascade)
-  users_messages_sender_idTousers   users?   @relation("messages_sender_idTousers", fields: [sender_id], references: [id], onDelete: Cascade)
+// Tabla de conversaciones - usada por Prisma para crear/listar conversaciones
+model conversations {
+  id                  String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at          DateTime                   @default(now())
+  updated_at          DateTime                   @default(now()) @updatedAt
+  last_message_at     DateTime?
+  participants        conversation_participants[]
+  messages            messages[]
 
-  @@index([created_at], map: "idx_messages_created")
-  @@index([receiver_id], map: "idx_messages_receiver")
+  @@index([updated_at], map: "idx_conversations_updated")
+}
+
+// Tabla de participantes - usada por Prisma
+model conversation_participants {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  conversation_id String        @db.Uuid
+  user_id         String        @db.Uuid
+  joined_at       DateTime      @default(now())
+  last_read_at    DateTime?
+  conversation    conversations @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
+  user            users         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([conversation_id, user_id])
+  @@index([user_id], map: "idx_participants_user")
+  @@index([conversation_id], map: "idx_participants_conversation")
+}
+
+// Tabla de mensajes - Supabase Realtime la usará directamente
+model messages {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  conversation_id String        @db.Uuid
+  sender_id       String        @db.Uuid
+  content         String
+  created_at      DateTime      @default(now())
+  conversation    conversations @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
+  sender          users         @relation("messages_sender", fields: [sender_id], references: [id], onDelete: Cascade)
+
+  @@index([conversation_id, created_at], map: "idx_messages_conversation_created")
   @@index([sender_id], map: "idx_messages_sender")
 }
 
@@ -148,8 +175,8 @@ model users {
   accounts                             accounts[]
   matches_matches_receiver_idTousers   matches[]             @relation("matches_receiver_idTousers")
   matches_matches_sender_idTousers     matches[]             @relation("matches_sender_idTousers")
-  messages_messages_receiver_idTousers messages[]            @relation("messages_receiver_idTousers")
-  messages_messages_sender_idTousers   messages[]            @relation("messages_sender_idTousers")
+  messages_sender                      messages[]            @relation("messages_sender")
+  conversation_participants            conversation_participants[]
   notifications                        notifications[]
   reviews_reviews_author_idTousers     reviews[]             @relation("reviews_author_idTousers")
   reviews_reviews_target_idTousers     reviews[]             @relation("reviews_target_idTousers")
