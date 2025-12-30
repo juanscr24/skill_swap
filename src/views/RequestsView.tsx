@@ -57,8 +57,22 @@ const ReceivedRequestsList = () => {
             }
         }
 
-        const handleSendMessage = () => {
-            router.push(`/chats`)
+        const handleSendMessage = async () => {
+            try {
+                const response = await fetch('/api/conversations', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ otherUserId: otherUser?.id })
+                })
+                
+                if (!response.ok) throw new Error('Failed to create conversation')
+                
+                const { conversationId } = await response.json()
+                router.push(`/chats?conversation=${conversationId}`)
+            } catch (error) {
+                console.error('Error creating conversation:', error)
+                router.push('/chats')
+            }
         }
 
         const createdAt = new Date(match.createdAt)
@@ -144,8 +158,22 @@ const AcceptedRequestsList = () => {
         const isCurrentUserSender = match.senderId === session?.user?.id
         const otherUser = isCurrentUserSender ? match.receiver : match.sender
         
-        const handleSendMessage = () => {
-            router.push(`/chats`)
+        const handleSendMessage = async () => {
+            try {
+                const response = await fetch('/api/conversations', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ otherUserId: otherUser?.id })
+                })
+                
+                if (!response.ok) throw new Error('Failed to create conversation')
+                
+                const { conversationId } = await response.json()
+                router.push(`/chats?conversation=${conversationId}`)
+            } catch (error) {
+                console.error('Error creating conversation:', error)
+                router.push('/chats')
+            }
         }
 
         const createdAt = new Date(match.createdAt)

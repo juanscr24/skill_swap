@@ -12,7 +12,9 @@ export const useConversations = () => {
       if (!response.ok) throw new Error('Error al obtener conversaciones')
       return response.json()
     },
-    refetchInterval: 10000, // Refetch cada 10 segundos para actualizar la lista
+    staleTime: 5 * 60 * 1000, // 5 minutos - no refetch automático tan agresivo
+    gcTime: 10 * 60 * 1000, // 10 minutos antes de liberar memoria
+    refetchOnWindowFocus: false, // No refetch al cambiar de pestaña
   })
 }
 

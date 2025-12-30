@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useTranslations } from 'next-intl'
 import { useSession } from 'next-auth/react'
+import { useSearchParams } from 'next/navigation'
 import { useConversations } from '@/hooks/useConversations'
 import { useRealtimeMessages } from '@/hooks/useRealtimeMessages'
 import { Card } from '@/components/ui/Card'
@@ -12,6 +13,7 @@ import { FiSend, FiCheck } from 'react-icons/fi'
 export const ChatView = () => {
   const t = useTranslations('chat')
   const { data: session } = useSession()
+  const searchParams = useSearchParams()
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null)
   const [messageInput, setMessageInput] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -19,6 +21,14 @@ export const ChatView = () => {
 
   // Obtener lista de conversaciones usando Prisma (a través de API)
   const { data: conversations, isLoading: conversationsLoading } = useConversations()
+
+  // Seleccionar conversación desde URL si existe
+  useEffect(() => {
+    const conversationFromUrl = searchParams.get('conversation')
+    if (conversationFromUrl) {
+      setSelectedConversationId(conversationFromUrl)
+    }
+  }, [searchParams])
 
   // Obtener mensajes en tiempo real usando Supabase Realtime
   const {
@@ -39,14 +49,20 @@ export const ChatView = () => {
 
   // Scroll automático al final cuando cambian los mensajes
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
-
-  // Marcar como leído cuando se selecciona una conversación
-  useEffect(() => {
-    if (selectedConversationId && session?.user?.id) {
-      markAsRead(session.user.id)
+    if (messages.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
+  }, [messages.length]) // Solo cuando cambia la cantidad, no todo el array
+
+  // Marcar como leído cuando se selecciona una conversación (con debounce)
+  useEffect(() => {
+    if (!selectedConversationId || !session?.user?.id) return
+
+    const timeoutId = setTimeout(() => {
+      markAsRead(session.user.id)
+    }, 500) // Esperar 500ms antes de marcar como leído
+
+    return () => clearTimeout(timeoutId)
   }, [selectedConversationId, session?.user?.id, markAsRead])
 
   // Obtener la conversación seleccionada
@@ -60,12 +76,15 @@ export const ChatView = () => {
     
     if (!messageInput.trim() || !session?.user?.id || !selectedConversationId) return
 
+    const content = messageInput
+    setMessageInput('') // Limpiar input inmediatamente para mejor UX
+    inputRef.current?.focus()
+
     try {
-      await sendMessage(messageInput, session.user.id)
-      setMessageInput('')
-      inputRef.current?.focus()
+      await sendMessage(content, session.user.id)
     } catch (error) {
       console.error('Error sending message:', error)
+      setMessageInput(content) // Restaurar mensaje si falla
       // Aquí podrías mostrar un toast de error
     }
   }

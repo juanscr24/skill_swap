@@ -141,24 +141,15 @@ export const matchesService = {
       }
     })
 
-    // Si existe solicitud inversa y está pendiente, aceptar ambas automáticamente
+    // Si existe solicitud inversa y está pendiente, aceptar automáticamente
     if (inverseMatch && inverseMatch.status === 'pending') {
-      // Actualizar la solicitud inversa a accepted
-      await prisma.matches.update({
+      // Solo actualizar la solicitud inversa a accepted
+      // NO crear una nueva solicitud
+      const acceptedMatch = await prisma.matches.update({
         where: { id: inverseMatch.id },
         data: {
           status: 'accepted',
           updated_at: new Date()
-        }
-      })
-
-      // Crear la nueva solicitud directamente como accepted
-      const match = await prisma.matches.create({
-        data: {
-          sender_id: senderId,
-          receiver_id: receiverId,
-          skill,
-          status: 'accepted'
         },
         include: {
           users_matches_sender_idTousers: {
@@ -178,7 +169,7 @@ export const matchesService = {
         }
       })
 
-      return match
+      return acceptedMatch
     }
 
     // Si no existe solicitud inversa, crear solicitud normal como pending

@@ -1,10 +1,12 @@
 {
     "chats": "Mensajes",
+    "conversations": "Conversaciones",
     "noChats": "No tienes conversaciones",
     "typeMessage": "Escribe un mensaje...",
     "send": "Enviar",
     "online": "En línea",
     "offline": "Desconectado",
+    "connecting": "Conectando...",
     "typing": "Escribiendo...",
     "today": "Hoy",
     "yesterday": "Ayer",

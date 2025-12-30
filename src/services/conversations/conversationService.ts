@@ -12,27 +12,33 @@ export async function getOrCreateConversation(
   userId1: string,
   userId2: string
 ): Promise<string> {
-  // Buscar conversación existente
+  // Query optimizado: buscar conversación con ambos usuarios directamente
   const existingConversation = await prisma.conversations.findFirst({
     where: {
-      participants: {
-        every: {
-          user_id: {
-            in: [userId1, userId2],
+      AND: [
+        {
+          participants: {
+            some: {
+              user_id: userId1,
+            },
           },
         },
-      },
+        {
+          participants: {
+            some: {
+              user_id: userId2,
+            },
+          },
+        },
+      ],
     },
-    include: {
-      participants: true,
+    select: {
+      id: true,
     },
   })
 
-  // Si ya existe una conversación entre estos usuarios
-  if (
-    existingConversation &&
-    existingConversation.participants.length === 2
-  ) {
+  // Si ya existe, retornar su ID
+  if (existingConversation) {
     return existingConversation.id
   }
 
@@ -45,6 +51,9 @@ export async function getOrCreateConversation(
           { user_id: userId2 },
         ],
       },
+    },
+    select: {
+      id: true,
     },
   })
 
@@ -65,6 +74,11 @@ export async function getUserConversations(
     },
     include: {
       participants: {
+        where: {
+          user_id: {
+            not: userId, // Solo traer el otro participante
+          },
+        },
         include: {
           user: {
             select: {
@@ -81,6 +95,13 @@ export async function getUserConversations(
           created_at: 'desc',
         },
         take: 1,
+        select: {
+          id: true,
+          conversation_id: true,
+          sender_id: true,
+          content: true,
+          created_at: true,
+        },
       },
     },
     orderBy: {
@@ -88,25 +109,16 @@ export async function getUserConversations(
     },
   })
 
-  // Transformar los datos para incluir el otro usuario y contar no leídos
+  // Transformar los datos para incluir el otro usuario
   return conversations.map((conv) => {
-    const currentUserParticipant = conv.participants.find(
-      (p) => p.user_id === userId
-    )
-    const otherParticipant = conv.participants.find((p) => p.user_id !== userId)
+    const otherParticipant = conv.participants[0] // Ya filtramos solo el otro usuario
 
     return {
       id: conv.id,
       created_at: conv.created_at.toISOString(),
       updated_at: conv.updated_at.toISOString(),
       last_message_at: conv.last_message_at?.toISOString() || null,
-      participants: conv.participants.map((p) => ({
-        id: p.id,
-        conversation_id: p.conversation_id,
-        user_id: p.user_id,
-        joined_at: p.joined_at.toISOString(),
-        last_read_at: p.last_read_at?.toISOString() || null,
-      })),
+      participants: [], // No necesitamos devolver todos los participantes
       lastMessage: conv.messages[0]
         ? {
             id: conv.messages[0].id,
@@ -124,8 +136,7 @@ export async function getUserConversations(
             image: otherParticipant.user.image,
           }
         : undefined,
-      // Calcular mensajes no leídos (aproximado, basado en last_read_at)
-      unreadCount: 0, // Se puede calcular con una query adicional si es necesario
+      unreadCount: 0, // Se puede calcular si es necesario
     }
   })
 }

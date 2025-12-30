@@ -60,18 +60,31 @@ export const messagesService = {
       }
     })
 
-    // Transformar a formato esperado por el frontend
-    const conversationsData = conversations.map(conv => {
+    // Transformar a formato esperado por el frontend y deduplicar por userId
+    const conversationsMap = new Map<string, Conversation>()
+    
+    for (const conv of conversations) {
       const otherParticipant = conv.participants.find(p => p.user_id !== userId)
+      
+      // Saltar si no hay otro participante válido
+      if (!otherParticipant?.user_id) continue
+      
+      // Si ya procesamos una conversación con este usuario, mantener la más reciente
+      const existingConv = conversationsMap.get(otherParticipant.user_id)
+      if (existingConv) {
+        const existingDate = new Date(existingConv.lastMessage.createdAt).getTime()
+        const currentDate = conv.messages[0]?.created_at.getTime() || 0
+        
+        // Mantener la conversación con el mensaje más reciente
+        if (currentDate <= existingDate) continue
+      }
+      
       const lastMessage = conv.messages[0]
 
-      // Contar mensajes no leídos (simplificado)
-      const unreadCount = 0 // Se puede calcular si es necesario
-
-      return {
-        userId: otherParticipant?.user_id || '',
-        userName: otherParticipant?.user.name || null,
-        userImage: otherParticipant?.user.image || null,
+      conversationsMap.set(otherParticipant.user_id, {
+        userId: otherParticipant.user_id,
+        userName: otherParticipant.user.name || null,
+        userImage: otherParticipant.user.image || null,
         lastMessage: lastMessage ? {
           content: lastMessage.content,
           createdAt: lastMessage.created_at
@@ -79,9 +92,11 @@ export const messagesService = {
           content: '',
           createdAt: new Date()
         },
-        unreadCount
-      }
-    })
+        unreadCount: 0
+      })
+    }
+
+    const conversationsData = Array.from(conversationsMap.values())
 
     // Agregar matches aceptados que no tienen conversación aún
     const acceptedMatches = await prisma.matches.findMany({
@@ -111,15 +126,23 @@ export const messagesService = {
 
     // Crear un Set con los IDs de usuarios que ya tienen conversación
     const existingUserIds = new Set(conversationsData.map(c => c.userId))
+    
+    // Set para evitar agregar el mismo usuario dos veces desde matches
+    const addedMatchUserIds = new Set<string>()
 
-    // Agregar matches sin conversación
+    // Agregar matches sin conversación (evitando duplicados)
     for (const match of acceptedMatches) {
       const otherUserId = match.sender_id === userId ? match.receiver_id : match.sender_id
       const otherUser = match.sender_id === userId 
         ? match.users_matches_receiver_idTousers
         : match.users_matches_sender_idTousers
 
-      if (!otherUserId || !otherUser || existingUserIds.has(otherUserId)) continue
+      // Saltar si ya existe conversación o si ya agregamos este usuario
+      if (!otherUserId || !otherUser || existingUserIds.has(otherUserId) || addedMatchUserIds.has(otherUserId)) {
+        continue
+      }
+
+      addedMatchUserIds.add(otherUserId)
 
       conversationsData.push({
         userId: otherUserId,
@@ -133,7 +156,12 @@ export const messagesService = {
       })
     }
 
-    return conversationsData.sort((a, b) => 
+    // Deduplicar conversationsData por userId por si acaso
+    const uniqueConversations = Array.from(
+      new Map(conversationsData.map(conv => [conv.userId, conv])).values()
+    )
+
+    return uniqueConversations.sort((a, b) => 
       b.lastMessage.createdAt.getTime() - a.lastMessage.createdAt.getTime()
     )
   },

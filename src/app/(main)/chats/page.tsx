@@ -1,4 +1,4 @@
-import { ChatView } from "@/views/ChatView"
+import { ChatView } from "@/views/ChatViewRealtime"
 
 export default function ChatsPage() {
     return <ChatView />
