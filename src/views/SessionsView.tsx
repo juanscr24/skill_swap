@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/Card"
 import { Avatar } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
 import { Tabs } from "@/components/ui/Tabs"
-import { Button } from "@/components"
+import { Button, LoadingSpinner } from "@/components"
 import Link from "next/link"
 import { FiCalendar, FiClock } from "react-icons/fi"
 import { useSession } from "next-auth/react"
@@ -186,7 +186,7 @@ export const SessionsView = () => {
             content: (
                 <div className="space-y-4 max-sm:space-y-3">
                     {isLoading ? (
-                        <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('loading')}</p>
+                        <LoadingSpinner />
                     ) : pendingSessions.length === 0 ? (
                         <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">No hay sesiones pendientes</p>
                     ) : (
@@ -203,7 +203,7 @@ export const SessionsView = () => {
             content: (
                 <div className="space-y-4 max-sm:space-y-3">
                     {isLoading ? (
-                        <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('loading')}</p>
+                        <LoadingSpinner />
                     ) : upcomingSessions.length === 0 ? (
                         <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('noSessions')}</p>
                     ) : (
@@ -220,7 +220,7 @@ export const SessionsView = () => {
             content: (
                 <div className="space-y-4 max-sm:space-y-3">
                     {isLoading ? (
-                        <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('loading')}</p>
+                        <LoadingSpinner />
                     ) : pastSessions.length === 0 ? (
                         <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('noSessions')}</p>
                     ) : (

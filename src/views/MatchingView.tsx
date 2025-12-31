@@ -3,7 +3,7 @@ import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { useMatches } from "@/hooks"
 import { MatchCard } from "@/components/features/matching"
-import { Card, Button } from "@/components"
+import { Card, Button, LoadingSpinner } from "@/components"
 
 export const MatchingView = () => {
     const t = useTranslations('matching')
@@ -38,7 +38,7 @@ export const MatchingView = () => {
     if (isLoading) {
         return (
             <div className="p-8 max-md:p-6 max-sm:p-4 flex items-center justify-center min-h-[80vh]">
-                <p className="text-(--text-2) max-sm:text-sm">{t('loading')}</p>
+                <LoadingSpinner />
             </div>
         )
     }

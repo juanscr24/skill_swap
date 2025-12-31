@@ -3,9 +3,10 @@ import { useTranslations } from "next-intl"
 import { Card } from "@/components/ui/Card"
 import { useDashboardStats } from "@/hooks/useDashboardStats"
 import { useSessions } from "@/hooks/useSessions"
-import { FiBookOpen, FiClock, FiTrendingUp, FiCalendar, FiLoader } from "react-icons/fi"
+import { FiBookOpen, FiClock, FiTrendingUp, FiCalendar } from "react-icons/fi"
 import Link from "next/link"
 import { Avatar } from "@/components/ui/Avatar"
+import { LoadingSpinner } from "@/components"
 
 export const DashboardView = () => {
     const t = useTranslations('dashboard')
@@ -46,11 +47,7 @@ export const DashboardView = () => {
             </h1>
 
             {/* Loading state */}
-            {(isLoadingStats || isLoadingSessions) && (
-                <div className="flex items-center justify-center py-12">
-                    <FiLoader className="w-8 h-8 animate-spin text-(--button-1)" />
-                </div>
-            )}
+            {(isLoadingStats || isLoadingSessions) && <LoadingSpinner />}
 
             {/* Stats Grid */}
             {!isLoadingStats && statsConfig.length > 0 && (

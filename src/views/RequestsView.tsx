@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/Card"
 import { Avatar } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
 import { Tabs } from "@/components/ui/Tabs"
-import { Button } from "@/components"
+import { Button, LoadingSpinner } from "@/components"
 import { FiCheck, FiX, FiMessageSquare } from "react-icons/fi"
 
 interface MatchRequest {

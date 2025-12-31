@@ -3,7 +3,7 @@
 import { useUserProfile } from '@/hooks/useUserProfile'
 import { useReviews } from '@/hooks/useReviews'
 import { useState } from 'react'
-import { FiLoader } from 'react-icons/fi'
+import { LoadingSpinner } from '@/components'
 import { Card } from '@/components/ui/Card'
 import { MentorProfileHeader } from '@/components/features/profile/mentor/MentorProfileHeader'
 import { MentorAboutSection } from '@/components/features/profile/mentor/MentorAboutSection'
@@ -58,9 +58,7 @@ export const UserProfileView = ({ userId }: UserProfileViewProps) => {
   if (isLoading) {
     return (
       <div className="px-30 max-2xl:px-14 max-lg:px-10 max-md:px-6 max-sm:px-4 py-8 max-md:py-6 max-sm:py-4 mx-auto">
-        <div className="flex items-center justify-center min-h-100">
-          <FiLoader className="w-8 h-8 animate-spin text-(--button-1)" />
-        </div>
+        <LoadingSpinner />
       </div>
     )
   }

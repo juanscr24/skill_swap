@@ -5,8 +5,8 @@ import { useProfile } from "@/hooks/useProfile"
 import { useSkills } from "@/hooks/useSkills"
 import { useLanguages } from "@/hooks/useLanguages"
 import { Card } from "@/components/ui/Card"
-import { Button } from "@/components"
-import { FiLoader, FiArrowLeft } from "react-icons/fi"
+import { Button, LoadingSpinner } from "@/components"
+import { FiArrowLeft } from "react-icons/fi"
 import Link from "next/link"
 import { EditAboutMeSection } from "@/components/features/profile/edit/EditAboutMeSection"
 import { EditSkillsSection } from "@/components/features/profile/edit/EditSkillsSection"
@@ -60,9 +60,7 @@ export const EditProfileView = () => {
     if (isLoadingProfile || isLoadingSkills || isLoadingLanguages) {
         return (
             <div className="p-8 max-md:p-6 max-sm:p-4 max-w-7xl mx-auto">
-                <div className="flex items-center justify-center min-h-100">
-                    <FiLoader className="w-8 h-8 animate-spin text-(--button-1)" />
-                </div>
+                <LoadingSpinner />
             </div>
         )
     }

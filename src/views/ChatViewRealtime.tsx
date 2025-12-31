@@ -8,6 +8,7 @@ import { useConversations } from '@/hooks/useConversations'
 import { useRealtimeMessages } from '@/hooks/useRealtimeMessages'
 import { Card } from '@/components/ui/Card'
 import { Avatar } from '@/components/ui/Avatar'
+import { LoadingSpinner } from '@/components'
 import { FiSend, FiCheck, FiSearch, FiVideo, FiInfo } from 'react-icons/fi'
 
 export const ChatView = () => {
@@ -119,11 +120,7 @@ export const ChatView = () => {
     }
 
     if (conversationsLoading) {
-        return (
-            <div className="flex items-center justify-center h-screen bg-(--bg-1)">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-(--button-1)" />
-            </div>
-        )
+        return <LoadingSpinner fullScreen />
     }
 
     return (

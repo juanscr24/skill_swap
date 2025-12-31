@@ -7,7 +7,7 @@ import { MentorCard } from "@/components/ui/MentorCard"
 import { MoreMentorsCard } from "@/components/ui/MoreMentorsCard"
 import { SearchBar } from "@/components/ui/SearchBar"
 import { Select } from "@/components/ui/Select"
-import { FiLoader } from "react-icons/fi"
+import { LoadingSpinner } from "@/components"
 
 export const MentorsView = () => {
     const t = useTranslations('mentors')
@@ -70,11 +70,7 @@ export const MentorsView = () => {
             </Card>
 
             {/* Loading state */}
-            {isLoading && (
-                <div className="flex items-center justify-center py-12">
-                    <FiLoader className="w-8 h-8 animate-spin text-(--button-1)" />
-                </div>
-            )}
+            {isLoading && <LoadingSpinner />}
 
             {/* Error state */}
             {error && (

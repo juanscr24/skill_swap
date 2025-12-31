@@ -5,7 +5,7 @@ import { useReviews } from "@/hooks"
 import { Card } from "@/components/ui/Card"
 import { Avatar } from "@/components/ui/Avatar"
 import { Rating } from "@/components/ui/Rating"
-import { Button } from "@/components"
+import { Button, LoadingSpinner } from "@/components"
 import { Textarea } from "@/components/ui/Textarea"
 import { Modal } from "@/components/ui/Modal"
 import { useSession } from "next-auth/react"
@@ -49,7 +49,7 @@ export const ReviewsView = () => {
             {/* Reviews List */}
             <div className="space-y-4 max-sm:space-y-3 max-w-4xl">
                 {isLoading ? (
-                    <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('loading')}</p>
+                    <LoadingSpinner />
                 ) : reviews.length === 0 ? (
                     <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('noReviews')}</p>
                 ) : (

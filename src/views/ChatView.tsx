@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl"
 import { useMessages } from "@/hooks"
 import { Card } from "@/components/ui/Card"
 import { Avatar } from "@/components/ui/Avatar"
+import { LoadingSpinner } from "@/components"
 import { FiSend } from "react-icons/fi"
 import { useSession } from "next-auth/react"
 
@@ -70,7 +71,7 @@ export const ChatView = () => {
                 
                 <div className="p-2">
                     {conversationsLoading ? (
-                        <p className="text-(--text-2) text-center py-4 max-sm:text-sm">{t('loading')}</p>
+                        <LoadingSpinner />
                     ) : conversations.length === 0 ? (
                         <p className="text-(--text-2) text-center py-4 max-sm:text-sm">{t('noConversations')}</p>
                     ) : (
@@ -131,7 +132,7 @@ export const ChatView = () => {
                     {/* Messages */}
                     <div className="flex-1 p-4 max-sm:p-3 overflow-y-auto space-y-4 max-sm:space-y-3">
                         {messagesLoading ? (
-                            <p className="text-(--text-2) text-center py-4 max-sm:text-sm">{t('loading')}</p>
+                            <LoadingSpinner />
                         ) : messages.length === 0 ? (
                             <p className="text-(--text-2) text-center py-4 max-sm:text-sm">{t('noMessages')}</p>
                         ) : (
