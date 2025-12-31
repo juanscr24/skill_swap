@@ -74,11 +74,6 @@ export async function getUserConversations(
     },
     include: {
       participants: {
-        where: {
-          user_id: {
-            not: userId, // Solo traer el otro participante
-          },
-        },
         include: {
           user: {
             select: {
@@ -109,36 +104,55 @@ export async function getUserConversations(
     },
   })
 
-  // Transformar los datos para incluir el otro usuario
-  return conversations.map((conv) => {
-    const otherParticipant = conv.participants[0] // Ya filtramos solo el otro usuario
+  // Calcular unreadCount para cada conversación
+  const conversationsWithUnread = await Promise.all(
+    conversations.map(async (conv) => {
+      // Encontrar el participante actual y el otro participante
+      const currentParticipant = conv.participants.find((p) => p.user_id === userId)
+      const otherParticipant = conv.participants.find((p) => p.user_id !== userId)
 
-    return {
-      id: conv.id,
-      created_at: conv.created_at.toISOString(),
-      updated_at: conv.updated_at.toISOString(),
-      last_message_at: conv.last_message_at?.toISOString() || null,
-      participants: [], // No necesitamos devolver todos los participantes
-      lastMessage: conv.messages[0]
-        ? {
-            id: conv.messages[0].id,
-            conversation_id: conv.messages[0].conversation_id,
-            sender_id: conv.messages[0].sender_id,
-            content: conv.messages[0].content,
-            created_at: conv.messages[0].created_at.toISOString(),
-          }
-        : undefined,
-      otherUser: otherParticipant
-        ? {
-            id: otherParticipant.user.id,
-            name: otherParticipant.user.name,
-            email: otherParticipant.user.email,
-            image: otherParticipant.user.image,
-          }
-        : undefined,
-      unreadCount: 0, // Se puede calcular si es necesario
-    }
-  })
+      // Contar mensajes no leídos (después del last_read_at del usuario actual)
+      const unreadCount = await prisma.messages.count({
+        where: {
+          conversation_id: conv.id,
+          sender_id: {
+            not: userId, // Solo mensajes del otro usuario
+          },
+          created_at: {
+            gt: currentParticipant?.last_read_at || new Date(0), // Mensajes después de last_read_at
+          },
+        },
+      })
+
+      return {
+        id: conv.id,
+        created_at: conv.created_at.toISOString(),
+        updated_at: conv.updated_at.toISOString(),
+        last_message_at: conv.last_message_at?.toISOString() || null,
+        participants: [], // No necesitamos devolver todos los participantes
+        lastMessage: conv.messages[0]
+          ? {
+              id: conv.messages[0].id,
+              conversation_id: conv.messages[0].conversation_id,
+              sender_id: conv.messages[0].sender_id,
+              content: conv.messages[0].content,
+              created_at: conv.messages[0].created_at.toISOString(),
+            }
+          : undefined,
+        otherUser: otherParticipant
+          ? {
+              id: otherParticipant.user.id,
+              name: otherParticipant.user.name,
+              email: otherParticipant.user.email,
+              image: otherParticipant.user.image,
+            }
+          : undefined,
+        unreadCount,
+      }
+    })
+  )
+
+  return conversationsWithUnread
 }
 
 // Obtener detalles de una conversación específica
