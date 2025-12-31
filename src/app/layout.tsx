@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { SessionProvider } from "@/components/providers/SessionProvider";
+import { QueryProvider } from "@/components/providers/QueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -60,11 +61,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-(--bg-1) flex justify-center min-h-screen`}
       >
         <SessionProvider>
-          <LocaleProvider>
-            <div className="w-full max-w-[100vw] overflow-x-hidden">
-              {children}
-            </div>
-          </LocaleProvider>
+          <QueryProvider>
+            <LocaleProvider>
+              <div className="w-full max-w-[100vw] overflow-x-hidden">
+                {children}
+              </div>
+            </LocaleProvider>
+          </QueryProvider>
         </SessionProvider>
       </body>
     </html>

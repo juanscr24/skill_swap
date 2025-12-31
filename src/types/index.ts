@@ -9,3 +9,12 @@ export type { CardReviewProps } from './ui/CardReviewProps'
 
 // Models
 export * from './models'
+
+// Chat - Export específico para evitar conflicto con Message de models
+export type {
+  ChatMessage,
+  Conversation,
+  ConversationParticipant,
+  ConversationWithDetails,
+  RealtimeMessage
+} from './chat'

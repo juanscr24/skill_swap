@@ -1,10 +1,12 @@
 {
     "chats": "Messages",
+    "conversations": "Conversations",
     "noChats": "No conversations",
     "typeMessage": "Type a message...",
     "send": "Send",
     "online": "Online",
     "offline": "Offline",
+    "connecting": "Connecting...",
     "typing": "Typing...",
     "today": "Today",
     "yesterday": "Yesterday",

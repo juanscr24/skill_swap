@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib'
+import { authOptions } from '@/lib/auth'
 import { messagesService } from '@/services'
 
 export async function POST(request: NextRequest) {
@@ -14,11 +14,50 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { receiverId, content } = await request.json()
+    const { conversationId, receiverId, content } = await request.json()
 
-    if (!receiverId || !content) {
+    if (!content) {
       return NextResponse.json(
-        { error: 'Datos incompletos' },
+        { error: 'Contenido requerido' },
+        { status: 400 }
+      )
+    }
+
+    // Si viene conversationId, usar la nueva estructura
+    if (conversationId) {
+      const { prisma } = await import('@/lib/prisma')
+      
+      // Verificar que el usuario es participante
+      const participant = await prisma.conversation_participants.findFirst({
+        where: {
+          conversation_id: conversationId,
+          user_id: session.user.id,
+        },
+      })
+
+      if (!participant) {
+        return NextResponse.json(
+          { error: 'No autorizado' },
+          { status: 403 }
+        )
+      }
+
+      // Crear mensaje
+      const message = await prisma.messages.create({
+        data: {
+          conversation_id: conversationId,
+          sender_id: session.user.id,
+          content: content.trim(),
+        },
+      })
+
+      return NextResponse.json(message)
+    }
+
+    // Fallback al sistema antiguo con receiverId
+    if (!receiverId) {
+      return NextResponse.json(
+        { error: 'receiverId o conversationId requerido' },
         { status: 400 }
       )
     }
