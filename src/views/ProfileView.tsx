@@ -2,7 +2,8 @@
 import { useTranslations } from "next-intl"
 import { useProfile } from "@/hooks/useProfile"
 import { useSession } from "next-auth/react"
-import { FiLoader, FiClock, FiCheckCircle } from "react-icons/fi"
+import { FiClock, FiCheckCircle } from "react-icons/fi"
+import { LoadingSpinner } from "@/components"
 import { ProfileHeader } from "@/components/features/profile/user/ProfileHeader"
 import { SocialLinks } from "@/components/features/profile/user/SocialLinks"
 import { StatsCard } from "@/components/features/profile/user/StatsCard"
@@ -29,9 +30,7 @@ export const ProfileView = () => {
     if (isLoading) {
         return (
             <div className="p-8 max-md:p-6 max-sm:p-4 max-w-7xl mx-auto">
-                <div className="flex items-center justify-center min-h-100">
-                    <FiLoader className="w-8 h-8 animate-spin text-(--button-1)" />
-                </div>
+                <LoadingSpinner />
             </div>
         )
     }

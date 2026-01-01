@@ -3,10 +3,7 @@
 import { ReactNode, useEffect, useState } from 'react'
 import { NextIntlClientProvider } from 'next-intl'
 import { useLocaleStore } from '@/stores/localeStore'
-
-interface LocaleProviderProps {
-    children: ReactNode
-}
+import type { LocaleProviderProps } from '@/types'
 
 export function LocaleProvider({ children }: LocaleProviderProps) {
     const { locale, messages } = useLocaleStore()

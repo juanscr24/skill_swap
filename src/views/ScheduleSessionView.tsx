@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
 import { Card } from "@/components/ui/Card"
-import { Button, Input } from "@/components"
+import { Button, Input, LoadingSpinner } from "@/components"
 import { Textarea } from "@/components/ui/Textarea"
 import { Select } from "@/components/ui/Select"
 import { useMentors, useAvailability } from "@/hooks"
@@ -99,9 +99,9 @@ export const ScheduleSessionView = () => {
                 router.push('/sessions')
             }, 1500)
 
-        } catch (err: any) {
+        } catch (err) {
             console.error('Error scheduling session:', err)
-            setError(err.message || 'Error al solicitar la sesión. Intenta de nuevo.')
+            setError(err instanceof Error ? err.message : 'Error al solicitar la sesión. Intenta de nuevo.')
         } finally {
             setIsSubmitting(false)
         }
@@ -140,10 +140,7 @@ export const ScheduleSessionView = () => {
             <Card className="shadow-lg">
                 <form onSubmit={handleSubmit} className="space-y-6 max-md:space-y-5 max-sm:space-y-4">
                     {loadingMentors ? (
-                        <div className="flex flex-col items-center justify-center py-12 gap-3">
-                            <FiLoader className="w-8 h-8 animate-spin text-(--button-1)" />
-                            <span className="text-(--text-2) font-medium">Cargando mentores...</span>
-                        </div>
+                        <LoadingSpinner />
                     ) : mentors.length === 0 ? (
                         <div className="text-center py-8 px-4 bg-(--bg-1) rounded-lg border-2 border-dashed border-(--border-1)">
                             <p className="text-(--text-2) font-medium mb-2">No hay mentores disponibles</p>
@@ -204,9 +201,7 @@ export const ScheduleSessionView = () => {
                                         </label>
                                         
                                         {loadingAvailability ? (
-                                            <div className="flex items-center justify-center py-8">
-                                                <FiLoader className="w-6 h-6 animate-spin text-(--button-1)" />
-                                            </div>
+                                            <LoadingSpinner size="md" />
                                         ) : availableSlots.length === 0 ? (
                                             <div className="text-center py-8 px-4 bg-(--bg-1) rounded-lg border-2 border-dashed border-(--border-1)">
                                                 <FiCalendar className="w-12 h-12 mx-auto mb-3 text-(--text-2)" />

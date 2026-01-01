@@ -5,16 +5,9 @@ import { Button } from "./Button"
 import { FiMapPin, FiCheck } from "react-icons/fi"
 import { useTranslations } from "next-intl"
 import { MessageSquare } from "lucide-react"
+import type { MentorCardProps } from '@/types'
 
-interface MentorCardProps {
-    id: string
-    name: string
-    image?: string | null
-    city?: string | null
-    bio?: string | null
-    averageRating: number
-    totalReviews: number
-    skills: Array<{ id: string; name: string }>
+interface MentorCardPropsExtended extends MentorCardProps {
     isAvailable?: boolean
 }
 
@@ -28,7 +21,7 @@ export const MentorCard = ({
     totalReviews,
     skills,
     isAvailable = true
-}: MentorCardProps) => {
+}: MentorCardPropsExtended) => {
     const t = useTranslations('mentors')
 
     return (

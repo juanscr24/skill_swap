@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import type { UpdateUserProfileData, UserFilters, UserWhereClause } from '@/types'
 
 /**
  * Obtiene el perfil completo de un usuario por ID
@@ -103,16 +104,7 @@ export async function getUserProfile(userId: string) {
  */
 export async function updateUserProfile(
   userId: string,
-  data: {
-    name?: string
-    bio?: string
-    city?: string
-    image?: string
-    image_public_id?: string
-    title?: string
-    social_links?: any
-    availability?: any
-  }
+  data: UpdateUserProfileData
 ) {
   return prisma.users.update({
     where: { id: userId },
@@ -180,7 +172,7 @@ export async function getMentors(filters?: {
     }
 
     // Construir filtros
-    const where: any = {
+    const where: UserWhereClause = {
       id: {
         in: Array.from(matchedUserIds),
       },
@@ -256,7 +248,7 @@ export async function getMentors(filters?: {
   }
 
   // Lógica original si no se proporciona userId (fallback)
-  const where: any = {}
+  const where: UserWhereClause = {}
 
   if (filters?.role) {
     where.role = filters.role

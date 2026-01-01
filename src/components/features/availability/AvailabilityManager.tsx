@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { useAvailability } from '@/hooks'
 import { Button } from '@/components/ui/Button'
 import { FiPlus, FiClock, FiTrash2 } from 'react-icons/fi'
+import type { AvailabilityManagerProps } from '@/types'
 
-interface AvailabilityManagerProps {
-  mentorId?: string
+interface AvailabilityManagerPropsExtended extends AvailabilityManagerProps {
   translations: {
     manageAvailability: string
     manageScheduleSubtitle: string
@@ -41,7 +41,7 @@ interface AvailabilityManagerProps {
 export const AvailabilityManager = ({
   mentorId,
   translations,
-}: AvailabilityManagerProps) => {
+}: AvailabilityManagerPropsExtended) => {
   const { availability, isLoading, addAvailability, deleteAvailability } =
     useAvailability(mentorId)
 

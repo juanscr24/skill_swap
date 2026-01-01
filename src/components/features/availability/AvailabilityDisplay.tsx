@@ -1,12 +1,7 @@
 'use client'
 
 import { MentorAvailability } from '@/types/models'
-
-interface AvailabilityDisplayProps {
-  availability: MentorAvailability[]
-  title: string
-  emptyMessage: string
-}
+import type { AvailabilityDisplayProps } from '@/types'
 
 export const AvailabilityDisplay = ({
   availability,

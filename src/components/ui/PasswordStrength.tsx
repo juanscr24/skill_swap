@@ -1,9 +1,6 @@
 'use client'
 
-interface PasswordRequirement {
-  label: string
-  regex: RegExp
-}
+import type { PasswordRequirement, PasswordStrengthProps } from '@/types'
 
 const requirements: PasswordRequirement[] = [
   { label: 'Al menos 8 caracteres', regex: /.{8,}/ },
@@ -12,11 +9,6 @@ const requirements: PasswordRequirement[] = [
   { label: 'Un número', regex: /\d/ },
   { label: 'Un carácter especial (@$!%*?&.#)', regex: /[@$!%*?&.#]/ },
 ]
-
-interface PasswordStrengthProps {
-  password: string
-  show?: boolean
-}
 
 export function PasswordStrength({ password, show = true }: PasswordStrengthProps) {
   if (!show) return null

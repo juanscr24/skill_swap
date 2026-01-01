@@ -19,6 +19,7 @@ export { PasswordStrength } from './ui/PasswordStrength'
 export { SkillSelector } from './ui/SkillSelector'
 export { MentorCard } from './ui/MentorCard'
 export { MoreMentorsCard } from './ui/MoreMentorsCard'
+export { default as LoadingSpinner } from './ui/LoadingSpinner'
 
 // Features
 export { LandingNavbar } from './features/LandingNavbar'

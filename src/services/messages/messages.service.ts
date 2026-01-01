@@ -1,32 +1,8 @@
 import { prisma } from '@/lib'
-
-export interface Conversation {
-  userId: string
-  userName: string | null
-  userImage: string | null
-  lastMessage: {
-    content: string
-    createdAt: Date
-  }
-  unreadCount: number
-}
-
-export interface Message {
-  id: string
-  senderId: string
-  receiverId: string
-  content: string
-  read: boolean
-  createdAt: Date
-  sender: {
-    id: string
-    name: string | null
-    image: string | null
-  }
-}
+import type { MessageData, MessageConversation, MessageDetail } from '@/types'
 
 export const messagesService = {
-  async getConversations(userId: string): Promise<Conversation[]> {
+  async getConversations(userId: string): Promise<MessageConversation[]> {
     // Usar la nueva estructura de conversaciones
     const conversations = await prisma.conversations.findMany({
       where: {
@@ -61,7 +37,7 @@ export const messagesService = {
     })
 
     // Transformar a formato esperado por el frontend y deduplicar por userId
-    const conversationsMap = new Map<string, Conversation>()
+    const conversationsMap = new Map<string, MessageConversation>()
     
     for (const conv of conversations) {
       const otherParticipant = conv.participants.find(p => p.user_id !== userId)
@@ -166,7 +142,7 @@ export const messagesService = {
     )
   },
 
-  async getMessages(userId: string, otherUserId: string): Promise<Message[]> {
+  async getMessages(userId: string, otherUserId: string): Promise<MessageDetail[]> {
     // Buscar conversación entre los dos usuarios
     const conversation = await prisma.conversations.findFirst({
       where: {
@@ -200,7 +176,7 @@ export const messagesService = {
       return []
     }
 
-    return conversation.messages.map((m: any) => ({
+    return conversation.messages.map((m: MessageData) => ({
       id: m.id,
       senderId: m.sender_id || '',
       receiverId: m.sender_id === userId ? otherUserId : userId, // Inferir receiver
@@ -215,7 +191,7 @@ export const messagesService = {
     }))
   },
 
-  async sendMessage(senderId: string, receiverId: string, content: string): Promise<Message> {
+  async sendMessage(senderId: string, receiverId: string, content: string): Promise<MessageDetail> {
     // Buscar o crear conversación
     let conversation = await prisma.conversations.findFirst({
       where: {

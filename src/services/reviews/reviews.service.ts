@@ -1,26 +1,27 @@
 import { prisma } from '@/lib'
+import type { ReviewData, ServiceReview } from '@/types'
 
-export interface Review {
-  id: string
-  authorId: string
-  targetId: string
-  rating: number
-  comment: string | null
-  createdAt: Date
-  author: {
-    id: string
-    name: string | null
-    image: string | null
-  } | null
-  target: {
-    id: string
-    name: string | null
-    image: string | null
-  } | null
-}
+const mapReviewData = (review: ReviewData): ServiceReview => ({
+  id: review.id,
+  authorId: review.author_id || '',
+  targetId: review.target_id || '',
+  rating: review.rating,
+  comment: review.comment,
+  createdAt: review.created_at,
+  author: review.author && review.author.id ? {
+    id: review.author.id,
+    name: review.author.name || null,
+    image: review.author.image || null
+  } : null,
+  target: review.target && review.target.id ? {
+    id: review.target.id,
+    name: review.target.name || null,
+    image: review.target.image || null
+  } : null
+})
 
 export const reviewsService = {
-  async getUserReviews(userId: string): Promise<Review[]> {
+  async getUserReviews(userId: string): Promise<ServiceReview[]> {
     const reviews = await prisma.reviews.findMany({
       where: {
         target_id: userId
@@ -44,18 +45,9 @@ export const reviewsService = {
       orderBy: {
         created_at: 'desc'
       }
-    })
+    }) as ReviewData[]
 
-    return reviews.map((r: any) => ({
-      id: r.id,
-      authorId: r.author_id || '',
-      targetId: r.target_id || '',
-      rating: r.rating,
-      comment: r.comment,
-      createdAt: r.created_at,
-      author: r.users_reviews_author_idTousers,
-      target: r.users_reviews_target_idTousers
-    }))
+    return reviews.map(mapReviewData)
   },
 
   async createReview(
@@ -63,7 +55,7 @@ export const reviewsService = {
     targetId: string,
     rating: number,
     comment?: string
-  ): Promise<Review> {
+  ): Promise<ServiceReview> {
     // Verificar que no existe una review previa del mismo autor al mismo target
     const existingReview = await prisma.reviews.findFirst({
       where: {
@@ -104,17 +96,8 @@ export const reviewsService = {
           }
         }
       }
-    })
+    }) as ReviewData
 
-    return {
-      id: review.id,
-      authorId: review.author_id || '',
-      targetId: review.target_id || '',
-      rating: review.rating,
-      comment: review.comment,
-      createdAt: review.created_at,
-      author: review.users_reviews_author_idTousers,
-      target: review.users_reviews_target_idTousers
-    }
+    return mapReviewData(review)
   }
 }

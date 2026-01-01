@@ -4,25 +4,7 @@ import Image from "next/image"
 import { Badge } from "@/components/ui/Badge"
 import { FiMapPin, FiX, FiCheck, FiStar } from "react-icons/fi"
 import { Dot, Languages } from "lucide-react"
-
-interface MatchCardProps {
-    user: {
-        id: string
-        name: string
-        image?: string
-        city?: string
-        title?: string
-        bio?: string
-        rating?: number
-        teachingSkills: string[]
-        learningSkills: string[]
-        matchPercentage?: number
-        yearsExperience?: number
-        languages?: string[]
-    }
-    onAccept: () => void
-    onReject: () => void
-}
+import type { MatchCardProps } from '@/types'
 
 export const MatchCard = ({ user, onAccept, onReject }: MatchCardProps) => {
     const t = useTranslations('matching')

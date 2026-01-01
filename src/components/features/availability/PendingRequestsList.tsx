@@ -4,23 +4,7 @@ import { Button } from '@/components/ui/Button'
 import { Avatar } from '@/components/ui/Avatar'
 import { useSessionRequests } from '@/hooks'
 import { FiCalendar } from 'react-icons/fi'
-
-interface PendingRequestsListProps {
-  translations: {
-    pendingRequests: string
-    acceptRequest: string
-    rejectRequest: string
-    requestAccepted: string
-    requestRejected: string
-    errorManagingRequest: string
-    topic: string
-    description: string
-    duration: string
-    minutes: string
-    date: string
-    time: string
-  }
-}
+import type { PendingRequestsListProps } from '@/types'
 
 export const PendingRequestsList = ({
   translations,

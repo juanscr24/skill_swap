@@ -1,12 +1,11 @@
 'use client'
 import { useTranslations } from "next-intl"
-import { useRouter } from "next/navigation"
 import { useProfile } from "@/hooks/useProfile"
 import { useSkills } from "@/hooks/useSkills"
 import { useLanguages } from "@/hooks/useLanguages"
 import { Card } from "@/components/ui/Card"
-import { Button } from "@/components"
-import { FiLoader, FiArrowLeft } from "react-icons/fi"
+import { Button, LoadingSpinner } from "@/components"
+import { FiArrowLeft } from "react-icons/fi"
 import Link from "next/link"
 import { EditAboutMeSection } from "@/components/features/profile/edit/EditAboutMeSection"
 import { EditSkillsSection } from "@/components/features/profile/edit/EditSkillsSection"
@@ -14,7 +13,6 @@ import { EditLanguagesSection } from "@/components/features/profile/edit/EditLan
 
 export const EditProfileView = () => {
     const t = useTranslations('profile')
-    const router = useRouter()
     const { profile, isLoading: isLoadingProfile, updateProfile } = useProfile()
     const {
         skills,
@@ -33,7 +31,12 @@ export const EditProfileView = () => {
     } = useLanguages()
 
     // Función para actualizar solo About Me
-    const handleUpdateAboutMe = async (data: any) => {
+    const handleUpdateAboutMe = async (data: {
+        name?: string | null
+        bio?: string | null
+        city?: string | null
+        title?: string | null
+    }) => {
         try {
             const response = await fetch('/api/users/profile/about-me', {
                 method: 'PATCH',
@@ -60,9 +63,7 @@ export const EditProfileView = () => {
     if (isLoadingProfile || isLoadingSkills || isLoadingLanguages) {
         return (
             <div className="p-8 max-md:p-6 max-sm:p-4 max-w-7xl mx-auto">
-                <div className="flex items-center justify-center min-h-100">
-                    <FiLoader className="w-8 h-8 animate-spin text-(--button-1)" />
-                </div>
+                <LoadingSpinner />
             </div>
         )
     }

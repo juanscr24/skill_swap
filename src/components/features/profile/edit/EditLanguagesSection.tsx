@@ -4,18 +4,7 @@ import { useTranslations } from "next-intl"
 import { Card } from "@/components/ui/Card"
 import { Button, Input } from "@/components"
 import { FiX, FiPlus } from "react-icons/fi"
-
-interface Language {
-  id: string
-  name: string
-  level?: string | null
-}
-
-interface EditLanguagesSectionProps {
-  languages: Language[]
-  onAddLanguage: (data: { name: string; level: string }) => Promise<{ success: boolean }>
-  onDeleteLanguage: (languageId: string) => Promise<{ success: boolean }>
-}
+import type { EditLanguagesSectionProps, Language } from '@/types'
 
 export const EditLanguagesSection = ({
   languages,
