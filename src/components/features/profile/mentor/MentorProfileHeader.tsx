@@ -2,22 +2,7 @@ import { Avatar } from "@/components/ui/Avatar"
 import { Button } from "@/components"
 import { MapPin, Share2, Bookmark, MessageSquare, Calendar, Linkedin, Github, Globe, Star, Dot, Languages } from "lucide-react"
 import { useTranslations } from "next-intl"
-
-interface MentorProfileHeaderProps {
-    name: string
-    title: string | null
-    city: string | null
-    image: string | null
-    rating: number
-    totalReviews: number
-    languages?: string[]
-    isOnline?: boolean
-    socialLinks?: {
-        linkedin?: string
-        github?: string
-        website?: string
-    } | null
-}
+import type { MentorProfileHeaderProps } from '@/types'
 
 export const MentorProfileHeader = ({
     name,

@@ -41,8 +41,8 @@ export function useAuth() {
       }
 
       return { success: false, error: 'Error desconocido' }
-    } catch (err: any) {
-      const errorMessage = err.message || 'Error al iniciar sesión'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error al iniciar sesión'
       setError(errorMessage)
       return { success: false, error: errorMessage }
     } finally {
@@ -87,8 +87,8 @@ export function useAuth() {
       }
 
       return { success: false, error: 'Error al iniciar sesión' }
-    } catch (err: any) {
-      const errorMessage = err.message || 'Error al registrar usuario'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error al registrar usuario'
       setError(errorMessage)
       return { success: false, error: errorMessage }
     } finally {
@@ -104,8 +104,9 @@ export function useAuth() {
       setIsLoading(true)
       setError(null)
       await signIn('google', { callbackUrl: '/dashboard' })
-    } catch (err: any) {
-      setError(err.message || 'Error al iniciar sesión con Google')
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error al iniciar sesión con Google'
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
@@ -119,8 +120,9 @@ export function useAuth() {
       setIsLoading(true)
       setError(null)
       await signIn('github', { callbackUrl: '/dashboard' })
-    } catch (err: any) {
-      setError(err.message || 'Error al iniciar sesión con GitHub')
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error al iniciar sesión con GitHub'
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
@@ -133,8 +135,9 @@ export function useAuth() {
     try {
       setIsLoading(true)
       await signOut({ callbackUrl: '/login' })
-    } catch (err: any) {
-      setError(err.message || 'Error al cerrar sesión')
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error al cerrar sesión'
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }

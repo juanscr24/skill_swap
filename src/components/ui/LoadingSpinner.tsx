@@ -1,7 +1,7 @@
 import { FiLoader } from 'react-icons/fi'
+import type { LoadingSpinnerProps } from '@/types'
 
-interface LoadingSpinnerProps {
-    size?: 'sm' | 'md' | 'lg'
+interface LoadingSpinnerPropsExtended extends LoadingSpinnerProps {
     fullScreen?: boolean
     className?: string
 }
@@ -12,7 +12,7 @@ const sizeClasses = {
     lg: 'w-8 h-8',
 }
 
-export default function LoadingSpinner({ size = 'lg', fullScreen = false, className = '' }: LoadingSpinnerProps) {
+export default function LoadingSpinner({ size = 'lg', fullScreen = false, className = '' }: LoadingSpinnerPropsExtended) {
     const spinner = (
         <FiLoader className={`animate-spin text-(--button-1) ${sizeClasses[size]} ${className}`} />
     )

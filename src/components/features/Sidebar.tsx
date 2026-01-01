@@ -16,11 +16,7 @@ import {
 import { ButtonMode } from "../ui/ButtonMode"
 import { LanguageSwitcher } from "../ui/LanguageSwitcher"
 import { useAuth } from "@/hooks/useAuth"
-
-interface SidebarProps {
-    isOpen: boolean
-    setIsOpen: (isOpen: boolean) => void
-}
+import type { SidebarProps } from '@/types'
 
 export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
     const pathname = usePathname()

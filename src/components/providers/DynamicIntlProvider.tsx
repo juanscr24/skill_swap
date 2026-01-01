@@ -1,19 +1,10 @@
 'use client'
 
-import { NextIntlClientProvider } from 'next-intl'
-import { useClientLocale } from '@/contexts/LocaleContext'
+import { useClientLocale } from '@/contexts/LocaleProvider'
 import { ReactNode } from 'react'
-
-interface DynamicIntlProviderProps {
-    children: ReactNode
-}
+import type { DynamicIntlProviderProps } from '@/types'
 
 export function DynamicIntlProvider({ children }: DynamicIntlProviderProps) {
-    const { currentLocale, messages } = useClientLocale()
-
-    return (
-        <NextIntlClientProvider messages={messages} locale={currentLocale}>
-            {children}
-        </NextIntlClientProvider>
-    )
+    // LocaleProvider ya incluye NextIntlClientProvider, solo retornamos children
+    return <>{children}</>
 }

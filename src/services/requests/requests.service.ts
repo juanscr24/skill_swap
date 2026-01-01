@@ -1,23 +1,16 @@
 import { prisma } from '@/lib'
+import type { PrismaMatch, MatchRequest } from '@/types'
 
-export interface MatchRequest {
-  id: string
-  senderId: string
-  receiverId: string
-  skill: string
-  status: string | null
-  createdAt: Date
-  sender: {
-    id: string
-    name: string | null
-    image: string | null
-  } | null
-  receiver: {
-    id: string
-    name: string | null
-    image: string | null
-  } | null
-}
+const mapMatchToRequest = (match: PrismaMatch): MatchRequest => ({
+  id: match.id,
+  senderId: match.sender_id || '',
+  receiverId: match.receiver_id || '',
+  skill: match.skill,
+  status: match.status,
+  createdAt: match.created_at,
+  sender: match.users_matches_sender_idTousers || null,
+  receiver: match.users_matches_receiver_idTousers || null
+})
 
 export const requestsService = {
   async getReceivedRequests(userId: string): Promise<MatchRequest[]> {
@@ -45,18 +38,9 @@ export const requestsService = {
       orderBy: {
         created_at: 'desc'
       }
-    })
+    }) as PrismaMatch[]
 
-    return requests.map((r: any) => ({
-      id: r.id,
-      senderId: r.sender_id || '',
-      receiverId: r.receiver_id || '',
-      skill: r.skill,
-      status: r.status,
-      createdAt: r.created_at,
-      sender: r.users_matches_sender_idTousers,
-      receiver: r.users_matches_receiver_idTousers
-    }))
+    return requests.map(mapMatchToRequest)
   },
 
   async getAcceptedRequests(userId: string): Promise<MatchRequest[]> {
@@ -87,18 +71,9 @@ export const requestsService = {
       orderBy: {
         updated_at: 'desc'
       }
-    })
+    }) as PrismaMatch[]
 
-    return requests.map((r: any) => ({
-      id: r.id,
-      senderId: r.sender_id || '',
-      receiverId: r.receiver_id || '',
-      skill: r.skill,
-      status: r.status,
-      createdAt: r.created_at,
-      sender: r.users_matches_sender_idTousers,
-      receiver: r.users_matches_receiver_idTousers
-    }))
+    return requests.map(mapMatchToRequest)
   },
 
   async getSentRequests(userId: string): Promise<MatchRequest[]> {
@@ -125,18 +100,9 @@ export const requestsService = {
       orderBy: {
         created_at: 'desc'
       }
-    })
+    }) as PrismaMatch[]
 
-    return requests.map((r: any) => ({
-      id: r.id,
-      senderId: r.sender_id || '',
-      receiverId: r.receiver_id || '',
-      skill: r.skill,
-      status: r.status,
-      createdAt: r.created_at,
-      sender: r.users_matches_sender_idTousers,
-      receiver: r.users_matches_receiver_idTousers
-    }))
+    return requests.map(mapMatchToRequest)
   },
 
   async acceptRequest(requestId: string, userId: string): Promise<void> {

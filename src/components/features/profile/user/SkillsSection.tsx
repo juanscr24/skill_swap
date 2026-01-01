@@ -2,21 +2,7 @@ import { useState } from "react"
 import { Badge } from "@/components/ui/Badge"
 import { useTranslations } from "next-intl"
 import { FiPlus, FiBookOpen, FiZap, FiX, FiCheck } from "react-icons/fi"
-
-interface Skill {
-    id: string
-    name: string
-    level?: string | null
-}
-
-interface SkillsSectionProps {
-    skillsTeach: Skill[]
-    skillsLearn: Skill[]
-    onAddSkill: (name: string, level?: string) => Promise<any>
-    onRemoveSkill: (id: string) => Promise<any>
-    onAddWantedSkill: (name: string) => Promise<any>
-    onRemoveWantedSkill: (id: string) => Promise<any>
-}
+import type { SkillsSectionProps, Skill } from '@/types'
 
 export const SkillsSection = ({
     skillsTeach,

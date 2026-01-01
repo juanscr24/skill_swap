@@ -4,19 +4,13 @@
 
 import { StartChatButton } from '@/components/features/StartChatButton'
 import { Avatar } from '@/components/ui/Avatar'
+import type { UserCardProps } from '@/types'
 
-interface UserCardProps {
-  user: {
-    id: string
-    name: string | null
-    email: string
-    image: string | null
-    bio?: string | null
-  }
+interface UserCardPropsExtended extends UserCardProps {
   currentUserId?: string
 }
 
-export const UserCard = ({ user, currentUserId }: UserCardProps) => {
+export const UserCard = ({ user, currentUserId }: UserCardPropsExtended) => {
   const isOwnProfile = currentUserId === user.id
 
   return (
@@ -28,7 +22,6 @@ export const UserCard = ({ user, currentUserId }: UserCardProps) => {
           <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
             {user.name || 'Usuario'}
           </h3>
-          <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
           
           {user.bio && (
             <p className="mt-2 text-gray-700 dark:text-gray-300">{user.bio}</p>
@@ -38,7 +31,7 @@ export const UserCard = ({ user, currentUserId }: UserCardProps) => {
         {!isOwnProfile && (
           <StartChatButton 
             userId={user.id} 
-            userName={user.name || undefined}
+            userName={user.name ?? undefined}
             variant="primary"
             size="md"
           />

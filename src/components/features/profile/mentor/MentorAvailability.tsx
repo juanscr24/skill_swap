@@ -6,12 +6,7 @@ import { FiCalendar, FiClock } from 'react-icons/fi'
 import { useAvailability } from '@/hooks'
 import { Button } from '@/components/ui/Button'
 import { BookSessionModal } from '@/components/features/availability'
-
-interface MentorAvailabilityProps {
-  mentorId: string
-  mentorName: string
-  availability?: any
-}
+import type { MentorAvailabilityProps } from '@/types'
 
 export const MentorAvailability = ({
   mentorId,

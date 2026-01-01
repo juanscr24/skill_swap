@@ -34,8 +34,8 @@ export const LoginView = () => {
             if (!result.success) {
                 setSubmitError(result.error || 'Error al iniciar sesión')
             }
-        } catch (err: any) {
-            setSubmitError(err.message || 'Error al iniciar sesión')
+        } catch (err) {
+            setSubmitError(err instanceof Error ? err.message : 'Error al iniciar sesión')
         }
     }
 

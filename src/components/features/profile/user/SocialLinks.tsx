@@ -3,18 +3,7 @@ import { FaLinkedin, FaGithub, FaInstagram, FaFacebook, FaWhatsapp, FaGlobe } fr
 import { useTranslations } from "next-intl"
 import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck } from "react-icons/fi"
 import { Button } from "@/components"
-
-interface SocialLinksProps {
-    links: {
-        linkedin?: string
-        github?: string
-        website?: string
-        facebook?: string
-        instagram?: string
-        whatsapp?: string
-    } | null
-    onUpdate: (data: { social_links: any }) => Promise<any>
-}
+import type { SocialLinksProps } from '@/types'
 
 const PLATFORMS = [
     { key: 'linkedin', icon: FaLinkedin, label: 'LinkedIn', color: 'bg-[#0077B5]/10 text-[#0077B5]', placeholder: 'https://linkedin.com/in/...' },

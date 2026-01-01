@@ -6,18 +6,7 @@ import { Button, Input } from "@/components"
 import { Textarea } from "@/components/ui/Textarea"
 import { Avatar } from "@/components/ui/Avatar"
 import { FiLoader, FiSave, FiUpload } from "react-icons/fi"
-
-interface EditAboutMeSectionProps {
-  profile: {
-    name: string | null
-    title?: string | null
-    city?: string | null
-    bio?: string | null
-    image?: string | null
-    image_public_id?: string | null
-  }
-  onUpdate: (data: Partial<EditAboutMeSectionProps['profile']>) => Promise<{ success: boolean }>
-}
+import type { EditAboutMeSectionProps } from '@/types'
 
 export const EditAboutMeSection = ({ profile, onUpdate }: EditAboutMeSectionProps) => {
   const t = useTranslations('profile')

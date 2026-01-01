@@ -5,27 +5,7 @@ import { Rating } from "@/components/ui/Rating"
 import { useTranslations } from "next-intl"
 import { Star, Trash2, Edit3 } from "lucide-react"
 import { useSession } from "next-auth/react"
-
-interface Review {
-    id: string
-    rating: number
-    comment: string | null
-    created_at: Date
-    users_reviews_author_idTousers: {
-        id: string
-        name: string | null
-        image: string | null
-        title?: string | null
-    } | null
-}
-
-interface MentorReviewsSectionProps {
-    reviews: Review[]
-    mentorId: string
-    onAddReview: (rating: number, comment: string) => Promise<void>
-    onDeleteReview: (reviewId: string) => Promise<void>
-    isSubmitting: boolean
-}
+import type { MentorReviewsSectionProps, Review } from '@/types'
 
 export const MentorReviewsSection = ({
     reviews,

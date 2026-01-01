@@ -1,9 +1,5 @@
 import { prisma } from '@/lib/prisma'
-
-export interface CreateLanguageInput {
-  name: string
-  level?: string
-}
+import type { CreateLanguageInput } from '@/types'
 
 /**
  * Get all languages for a user

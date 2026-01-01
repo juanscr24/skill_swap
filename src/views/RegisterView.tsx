@@ -34,8 +34,8 @@ export const RegisterView = () => {
             if (!result.success) {
                 setSubmitError(result.error || 'Error al registrar usuario')
             }
-        } catch (err: any) {
-            setSubmitError(err.message || 'Error al registrar usuario')
+        } catch (err) {
+            setSubmitError(err instanceof Error ? err.message : 'Error al registrar usuario')
         }
     }
 

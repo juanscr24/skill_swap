@@ -1,14 +1,5 @@
 import { Card } from "@/components/ui/Card"
-
-interface Language {
-  id: string
-  name: string
-  level?: string | null
-}
-
-interface LanguagesSectionProps {
-  languages: Language[]
-}
+import type { LanguagesSectionProps, Language } from '@/types'
 
 export const LanguagesSection = ({ languages }: LanguagesSectionProps) => {
   if (!languages || languages.length === 0) {

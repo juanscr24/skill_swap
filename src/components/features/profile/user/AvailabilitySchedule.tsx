@@ -1,11 +1,6 @@
 import { useTranslations } from "next-intl"
 import { Badge } from "@/components/ui/Badge"
-
-interface AvailabilityScheduleProps {
-    availability: {
-        [key: string]: string
-    } | null
-}
+import type { AvailabilityScheduleProps } from '@/types'
 
 export const AvailabilitySchedule = ({ availability }: AvailabilityScheduleProps) => {
     const t = useTranslations('profile')

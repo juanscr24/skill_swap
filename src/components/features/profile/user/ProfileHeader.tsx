@@ -4,15 +4,7 @@ import Link from "next/link"
 import { FiMapPin, FiEdit, FiShare2 } from "react-icons/fi"
 import { useTranslations } from "next-intl"
 import { Star } from "lucide-react"
-
-interface ProfileHeaderProps {
-    name: string
-    title: string | null
-    city: string | null
-    image: string | null
-    rating: number
-    totalReviews: number
-}
+import type { ProfileHeaderProps } from '@/types'
 
 export const ProfileHeader = ({
     name,

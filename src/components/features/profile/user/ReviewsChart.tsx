@@ -1,15 +1,6 @@
 import { useTranslations } from "next-intl"
 import { Rating } from "@/components/ui/Rating"
-
-interface Review {
-    rating: number
-}
-
-interface ReviewsChartProps {
-    reviews: Review[]
-    averageRating: number
-    totalReviews: number
-}
+import type { ReviewsChartProps, Review } from '@/types'
 
 export const ReviewsChart = ({ reviews, averageRating, totalReviews }: ReviewsChartProps) => {
     const t = useTranslations('profile')

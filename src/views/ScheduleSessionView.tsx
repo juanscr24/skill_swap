@@ -99,9 +99,9 @@ export const ScheduleSessionView = () => {
                 router.push('/sessions')
             }, 1500)
 
-        } catch (err: any) {
+        } catch (err) {
             console.error('Error scheduling session:', err)
-            setError(err.message || 'Error al solicitar la sesión. Intenta de nuevo.')
+            setError(err instanceof Error ? err.message : 'Error al solicitar la sesión. Intenta de nuevo.')
         } finally {
             setIsSubmitting(false)
         }

@@ -4,10 +4,9 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useCreateConversation } from '@/hooks/useConversations'
 import { FiMessageCircle } from 'react-icons/fi'
+import type { StartChatButtonProps } from '@/types'
 
-interface StartChatButtonProps {
-  userId: string
-  userName?: string
+interface StartChatButtonPropsExtended extends StartChatButtonProps {
   variant?: 'primary' | 'secondary' | 'ghost'
   size?: 'sm' | 'md' | 'lg'
   className?: string
@@ -19,7 +18,7 @@ export const StartChatButton = ({
   variant = 'primary',
   size = 'md',
   className = '',
-}: StartChatButtonProps) => {
+}: StartChatButtonPropsExtended) => {
   const router = useRouter()
   const { mutate: createConversation, isPending } = useCreateConversation()
   const [error, setError] = useState<string | null>(null)

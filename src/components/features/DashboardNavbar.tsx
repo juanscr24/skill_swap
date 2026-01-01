@@ -1,11 +1,7 @@
 'use client'
 import { FiMenu, FiX } from "react-icons/fi"
 import { SkillSwapLogo } from "../ui/SkillSwapLogo"
-
-interface DashboardNavbarProps {
-    isOpen: boolean
-    setIsOpen: (isOpen: boolean) => void
-}
+import type { DashboardNavbarProps } from '@/types'
 
 export const DashboardNavbar = ({ isOpen, setIsOpen }: DashboardNavbarProps) => {
     return (

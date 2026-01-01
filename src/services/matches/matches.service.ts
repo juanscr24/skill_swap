@@ -1,28 +1,5 @@
 import { prisma } from '@/lib'
-
-export interface PotentialMatch {
-  id: string
-  name: string | null
-  email: string
-  image: string | null
-  bio: string | null
-  city: string | null
-  title: string | null
-  skills: Array<{
-    id: string
-    name: string
-    level: string | null
-  }>
-  wantedSkills: Array<{
-    id: string
-    name: string
-  }>
-  languages: Array<{
-    id: string
-    name: string
-    level: string | null
-  }>
-}
+import type { UserWithRelations, PotentialMatch } from '@/types'
 
 export const matchesService = {
   async getPotentialMatches(userId: string): Promise<PotentialMatch[]> {
@@ -36,7 +13,7 @@ export const matchesService = {
       }
     })
 
-    const wantedSkillNames = userWantedSkills.map((s: any) => s.name)
+    const wantedSkillNames = userWantedSkills.map(s => s.name)
 
     // Si el usuario no tiene habilidades que quiere aprender, retornar vacío
     if (wantedSkillNames.length === 0) {
@@ -59,9 +36,9 @@ export const matchesService = {
 
     // Crear lista de IDs a excluir
     const excludedUserIds = new Set<string>()
-    existingMatches.forEach((match: any) => {
-      if (match.sender_id !== userId) excludedUserIds.add(match.sender_id)
-      if (match.receiver_id !== userId) excludedUserIds.add(match.receiver_id)
+    existingMatches.forEach(match => {
+      if (match.sender_id && match.sender_id !== userId) excludedUserIds.add(match.sender_id)
+      if (match.receiver_id && match.receiver_id !== userId) excludedUserIds.add(match.receiver_id)
     })
 
     // Obtener usuarios que NO son el usuario actual y tienen habilidades que coinciden
@@ -102,19 +79,27 @@ export const matchesService = {
         }
       },
       take: 50 // Limitar a 50 usuarios
-    })
+    }) as UserWithRelations[]
 
-    return potentialMatches.map((user: any) => ({
+    return potentialMatches.map(user => ({
       id: user.id,
       name: user.name,
-      wantedSkills: user.wanted_skills,
+      wantedSkills: user.wanted_skills || [],
       email: user.email,
       image: user.image,
       bio: user.bio,
       city: user.city,
-      title: user.title,
-      skills: user.skills,
-      languages: user.languages
+      title: user.title || null,
+      skills: (user.skills || []).map(s => ({
+        id: s.id,
+        name: s.name,
+        level: s.level || null
+      })),
+      languages: (user.languages || []).map(l => ({
+        id: l.id,
+        name: l.name,
+        level: l.level || null
+      }))
     }))
   },
 

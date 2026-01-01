@@ -1,6 +1,5 @@
 'use client'
 import { useTranslations } from "next-intl"
-import { useRouter } from "next/navigation"
 import { useProfile } from "@/hooks/useProfile"
 import { useSkills } from "@/hooks/useSkills"
 import { useLanguages } from "@/hooks/useLanguages"
@@ -14,7 +13,6 @@ import { EditLanguagesSection } from "@/components/features/profile/edit/EditLan
 
 export const EditProfileView = () => {
     const t = useTranslations('profile')
-    const router = useRouter()
     const { profile, isLoading: isLoadingProfile, updateProfile } = useProfile()
     const {
         skills,
@@ -33,7 +31,12 @@ export const EditProfileView = () => {
     } = useLanguages()
 
     // Función para actualizar solo About Me
-    const handleUpdateAboutMe = async (data: any) => {
+    const handleUpdateAboutMe = async (data: {
+        name?: string | null
+        bio?: string | null
+        city?: string | null
+        title?: string | null
+    }) => {
         try {
             const response = await fetch('/api/users/profile/about-me', {
                 method: 'PATCH',

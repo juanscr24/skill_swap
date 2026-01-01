@@ -3,19 +3,7 @@ import { useTranslations } from "next-intl"
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi"
 import Link from "next/link"
 import { useRef } from "react"
-
-interface SimilarMentor {
-    id: string
-    name: string | null
-    image: string | null
-    title: string | null
-    averageRating: number
-}
-
-interface MentorSimilarProfilesProps {
-    mentorName: string
-    similarMentors: SimilarMentor[]
-}
+import type { MentorSimilarProfilesProps, SimilarMentor } from '@/types'
 
 export const MentorSimilarProfiles = ({ mentorName, similarMentors }: MentorSimilarProfilesProps) => {
     const t = useTranslations('profile')

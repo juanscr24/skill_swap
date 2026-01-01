@@ -6,30 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { useSessionRequests } from '@/hooks'
-
-interface BookSessionModalProps {
-  mentorId: string
-  mentorName: string
-  availability: MentorAvailability[]
-  onClose: () => void
-  onSuccess: () => void
-  translations: {
-    bookSession: string
-    selectAvailability: string
-    topic: string
-    topicPlaceholder: string
-    description: string
-    descriptionPlaceholder: string
-    selectDuration: string
-    requestSession: string
-    minimumDuration: string
-    invalidTimeFormat: string
-    sessionRequested: string
-    errorRequestingSession: string
-    noAvailableSlots: string
-    minutes: string
-  }
-}
+import type { BookSessionModalProps } from '@/types'
 
 export const BookSessionModal = ({
   mentorId,

@@ -38,7 +38,15 @@ export const availabilityService = {
         mentorId: string,
         includeBooked: boolean = false
     ): Promise<MentorAvailability[]> {
-        const where: any = {
+        interface AvailabilityFilter {
+            mentor_id: string
+            date: {
+                gte: Date
+            }
+            is_booked?: boolean
+        }
+
+        const where: AvailabilityFilter = {
             mentor_id: mentorId,
             date: {
                 gte: new Date(), // Only future dates

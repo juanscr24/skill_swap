@@ -1,14 +1,13 @@
 import { IconType } from "react-icons"
+import type { StatsCardProps } from '@/types'
 
-interface StatsCardProps {
+interface StatsCardPropsExtended extends StatsCardProps {
     icon: IconType
-    value: number
-    label: string
     color: string
     bgColor: string
 }
 
-export const StatsCard = ({ icon: Icon, value, label, color, bgColor }: StatsCardProps) => {
+export const StatsCard = ({ icon: Icon, value, label, color, bgColor }: StatsCardPropsExtended) => {
     return (
         <div className="bg-(--bg-2) rounded-2xl p-6 border border-(--border-1) flex flex-col items-start gap-4 flex-1">
             <div className={`p-3 rounded-full ${bgColor}`}>

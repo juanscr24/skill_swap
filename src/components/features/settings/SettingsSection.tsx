@@ -1,15 +1,13 @@
 import { ReactNode } from "react"
 import { IconType } from "react-icons"
+import type { SettingsSectionProps } from '@/types'
 
-interface SettingsSectionProps {
-    title: string
-    description?: string
+interface SettingsSectionPropsExtended extends SettingsSectionProps {
     icon?: IconType
-    children: ReactNode
     className?: string
 }
 
-export const SettingsSection = ({ title, description, icon: Icon, children, className = "" }: SettingsSectionProps) => {
+export const SettingsSection = ({ title, description, icon: Icon, children, className = "" }: SettingsSectionPropsExtended) => {
     return (
         <section className={`bg-(--bg-2) rounded-xl border border-(--border-1) overflow-hidden ${className}`}>
             <div className="p-6 max-sm:p-4 border-b border-(--border-1)">

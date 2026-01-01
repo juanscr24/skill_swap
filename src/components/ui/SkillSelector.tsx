@@ -2,10 +2,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { FiX, FiPlus, FiSearch } from 'react-icons/fi'
 import { Badge } from './Badge'
+import type { SkillSelectorProps } from '@/types'
 
-interface SkillSelectorProps {
-    onAdd: (skillName: string) => void
-    placeholder?: string
+interface SkillSelectorPropsExtended extends SkillSelectorProps {
     recommendations?: string[]
     label?: string
 }
@@ -15,7 +14,7 @@ export const SkillSelector = ({
     placeholder = 'Buscar o agregar habilidad...', 
     recommendations = [],
     label
-}: SkillSelectorProps) => {
+}: SkillSelectorPropsExtended) => {
     const [isOpen, setIsOpen] = useState(false)
     const [search, setSearch] = useState('')
     const [customSkill, setCustomSkill] = useState('')

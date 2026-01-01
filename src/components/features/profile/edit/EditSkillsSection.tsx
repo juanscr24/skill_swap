@@ -7,21 +7,7 @@ import { Badge } from "@/components/ui/Badge"
 import { SkillSelector } from "@/components/ui/SkillSelector"
 import { recommendedSkills } from "@/constants/recommendedSkills"
 import { FiX } from "react-icons/fi"
-
-interface Skill {
-  id: string
-  name: string
-  level?: string | null
-}
-
-interface EditSkillsSectionProps {
-  skills: Skill[]
-  wantedSkills: Skill[]
-  onAddSkill: (data: { name: string; description?: string; level?: 'beginner' | 'intermediate' | 'advanced' | 'expert' }) => Promise<{ success: boolean; data?: any; error?: string }>
-  onDeleteSkill: (skillId: string) => Promise<{ success: boolean }>
-  onAddWantedSkill: (name: string) => Promise<{ success: boolean }>
-  onDeleteWantedSkill: (skillId: string) => Promise<{ success: boolean }>
-}
+import type { EditSkillsSectionProps, Skill } from '@/types'
 
 export const EditSkillsSection = ({
   skills,

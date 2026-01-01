@@ -13,10 +13,7 @@ import { MentorAvailability } from '@/components/features/profile/mentor/MentorA
 import { MentorSimilarProfiles } from '@/components/features/profile/mentor/MentorSimilarProfiles'
 import { MentorStats } from '@/components/features/profile/mentor/MentorStats'
 import { useMentors } from '@/hooks/useMentors'
-
-interface UserProfileViewProps {
-  userId: string
-}
+import type { UserProfileViewProps } from '@/types'
 
 export const UserProfileView = ({ userId }: UserProfileViewProps) => {
   const { profile, isLoading, error, refetch } = useUserProfile(userId)

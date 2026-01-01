@@ -1,13 +1,13 @@
 'use client'
 
-interface SwitchProps {
-    checked: boolean
-    onChange: (checked: boolean) => void
+import type { SwitchProps } from '@/types'
+
+interface SwitchPropsExtended extends SwitchProps {
     disabled?: boolean
     className?: string
 }
 
-export const Switch = ({ checked, onChange, disabled = false, className = '' }: SwitchProps) => {
+export const Switch = ({ checked, onChange, disabled = false, className = '' }: SwitchPropsExtended) => {
     return (
         <button
             type="button"

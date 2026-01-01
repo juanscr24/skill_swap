@@ -19,13 +19,19 @@ export interface User {
 export interface Skill {
     id: string
     name: string
-    description?: string
-    level?: string
+    description?: string | null
+    level?: string | null
 }
 
 export interface WantedSkill {
     id: string
     name: string
+}
+
+export interface Language {
+    id: string
+    name: string
+    level?: string | null
 }
 
 export interface Match {
@@ -98,7 +104,7 @@ export interface Notification {
     id: string
     user_id: string
     type: string
-    data?: any
+    data?: Record<string, unknown>
     read: boolean
     created_at: Date
 }
