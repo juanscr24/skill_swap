@@ -4,12 +4,12 @@ import { motion, AnimatePresence } from "motion/react"
 import { useEffect, useState } from "react"
 import { Menu, X } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { Button } from "../ui/Button"
-import { ButtonMode } from "../ui/ButtonMode"
-import { LanguageSwitcher } from "../ui/LanguageSwitcher"
+import { Button } from "../../ui/Button"
+import { ButtonMode } from "../../ui/ButtonMode"
+import { LanguageSwitcher } from "../../ui/LanguageSwitcher"
 import { NAVBAR_ITEMS } from "@/constants/navbar_item"
 import { scrollToTop, scrollToElement } from "@/utils/scroll"
-import { SkillSwapLogo } from "../ui/SkillSwapLogo"
+import { SkillSwapLogo } from "../../ui/SkillSwapLogo"
 
 export const LandingNavbar = () => {
     const t = useTranslations("landingNavbar")

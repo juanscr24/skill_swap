@@ -1,7 +1,7 @@
 'use client'
 import Image from "next/image"
 import { motion } from "motion/react"
-import { Button } from "../ui/Button"
+import { Button } from "../../ui/Button"
 import { landing } from "@public/images"
 import { useTranslations } from "next-intl"
 import Link from "next/link"

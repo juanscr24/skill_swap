@@ -22,8 +22,8 @@ export { MoreMentorsCard } from './ui/MoreMentorsCard'
 export { default as LoadingSpinner } from './ui/LoadingSpinner'
 
 // Features
-export { LandingNavbar } from './features/LandingNavbar'
-export { AboutUs } from './features/AboutUs'
+export { LandingNavbar } from './features/landing/LandingNavbar'
+export { AboutUs } from './features/landing/AboutUs'
 export { Sidebar } from './features/Sidebar'
 export { DashboardNavbar } from './features/DashboardNavbar'
 
