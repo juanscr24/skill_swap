@@ -16,6 +16,8 @@
     "completed": "Completed",
     "cancelled": "Cancelled",
     "pending": "Pending",
+    "pendingSessions": "Pending Sessions",
+    "noPendingRequests": "No pending requests",
     "rejected": "Rejected",
     "markAsCompleted": "Mark as completed",
     "cancel": "Cancel session",

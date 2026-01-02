@@ -9,23 +9,15 @@ import { SocialLinks } from "@/components/features/profile/user/SocialLinks"
 import { StatsCard } from "@/components/features/profile/user/StatsCard"
 import { SkillsSection } from "@/components/features/profile/user/SkillsSection"
 import { ReviewsChart } from "@/components/features/profile/user/ReviewsChart"
-import { AvailabilitySchedule } from "@/components/features/profile/user/AvailabilitySchedule"
 import { LanguagesSection } from "@/components/features/profile/user/LanguagesSection"
-import { AvailabilityManager } from "@/components/features/availability"
-import { PendingRequestsList } from "@/components/features/availability"
 import { Card } from "@/components/ui/Card"
 import Link from "next/link"
 import { Pencil } from "lucide-react"
-import { ManageAvailability } from "@/components/features/sessions/ManageAvailability"
 
 export const ProfileView = () => {
     const t = useTranslations('profile')
-    const tSessions = useTranslations('sessions')
     const { data: session } = useSession()
     const { profile, isLoading, error, updateProfile, addSkill, removeSkill, addWantedSkill, removeWantedSkill } = useProfile()
-
-    // Un usuario es mentor si tiene skills para enseñar o si su role es MENTOR/ADMIN
-    const isMentor = (profile?.skills && profile.skills.length > 0) || profile?.role === 'MENTOR' || profile?.role === 'ADMIN'
 
     // Loading state
     if (isLoading) {
@@ -128,8 +120,6 @@ export const ProfileView = () => {
                         averageRating={profile.averageRating}
                         totalReviews={profile.totalReviews}
                     />
-
-                    <ManageAvailability profile={profile} isMentor={isMentor} />
                 </div>
             </div>
         </div>

@@ -1,6 +1,7 @@
 'use client'
 import { useTranslations } from "next-intl"
 import { useSessions } from "@/hooks"
+import { useProfile } from "@/hooks/useProfile"
 import { Card } from "@/components/ui/Card"
 import { Avatar } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
@@ -9,6 +10,7 @@ import { Button, LoadingSpinner } from "@/components"
 import Link from "next/link"
 import { FiCalendar, FiClock } from "react-icons/fi"
 import { useSession } from "next-auth/react"
+import { ManageAvailability } from "@/components/features/sessions/ManageAvailability"
 
 interface SessionData {
     id: string
@@ -33,6 +35,10 @@ export const SessionsView = () => {
     const t = useTranslations('sessions')
     const { data: session } = useSession()
     const { sessions, isLoading, cancelSession, updateSessionStatus } = useSessions('all')
+    const { profile } = useProfile()
+
+    // Un usuario es mentor si tiene skills para enseñar o si su role es MENTOR/ADMIN
+    const isMentor = (profile?.skills && profile.skills.length > 0) || profile?.role === 'MENTOR' || profile?.role === 'ADMIN'
 
     const pendingSessions = sessions.filter(
         (s) => s.status === 'pending'
@@ -62,7 +68,7 @@ export const SessionsView = () => {
 
         const handleCancel = async () => {
             if (!confirm('¿Estás seguro de cancelar esta sesión?')) return
-            
+
             const result = await cancelSession(sessionData.id)
             if (!result.success) {
                 alert(t('errorCancelling'))
@@ -78,7 +84,7 @@ export const SessionsView = () => {
 
         const handleReject = async () => {
             if (!confirm('¿Estás seguro de rechazar esta sesión?')) return
-            
+
             const result = await updateSessionStatus(sessionData.id, 'rejected')
             if (!result.success) {
                 alert('Error al rechazar la sesión')
@@ -120,9 +126,9 @@ export const SessionsView = () => {
                             <div className="flex items-center gap-2 max-sm:gap-1">
                                 <FiClock className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
                                 <span>
-                                    {startAt.toLocaleTimeString('es-ES', { 
-                                        hour: '2-digit', 
-                                        minute: '2-digit' 
+                                    {startAt.toLocaleTimeString('es-ES', {
+                                        hour: '2-digit',
+                                        minute: '2-digit'
                                     })}
                                 </span>
                             </div>
@@ -150,7 +156,7 @@ export const SessionsView = () => {
                                     </Button>
                                 </div>
                             )}
-                            
+
                             {sessionData.status === 'pending' && isGuest && (
                                 <div className="flex gap-2 max-sm:gap-1 flex-wrap">
                                     <span className="text-sm max-sm:text-xs text-(--text-2) italic">
@@ -181,14 +187,27 @@ export const SessionsView = () => {
 
     const tabs = [
         {
+            id: 'availability',
+            label: t('manageAvailability'),
+            content: (
+                <div>
+                    {profile ? (
+                        <ManageAvailability profile={profile} isMentor={isMentor} />
+                    ) : (
+                        <LoadingSpinner />
+                    )}
+                </div>
+            )
+        },
+        {
             id: 'pending',
-            label: 'Pendientes',
+            label: (t('pendingSessions')),
             content: (
                 <div className="space-y-4 max-sm:space-y-3">
                     {isLoading ? (
                         <LoadingSpinner />
                     ) : pendingSessions.length === 0 ? (
-                        <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">No hay sesiones pendientes</p>
+                        <p className="text-(--text-2) text-center py-8 max-sm:py-6 max-sm:text-sm">{t('noPendingRequests')}</p>
                     ) : (
                         pendingSessions.map((sessionData) => (
                             <SessionCard key={sessionData.id} sessionData={sessionData} />
