@@ -15,7 +15,6 @@ export { Select } from './ui/Select'
 export { Modal } from './ui/Modal'
 export { Tabs } from './ui/Tabs'
 export { SearchBar } from './ui/SearchBar'
-export { PasswordStrength } from './ui/PasswordStrength'
 export { SkillSelector } from './ui/SkillSelector'
 export { MentorCard } from './ui/MentorCard'
 export { MoreMentorsCard } from './ui/MoreMentorsCard'
@@ -24,8 +23,8 @@ export { default as LoadingSpinner } from './ui/LoadingSpinner'
 // Features
 export { LandingNavbar } from './features/landing/LandingNavbar'
 export { AboutUs } from './features/landing/AboutUs'
-export { Sidebar } from './features/Sidebar'
-export { DashboardNavbar } from './features/DashboardNavbar'
+export { Sidebar } from './layout/Sidebar'
+export { DashboardNavbar } from './layout/DashboardNavbar'
 
 // Form
 

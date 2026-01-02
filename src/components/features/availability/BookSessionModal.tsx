@@ -7,14 +7,7 @@ import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { useSessionRequests } from '@/hooks'
 import { useTranslations } from 'next-intl'
-
-interface BookSessionModalProps {
-  mentorId: string
-  mentorName: string
-  availability: MentorAvailability[]
-  onClose: () => void
-  onSuccess: () => void
-}
+import { BookSessionModalProps } from '@/types'
 
 export const BookSessionModal = ({
   mentorId,
@@ -124,11 +117,10 @@ export const BookSessionModal = ({
                     key={slot.id}
                     type="button"
                     onClick={() => setSelectedAvailability(slot.id)}
-                    className={`p-4 rounded-lg border-2 text-left transition-all ${
-                      selectedAvailability === slot.id
+                    className={`p-4 rounded-lg border-2 text-left transition-all ${selectedAvailability === slot.id
                         ? 'border-(--button-1) bg-(--button-1)/10'
                         : 'border-(--border-1) hover:border-(--button-1)/50'
-                    }`}
+                      }`}
                   >
                     <p className="font-semibold text-(--text-1)">
                       {formatDate(slot.date)}

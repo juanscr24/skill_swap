@@ -4,27 +4,9 @@ export interface AvailabilityManagerProps {
   mentorId: string
 }
 
-export interface StartChatButtonProps {
-  userId: string
-  userName?: string
-}
-
 export interface SidebarProps {
   isOpen: boolean
   setIsOpen: (isOpen: boolean) => void
-}
-
-export interface UserCardProps {
-  user: {
-    id: string
-    name: string | null
-    email?: string | null
-    image: string | null
-    bio: string | null
-    skills?: Array<{ name: string }>
-  }
-  onViewProfile?: () => void
-  onSendRequest?: () => void
 }
 
 export interface MatchCardProps {
@@ -46,6 +28,5 @@ export interface MatchCardProps {
   onReject: () => void
 }
 
-export interface DashboardNavbarProps {
-  userName?: string
-}
+export type DashboardNavbarProps = SidebarProps
+
