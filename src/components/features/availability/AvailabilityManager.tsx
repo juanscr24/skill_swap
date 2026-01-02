@@ -4,44 +4,11 @@ import { useState } from 'react'
 import { useAvailability } from '@/hooks'
 import { Button } from '@/components/ui/Button'
 import { FiPlus, FiClock, FiTrash2 } from 'react-icons/fi'
+import { useTranslations } from 'next-intl'
 import type { AvailabilityManagerProps } from '@/types'
 
-interface AvailabilityManagerPropsExtended extends AvailabilityManagerProps {
-  translations: {
-    manageAvailability: string
-    manageScheduleSubtitle: string
-    addNewAvailability: string
-    dayOfWeek: string
-    selectDay: string
-    startTime: string
-    endTime: string
-    add: string
-    currentAvailabilities: string
-    viewFullCalendar: string
-    day: string
-    schedule: string
-    state: string
-    actions: string
-    recurring: string
-    oneTime: string
-    monday: string
-    tuesday: string
-    wednesday: string
-    thursday: string
-    friday: string
-    saturday: string
-    sunday: string
-    availabilityAdded: string
-    availabilityDeleted: string
-    errorAddingAvailability: string
-    errorDeletingAvailability: string
-  }
-}
-
-export const AvailabilityManager = ({
-  mentorId,
-  translations,
-}: AvailabilityManagerPropsExtended) => {
+export const AvailabilityManager = ({ mentorId }: AvailabilityManagerProps) => {
+  const t = useTranslations('sessions')
   const { availability, isLoading, addAvailability, deleteAvailability } =
     useAvailability(mentorId)
 
@@ -60,19 +27,19 @@ export const AvailabilityManager = ({
         newSlot.startTime,
         newSlot.endTime
       )
-      alert(translations.availabilityAdded)
+      alert(t('availabilityAdded'))
       setNewSlot({ date: '', startTime: '', endTime: '' })
     } catch (error: any) {
-      alert(error.message || translations.errorAddingAvailability)
+      alert(error.message || t('errorAddingAvailability'))
     }
   }
 
   const handleDelete = async (id: string) => {
     try {
       await deleteAvailability(id)
-      alert(translations.availabilityDeleted)
+      alert(t('availabilityDeleted'))
     } catch (error: any) {
-      alert(error.message || translations.errorDeletingAvailability)
+      alert(error.message || t('errorDeletingAvailability'))
     }
   }
 
@@ -95,10 +62,10 @@ export const AvailabilityManager = ({
       {/* Header */}
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-(--text-1)">
-          {translations.manageAvailability}
+          {t('manageAvailability')}
         </h1>
         <p className="text-(--text-2)">
-          {translations.manageScheduleSubtitle}
+          {t('manageScheduleSubtitle')}
         </p>
       </div>
 
@@ -109,7 +76,7 @@ export const AvailabilityManager = ({
             <FiPlus className="text-white text-xl" />
           </div>
           <h2 className="text-xl font-semibold text-(--text-1)">
-            {translations.addNewAvailability}
+            {t('addNewAvailability')}
           </h2>
         </div>
 
@@ -118,7 +85,7 @@ export const AvailabilityManager = ({
             {/* Day Selector */}
             <div className="space-y-2">
               <label className="text-sm text-(--text-2)">
-                {translations.dayOfWeek}
+                {t('dayOfWeek')}
               </label>
               <input
                 type="date"
@@ -134,7 +101,7 @@ export const AvailabilityManager = ({
             {/* Start Time */}
             <div className="space-y-2">
               <label className="text-sm text-(--text-2)">
-                {translations.startTime}
+                {t('startTime')}
               </label>
               <div className="relative">
                 <input
@@ -154,7 +121,7 @@ export const AvailabilityManager = ({
             {/* End Time */}
             <div className="space-y-2">
               <label className="text-sm text-(--text-2)">
-                {translations.endTime}
+                {t('endTime')}
               </label>
               <div className="relative">
                 <input
@@ -178,7 +145,7 @@ export const AvailabilityManager = ({
                 className="w-full py-3 bg-(--button-1) hover:opacity-90 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2"
               >
                 <FiPlus className="text-xl" />
-                {translations.add}
+                {t('add')}
               </Button>
             </div>
           </div>
@@ -189,10 +156,10 @@ export const AvailabilityManager = ({
       <div className="bg-(--bg-2) border border-(--border-1) rounded-xl p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-(--text-1)">
-            {translations.currentAvailabilities}
+            {t('currentAvailabilities')}
           </h2>
           <button className="text-(--button-1) hover:underline text-sm font-medium">
-            {translations.viewFullCalendar}
+            {t('viewFullCalendar')}
           </button>
         </div>
 
@@ -210,16 +177,16 @@ export const AvailabilityManager = ({
               <thead>
                 <tr className="border-b border-(--border-1)">
                   <th className="text-left py-3 px-4 text-xs font-semibold text-(--text-2) uppercase tracking-wider">
-                    {translations.day}
+                    {t('day')}
                   </th>
                   <th className="text-left py-3 px-4 text-xs font-semibold text-(--text-2) uppercase tracking-wider">
-                    {translations.schedule}
+                    {t('schedule')}
                   </th>
                   <th className="text-left py-3 px-4 text-xs font-semibold text-(--text-2) uppercase tracking-wider">
-                    {translations.state}
+                    {t('state')}
                   </th>
                   <th className="text-left py-3 px-4 text-xs font-semibold text-(--text-2) uppercase tracking-wider">
-                    {translations.actions}
+                    {t('actions')}
                   </th>
                 </tr>
               </thead>
@@ -238,7 +205,7 @@ export const AvailabilityManager = ({
                     <td className="py-4 px-4">
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-green-500/10 text-green-500">
                         <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                        {translations.recurring}
+                        {t('recurring')}
                       </span>
                     </td>
                     <td className="py-4 px-4">

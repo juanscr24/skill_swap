@@ -16,6 +16,7 @@ import { PendingRequestsList } from "@/components/features/availability"
 import { Card } from "@/components/ui/Card"
 import Link from "next/link"
 import { Pencil } from "lucide-react"
+import { ManageAvailability } from "@/components/features/sessions/ManageAvailability"
 
 export const ProfileView = () => {
     const t = useTranslations('profile')
@@ -61,8 +62,10 @@ export const ProfileView = () => {
                     />
 
                     <SocialLinks
-                        links={profile.social_links}
-                        onUpdate={updateProfile}
+                        links={profile.social_links || {}}
+                        onUpdate={async (data) => {
+                            await updateProfile(data)
+                        }}
                     />
 
                     <div className="flex gap-4">
@@ -105,10 +108,18 @@ export const ProfileView = () => {
                     <SkillsSection
                         skillsTeach={profile.skills}
                         skillsLearn={profile.wanted_skills}
-                        onAddSkill={addSkill}
-                        onRemoveSkill={removeSkill}
-                        onAddWantedSkill={addWantedSkill}
-                        onRemoveWantedSkill={removeWantedSkill}
+                        onAddSkill={async (name) => {
+                            await addSkill(name)
+                        }}
+                        onRemoveSkill={async (id) => {
+                            await removeSkill(id)
+                        }}
+                        onAddWantedSkill={async (name) => {
+                            await addWantedSkill(name)
+                        }}
+                        onRemoveWantedSkill={async (id) => {
+                            await removeWantedSkill(id)
+                        }}
                     />
 
 
@@ -118,61 +129,7 @@ export const ProfileView = () => {
                         totalReviews={profile.totalReviews}
                     />
 
-                    {isMentor && profile.id && (
-                        <>
-                            <AvailabilityManager
-                                mentorId={profile.id}
-                                translations={{
-                                    manageAvailability: tSessions('manageAvailability'),
-                                    manageScheduleSubtitle: tSessions('manageScheduleSubtitle'),
-                                    addNewAvailability: tSessions('addNewAvailability'),
-                                    dayOfWeek: tSessions('dayOfWeek'),
-                                    selectDay: tSessions('selectDay'),
-                                    startTime: tSessions('startTime'),
-                                    endTime: tSessions('endTime'),
-                                    add: tSessions('add'),
-                                    currentAvailabilities: tSessions('currentAvailabilities'),
-                                    viewFullCalendar: tSessions('viewFullCalendar'),
-                                    day: tSessions('day'),
-                                    schedule: tSessions('schedule'),
-                                    state: tSessions('state'),
-                                    actions: tSessions('actions'),
-                                    recurring: tSessions('recurring'),
-                                    oneTime: tSessions('oneTime'),
-                                    monday: tSessions('monday'),
-                                    tuesday: tSessions('tuesday'),
-                                    wednesday: tSessions('wednesday'),
-                                    thursday: tSessions('thursday'),
-                                    friday: tSessions('friday'),
-                                    saturday: tSessions('saturday'),
-                                    sunday: tSessions('sunday'),
-                                    availabilityAdded: tSessions('availabilityAdded'),
-                                    availabilityDeleted: tSessions('availabilityDeleted'),
-                                    errorAddingAvailability: tSessions('errorAddingAvailability'),
-                                    errorDeletingAvailability: tSessions('errorDeletingAvailability'),
-                                }}
-                            />
-
-                            <PendingRequestsList
-                                translations={{
-                                    pendingRequests: tSessions('pendingRequests'),
-                                    acceptRequest: tSessions('acceptRequest'),
-                                    rejectRequest: tSessions('rejectRequest'),
-                                    requestAccepted: tSessions('requestAccepted'),
-                                    requestRejected: tSessions('requestRejected'),
-                                    errorManagingRequest: tSessions('errorManagingRequest'),
-                                    topic: tSessions('topic'),
-                                    description: tSessions('description'),
-                                    duration: tSessions('duration'),
-                                    minutes: tSessions('minutes'),
-                                    date: tSessions('date'),
-                                    time: tSessions('time'),
-                                }}
-                            />
-                        </>
-                    )}
-
-                    {!isMentor && <AvailabilitySchedule availability={profile.availability} />}
+                    <ManageAvailability profile={profile} isMentor={isMentor} />
                 </div>
             </div>
         </div>

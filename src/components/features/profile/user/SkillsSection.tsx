@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Badge } from "@/components/ui/Badge"
 import { useTranslations } from "next-intl"
 import { FiPlus, FiBookOpen, FiZap, FiX, FiCheck } from "react-icons/fi"
-import type { SkillsSectionProps, Skill } from '@/types'
+import type { SkillsSectionProps } from '@/types'
 
 export const SkillsSection = ({
     skillsTeach,
@@ -20,14 +20,14 @@ export const SkillsSection = ({
     const [learnInput, setLearnInput] = useState('')
 
     const handleAddTeach = async () => {
-        if (!teachInput.trim()) return
+        if (!teachInput.trim() || !onAddSkill) return
         await onAddSkill(teachInput)
         setTeachInput('')
         setAddingTeach(false)
     }
 
     const handleAddLearn = async () => {
-        if (!learnInput.trim()) return
+        if (!learnInput.trim() || !onAddWantedSkill) return
         await onAddWantedSkill(learnInput)
         setLearnInput('')
         setAddingLearn(false)
@@ -49,12 +49,14 @@ export const SkillsSection = ({
                         skillsTeach.map(skill => (
                             <Badge key={skill.id} variant="info" className="px-3 py-1.5 bg-[#3B82F6]/10 text-[#3B82F6] border-[#3B82F6]/20 hover:bg-[#3B82F6]/20 transition-colors cursor-default flex items-center gap-1 group">
                                 {skill.name} {skill.level ? `• ${skill.level}` : ''}
-                                <button
-                                    onClick={() => onRemoveSkill(skill.id)}
-                                    className="ml-1 opacity-0 group-hover:opacity-100 hover:text-red-500 transition-all"
-                                >
-                                    <FiX size={12} />
-                                </button>
+                                {onRemoveSkill && (
+                                    <button
+                                        onClick={() => onRemoveSkill(skill.id)}
+                                        className="ml-1 opacity-0 group-hover:opacity-100 hover:text-red-500 transition-all"
+                                    >
+                                        <FiX size={12} />
+                                    </button>
+                                )}
                             </Badge>
                         ))
                     }
@@ -97,12 +99,14 @@ export const SkillsSection = ({
                         skillsLearn.map(skill => (
                             <Badge key={skill.id} variant="warning" className="px-3 py-1.5 bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20 hover:bg-[#F59E0B]/20 transition-colors cursor-default flex items-center gap-1 group">
                                 {skill.name}
-                                <button
-                                    onClick={() => onRemoveWantedSkill(skill.id)}
-                                    className="ml-1 opacity-0 group-hover:opacity-100 hover:text-red-500 transition-all"
-                                >
-                                    <FiX size={12} />
-                                </button>
+                                {onRemoveWantedSkill && (
+                                    <button
+                                        onClick={() => onRemoveWantedSkill(skill.id)}
+                                        className="ml-1 opacity-0 group-hover:opacity-100 hover:text-red-500 transition-all"
+                                    >
+                                        <FiX size={12} />
+                                    </button>
+                                )}
                             </Badge>
                         ))
                     }

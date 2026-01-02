@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { Avatar } from "@/components/ui/Avatar"
-import { Button } from "@/components"
+import { Button, LoadingSpinner } from "@/components"
 import { Rating } from "@/components/ui/Rating"
 import { useTranslations } from "next-intl"
-import { Star, Trash2, Edit3 } from "lucide-react"
+import { Trash2, Edit3 } from "lucide-react"
 import { useSession } from "next-auth/react"
 import type { MentorReviewsSectionProps, Review } from '@/types'
 
@@ -23,7 +23,7 @@ export const MentorReviewsSection = ({
 
     // Find user's existing review
     const userReview = reviews.find(
-        review => review.users_reviews_author_idTousers?.id === session?.user?.id
+        review => review.author?.id === session?.user?.id
     )
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -138,7 +138,9 @@ export const MentorReviewsSection = ({
                             disabled={isSubmitting}
                             className="flex-1 bg-[#3B82F6] hover:bg-[#2563EB] text-white border-none"
                         >
-                            {isSubmitting ? t('loading') : t('submit')}
+                            {isSubmitting ?
+                                <LoadingSpinner />
+                                : t('submit')}
                         </Button>
                         <Button
                             type="button"
@@ -161,7 +163,7 @@ export const MentorReviewsSection = ({
             <div className="space-y-4">
                 {reviews.length > 0 ? (
                     reviews.slice(0, 3).map((review) => {
-                        const isOwnReview = review.users_reviews_author_idTousers?.id === session?.user?.id
+                        const isOwnReview = review.author?.id === session?.user?.id
 
                         return (
                             <div
@@ -170,19 +172,19 @@ export const MentorReviewsSection = ({
                             >
                                 <div className="flex items-start gap-3">
                                     <Avatar
-                                        src={review.users_reviews_author_idTousers?.image || ''}
-                                        alt={review.users_reviews_author_idTousers?.name || 'User'}
+                                        src={review.author?.image || ''}
+                                        alt={review.author?.name || 'User'}
                                         size="md"
                                     />
                                     <div className="flex-1">
                                         <div className="flex items-start justify-between mb-2">
                                             <div>
                                                 <h4 className="font-semibold text-(--text-1)">
-                                                    {review.users_reviews_author_idTousers?.name || 'Anonymous'}
+                                                    {review.author?.name || 'Anonymous'}
                                                 </h4>
-                                                {review.users_reviews_author_idTousers?.title && (
+                                                {review.author?.title && (
                                                     <p className="text-xs text-(--text-2)">
-                                                        {review.users_reviews_author_idTousers.title}
+                                                        {review.author.title}
                                                     </p>
                                                 )}
                                             </div>

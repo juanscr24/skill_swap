@@ -7,6 +7,7 @@ import { useAvailability } from '@/hooks'
 import { Button } from '@/components/ui/Button'
 import { BookSessionModal } from '@/components/features/availability'
 import type { MentorAvailabilityProps } from '@/types'
+import LoadingSpinner from '@/components/ui/LoadingSpinner'
 
 export const MentorAvailability = ({
   mentorId,
@@ -31,27 +32,9 @@ export const MentorAvailability = ({
 
   const nextSlots = getNextSlots()
 
-  const translations = {
-    bookSession: t('bookSession'),
-    selectAvailability: t('selectAvailability'),
-    topic: t('topic'),
-    topicPlaceholder: t('topicPlaceholder'),
-    description: t('description'),
-    descriptionPlaceholder: t('descriptionPlaceholder'),
-    selectDuration: t('selectDuration'),
-    requestSession: t('requestSession'),
-    minimumDuration: t('minimumDuration'),
-    invalidTimeFormat: t('invalidTimeFormat'),
-    sessionRequested: t('sessionRequested'),
-    errorRequestingSession: t('errorRequestingSession'),
-    noAvailableSlots: t('noAvailableSlots'),
-    minutes: t('minutes'),
-  }
-
   return (
     <>
-      <div className="bg-(--bg-2) rounded-2xl p-6 border border-(--border-1)">
-        <div className="flex items-center gap-2 mb-4">
+      <div className="bg-(--bg-2) rounded-2xl p-6 border border-(--border-1)">\n        <div className="flex items-center gap-2 mb-4">
           <FiCalendar className="text-(--button-1)" size={20} />
           <h2 className="text-lg font-bold text-(--text-1)">
             {t('nextAvailability')}
@@ -59,9 +42,7 @@ export const MentorAvailability = ({
         </div>
 
         {isLoading ? (
-          <div className="text-center py-4 text-(--text-2)">
-            {t('loading')}
-          </div>
+          <LoadingSpinner />
         ) : nextSlots.length === 0 ? (
           <div className="text-center py-8 text-(--text-2)">
             <p className="text-sm">{t('noAvailableSlots')}</p>
@@ -101,13 +82,12 @@ export const MentorAvailability = ({
       {showBookingModal && (
         <BookSessionModal
           mentorId={mentorId}
-          mentorName={mentorName}
+          mentorName={mentorName || 'Mentor'}
           availability={availability.filter((slot) => !slot.is_booked)}
           onClose={() => setShowBookingModal(false)}
           onSuccess={() => {
             alert(t('sessionRequested'))
           }}
-          translations={translations}
         />
       )}
     </>

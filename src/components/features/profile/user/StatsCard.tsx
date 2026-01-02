@@ -1,8 +1,10 @@
 import { IconType } from "react-icons"
 import type { StatsCardProps } from '@/types'
 
-interface StatsCardPropsExtended extends StatsCardProps {
+interface StatsCardPropsExtended {
     icon: IconType
+    value: number | string
+    label: string
     color: string
     bgColor: string
 }

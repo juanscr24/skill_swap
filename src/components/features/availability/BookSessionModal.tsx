@@ -6,7 +6,15 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { useSessionRequests } from '@/hooks'
-import type { BookSessionModalProps } from '@/types'
+import { useTranslations } from 'next-intl'
+
+interface BookSessionModalProps {
+  mentorId: string
+  mentorName: string
+  availability: MentorAvailability[]
+  onClose: () => void
+  onSuccess: () => void
+}
 
 export const BookSessionModal = ({
   mentorId,
@@ -14,8 +22,8 @@ export const BookSessionModal = ({
   availability,
   onClose,
   onSuccess,
-  translations,
 }: BookSessionModalProps) => {
+  const t = useTranslations('sessions')
   const { createSessionRequest } = useSessionRequests()
   const [selectedAvailability, setSelectedAvailability] = useState('')
   const [title, setTitle] = useState('')
@@ -43,12 +51,12 @@ export const BookSessionModal = ({
 
     const durationNum = parseInt(duration)
     if (durationNum < 30) {
-      setError(translations.minimumDuration)
+      setError(t('minimumDuration'))
       return
     }
 
     if (durationNum % 10 !== 0) {
-      setError(translations.invalidTimeFormat)
+      setError(t('invalidTimeFormat'))
       return
     }
 
@@ -66,7 +74,7 @@ export const BookSessionModal = ({
       onSuccess()
       onClose()
     } catch (err: any) {
-      setError(err.message || translations.errorRequestingSession)
+      setError(err.message || t('errorRequestingSession'))
     } finally {
       setIsSubmitting(false)
     }
@@ -83,7 +91,7 @@ export const BookSessionModal = ({
       <div className="bg-(--bg-2) rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-(--border-1)">
           <h2 className="text-2xl font-bold text-(--text-1)">
-            {translations.bookSession}
+            {t('bookSession')}
           </h2>
           <p className="text-(--text-2) mt-1">con {mentorName}</p>
         </div>
@@ -97,7 +105,7 @@ export const BookSessionModal = ({
         {availableSlots.length === 0 ? (
           <div className="p-6">
             <p className="text-(--text-2) text-center py-8">
-              {translations.noAvailableSlots}
+              {t('noAvailableSlots')}
             </p>
             <Button secondary onClick={onClose} className="w-full">
               Cerrar
@@ -108,7 +116,7 @@ export const BookSessionModal = ({
             {/* Availability Selection */}
             <div>
               <label className="font-semibold text-(--text-1) block mb-3">
-                {translations.selectAvailability}
+                {t('selectAvailability')}
               </label>
               <div className="grid grid-cols-1 gap-3 max-h-60 overflow-y-auto">
                 {availableSlots.map((slot) => (
@@ -136,9 +144,9 @@ export const BookSessionModal = ({
             {/* Topic */}
             <Input
               type="text"
-              label={translations.topic}
+              label={t('topic')}
               id="title"
-              placeholder={translations.topicPlaceholder}
+              placeholder={t('topicPlaceholder')}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
@@ -146,9 +154,9 @@ export const BookSessionModal = ({
 
             {/* Description */}
             <Textarea
-              label={translations.description}
+              label={t('description')}
               id="description"
-              placeholder={translations.descriptionPlaceholder}
+              placeholder={t('descriptionPlaceholder')}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
@@ -160,7 +168,7 @@ export const BookSessionModal = ({
                 htmlFor="duration"
                 className="font-semibold text-(--text-1) block mb-2"
               >
-                {translations.selectDuration}
+                {t('selectDuration')}
               </label>
               <select
                 id="duration"
@@ -168,12 +176,12 @@ export const BookSessionModal = ({
                 onChange={(e) => setDuration(e.target.value)}
                 className="bg-(--bg-2) border border-(--border-1) text-(--text-1) w-full outline-none px-4 py-4 rounded-md"
               >
-                <option value="30">30 {translations.minutes}</option>
-                <option value="40">40 {translations.minutes}</option>
-                <option value="50">50 {translations.minutes}</option>
-                <option value="60">60 {translations.minutes}</option>
-                <option value="90">90 {translations.minutes}</option>
-                <option value="120">120 {translations.minutes}</option>
+                <option value="30">30 {t('minutes')}</option>
+                <option value="40">40 {t('minutes')}</option>
+                <option value="50">50 {t('minutes')}</option>
+                <option value="60">60 {t('minutes')}</option>
+                <option value="90">90 {t('minutes')}</option>
+                <option value="120">120 {t('minutes')}</option>
               </select>
             </div>
 
@@ -196,7 +204,7 @@ export const BookSessionModal = ({
                 }
                 className="flex-1"
               >
-                {isSubmitting ? 'Solicitando...' : translations.requestSession}
+                {isSubmitting ? 'Solicitando...' : t('requestSession')}
               </Button>
             </div>
           </form>

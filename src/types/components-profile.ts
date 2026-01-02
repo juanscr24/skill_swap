@@ -2,21 +2,33 @@
 
 export interface ProfileHeaderProps {
   name: string | null
+  title?: string | null
   image: string | null
   city: string | null
-  role: string | null
+  role?: string | null
+  rating?: number
+  totalReviews?: number
 }
 
 export interface MentorProfileHeaderProps {
   name: string | null
+  title?: string | null
   image: string | null
   city: string | null
   rating: number
   totalReviews: number
+  languages?: string[]
+  isOnline?: boolean
+  socialLinks?: {
+    github?: string
+    linkedin?: string
+    twitter?: string
+    website?: string
+  }
 }
 
 export interface StatsCardProps {
-  title: string
+  label: string
   value: number | string
   icon: React.ReactNode
   trend?: {
@@ -26,10 +38,10 @@ export interface StatsCardProps {
 }
 
 export interface MentorStatsProps {
-  hoursTeaching: number
-  studentsHelped: number
-  rating: number
+  totalSessions: number
+  totalHours: number
   totalReviews: number
+  averageRating: number
 }
 
 export interface SocialLinksProps {
@@ -37,25 +49,41 @@ export interface SocialLinksProps {
     github?: string
     linkedin?: string
     twitter?: string
+    instagram?: string
+    facebook?: string
+    whatsapp?: string
     website?: string
   }
+  onUpdate?: (data: { social_links: SocialLinksProps['links'] }) => Promise<void>
 }
 
 export interface SkillsSectionProps {
-  skills: Array<{
+  skillsTeach: Array<{
     id: string
     name: string
     level?: string | null
     description?: string | null
   }>
-  wantedSkills?: Array<{
+  skillsLearn: Array<{
     id: string
     name: string
+    level?: string | null
+    description?: string | null
   }>
+  onAddSkill?: (skillName: string) => Promise<void>
+  onRemoveSkill?: (skillId: string) => Promise<void>
+  onAddWantedSkill?: (skillName: string) => Promise<void>
+  onRemoveWantedSkill?: (skillId: string) => Promise<void>
 }
 
 export interface MentorSkillsSectionProps {
-  skills: Array<{
+  skillsTeach: Array<{
+    id: string
+    name: string
+    level?: string | null
+    description?: string | null
+  }>
+  skillsLearn: Array<{
     id: string
     name: string
     level?: string | null
@@ -72,7 +100,7 @@ export interface LanguagesSectionProps {
 }
 
 export interface AvailabilityScheduleProps {
-  availability: Record<string, string[]>
+  availability?: Record<string, string>
 }
 
 export interface MentorAboutSectionProps {
@@ -88,6 +116,8 @@ export interface ReviewsChartProps {
     rating: number
     created_at: Date
   }>
+  averageRating: number
+  totalReviews: number
 }
 
 export interface MentorReviewsSectionProps {
@@ -97,25 +127,35 @@ export interface MentorReviewsSectionProps {
     comment: string | null
     created_at: Date
     author: {
+      id: string
       name: string | null
       image: string | null
+      title?: string | null
     } | null
   }>
+  mentorId: string
+  onAddReview: (rating: number, comment: string) => Promise<void>
+  onDeleteReview: (reviewId: string) => Promise<void>
+  isSubmitting: boolean
 }
 
 export interface SimilarMentor {
   id: string
   name: string | null
   image: string | null
-  rating: number
+  title?: string | null
+  averageRating: number
   skills: Array<{ name: string }>
 }
 
 export interface MentorSimilarProfilesProps {
-  mentorId: string
+  mentorName: string
+  similarMentors: SimilarMentor[]
 }
 
 export interface MentorAvailabilityProps {
   mentorId: string
+  mentorName?: string
+  availability?: any
   onBookSession?: (slotId: string) => void
 }

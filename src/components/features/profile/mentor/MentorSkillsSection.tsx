@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/Badge"
 import { useTranslations } from "next-intl"
 import { FiZap, FiBookOpen } from "react-icons/fi"
-import type { MentorSkillsSectionProps, Skill } from '@/types'
+import type { MentorSkillsSectionProps } from '@/types'
 
 export const MentorSkillsSection = ({ skillsTeach, skillsLearn }: MentorSkillsSectionProps) => {
     const t = useTranslations('profile')
