@@ -34,7 +34,8 @@ export const MentorAvailability = ({
 
   return (
     <>
-      <div className="bg-(--bg-2) rounded-2xl p-6 border border-(--border-1)">\n        <div className="flex items-center gap-2 mb-4">
+      <div className="bg-(--bg-2) rounded-2xl p-6 border border-(--border-1)">
+        <div className="flex items-center gap-2 mb-4">
           <FiCalendar className="text-(--button-1)" size={20} />
           <h2 className="text-lg font-bold text-(--text-1)">
             {t('nextAvailability')}

@@ -1,6 +1,7 @@
 'use client'
 import { useTranslations } from "next-intl"
 import { useProfile } from "@/hooks/useProfile"
+import { useLanguages } from "@/hooks/useLanguages"
 import { useSession } from "next-auth/react"
 import { FiClock, FiCheckCircle } from "react-icons/fi"
 import { LoadingSpinner } from "@/components"
@@ -18,6 +19,12 @@ export const ProfileView = () => {
     const t = useTranslations('profile')
     const { data: session } = useSession()
     const { profile, isLoading, error, updateProfile, addSkill, removeSkill, addWantedSkill, removeWantedSkill } = useProfile()
+    const {
+        languages,
+        isLoading: isLoadingLanguages,
+        addLanguage,
+        deleteLanguage
+    } = useLanguages()
 
     // Loading state
     if (isLoading) {
@@ -94,14 +101,26 @@ export const ProfileView = () => {
                     </div>
 
                     {profile.languages && profile.languages.length > 0 && (
-                        <LanguagesSection languages={profile.languages} />
+                        <LanguagesSection 
+                            languages={languages.length > 0 ? languages : profile.languages}
+                            onAddLanguage={addLanguage}
+                            onDeleteLanguage={deleteLanguage}
+                        />
+                    )}
+
+                    {(!profile.languages || profile.languages.length === 0) && (
+                        <LanguagesSection 
+                            languages={languages}
+                            onAddLanguage={addLanguage}
+                            onDeleteLanguage={deleteLanguage}
+                        />
                     )}
 
                     <SkillsSection
                         skillsTeach={profile.skills}
                         skillsLearn={profile.wanted_skills}
-                        onAddSkill={async (name) => {
-                            await addSkill(name)
+                        onAddSkill={async (name, level) => {
+                            await addSkill(name, level)
                         }}
                         onRemoveSkill={async (id) => {
                             await removeSkill(id)

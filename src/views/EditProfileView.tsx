@@ -8,26 +8,15 @@ import { Button, LoadingSpinner } from "@/components"
 import { FiArrowLeft } from "react-icons/fi"
 import Link from "next/link"
 import { EditAboutMeSection } from "@/components/features/profile/edit/EditAboutMeSection"
-import { EditSkillsSection } from "@/components/features/profile/edit/EditSkillsSection"
-import { EditLanguagesSection } from "@/components/features/profile/edit/EditLanguagesSection"
 
 export const EditProfileView = () => {
     const t = useTranslations('profile')
     const { profile, isLoading: isLoadingProfile, updateProfile } = useProfile()
     const {
-        skills,
-        wantedSkills,
         isLoading: isLoadingSkills,
-        addSkill,
-        deleteSkill,
-        addWantedSkill,
-        deleteWantedSkill
     } = useSkills()
     const {
-        languages,
         isLoading: isLoadingLanguages,
-        addLanguage,
-        deleteLanguage
     } = useLanguages()
 
     // Función para actualizar solo About Me
@@ -99,23 +88,6 @@ export const EditProfileView = () => {
                 <EditAboutMeSection
                     profile={profile}
                     onUpdate={handleUpdateAboutMe}
-                />
-
-                {/* Languages Section */}
-                <EditLanguagesSection
-                    languages={languages}
-                    onAddLanguage={addLanguage}
-                    onDeleteLanguage={deleteLanguage}
-                />
-
-                {/* Skills & Expertise Section */}
-                <EditSkillsSection
-                    skills={skills}
-                    wantedSkills={wantedSkills}
-                    onAddSkill={addSkill}
-                    onDeleteSkill={deleteSkill}
-                    onAddWantedSkill={addWantedSkill}
-                    onDeleteWantedSkill={deleteWantedSkill}
                 />
             </div>
         </div>

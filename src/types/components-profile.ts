@@ -70,7 +70,7 @@ export interface SkillsSectionProps {
     level?: string | null
     description?: string | null
   }>
-  onAddSkill?: (skillName: string) => Promise<void>
+  onAddSkill?: (skillName: string, level?: string) => Promise<void>
   onRemoveSkill?: (skillId: string) => Promise<void>
   onAddWantedSkill?: (skillName: string) => Promise<void>
   onRemoveWantedSkill?: (skillId: string) => Promise<void>
@@ -95,8 +95,10 @@ export interface LanguagesSectionProps {
   languages: Array<{
     id: string
     name: string
-    level: string | null
+    level?: string | null
   }>
+  onAddLanguage?: (data: { name: string; level: string }) => Promise<{ success: boolean }>
+  onDeleteLanguage?: (languageId: string) => Promise<{ success: boolean }>
 }
 
 export interface AvailabilityScheduleProps {
