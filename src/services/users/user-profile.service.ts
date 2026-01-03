@@ -85,9 +85,18 @@ export async function getUserProfile(userId: string) {
       ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length
       : 0
 
+  // Transformar reviews para que tengan la estructura esperada por el componente
+  const transformedReviews = reviews.map(review => ({
+    id: review.id,
+    rating: review.rating,
+    comment: review.comment,
+    created_at: review.created_at,
+    author: review.users_reviews_author_idTousers
+  }))
+
   return {
     ...user,
-    reviews,
+    reviews: transformedReviews,
     averageRating: Number(averageRating.toFixed(1)),
     totalReviews: reviews.length,
     // Calculated stats

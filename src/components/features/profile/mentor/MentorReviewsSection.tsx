@@ -90,8 +90,8 @@ export const MentorReviewsSection = ({
                 </div>
             )}
 
-            {/* Write Review Button */}
-            {session && !showReviewForm && (
+            {/* Write Review Button - Solo mostrar si el usuario NO tiene una reseña */}
+            {session && !showReviewForm && !userReview && (
                 <div className="mb-6">
                     <Button
                         onClick={handleWriteReview}

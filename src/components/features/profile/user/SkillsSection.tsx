@@ -115,10 +115,10 @@ export const SkillsSection = ({
                     {/* Existing Skills */}
                     {skillsTeach.map(skill => (
                         <div key={skill.id} className="flex items-center justify-between p-3 bg-(--bg-1) rounded-xl border border-(--border-1) group hover:border-[#3B82F6] transition-colors">
-                            <div>
+                            <div className="flex items-center justify-between w-full">
                                 <p className="font-semibold text-(--text-1)">{skill.name}</p>
                                 {skill.level && (
-                                    <span className="text-xs text-(--text-2) uppercase tracking-wider">{skill.level}</span>
+                                    <span className="text-xs text-(--text-2) uppercase italic tracking-wider">{skill.level}</span>
                                 )}
                             </div>
                             {onRemoveSkill && (

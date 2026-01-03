@@ -16,7 +16,7 @@ import { useMentors } from '@/hooks/useMentors'
 import type { UserProfileViewProps } from '@/types'
 
 export const UserProfileView = ({ userId }: UserProfileViewProps) => {
-  const { profile, isLoading, error, refetch } = useUserProfile(userId)
+  const { profile, isLoading, error, refetch, updateReviews } = useUserProfile(userId)
   const { createReview, deleteReview } = useReviews(userId)
   const { mentors } = useMentors({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -24,9 +24,11 @@ export const UserProfileView = ({ userId }: UserProfileViewProps) => {
   const handleAddReview = async (rating: number, comment: string) => {
     try {
       setIsSubmitting(true)
-      await createReview(userId, rating, comment)
-      // Refetch profile to update reviews
-      setTimeout(() => refetch(), 1000)
+      const result = await createReview(userId, rating, comment)
+      if (result.success && result.review) {
+        // Actualizar reviews en el estado local sin recargar todo el perfil
+        updateReviews?.(result.review)
+      }
     } catch (err) {
       throw err
     } finally {
@@ -39,8 +41,8 @@ export const UserProfileView = ({ userId }: UserProfileViewProps) => {
       setIsSubmitting(true)
       const result = await deleteReview(reviewId)
       if (result.success) {
-        // Refetch profile to update reviews
-        setTimeout(() => refetch(), 1000)
+        // Actualizar reviews en el estado local sin recargar todo el perfil
+        updateReviews?.(reviewId, true)
       } else {
         throw new Error(result.error)
       }
