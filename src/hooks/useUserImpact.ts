@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
-import type { DashboardStats } from '@/types/dashboard'
+import type { UserImpact } from '@/types/dashboard'
 
-export function useDashboardStats() {
+export function useUserImpact() {
   const { data: session, status } = useSession()
-  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [impact, setImpact] = useState<UserImpact | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchStats = async () => {
+  const fetchImpact = async () => {
     if (status !== 'authenticated') {
       setIsLoading(false)
       return
@@ -20,30 +20,30 @@ export function useDashboardStats() {
       setIsLoading(true)
       setError(null)
 
-      const response = await fetch('/api/dashboard/stats')
+      const response = await fetch('/api/dashboard/impact')
 
       if (!response.ok) {
-        throw new Error('Error al cargar estadísticas')
+        throw new Error('Error al cargar datos de impacto')
       }
 
       const data = await response.json()
-      setStats(data)
+      setImpact(data)
     } catch (err: any) {
-      console.error('Error fetching stats:', err)
-      setError(err.message || 'Error al cargar estadísticas')
+      console.error('Error fetching impact:', err)
+      setError(err.message || 'Error al cargar datos de impacto')
     } finally {
       setIsLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchStats()
+    fetchImpact()
   }, [status])
 
   return {
-    stats,
+    impact,
     isLoading,
     error,
-    refetch: fetchStats,
+    refetch: fetchImpact,
   }
 }

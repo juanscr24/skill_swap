@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
-import type { DashboardStats } from '@/types/dashboard'
+import type { RecentActivity } from '@/types/dashboard'
 
-export function useDashboardStats() {
+export function useRecentActivity() {
   const { data: session, status } = useSession()
-  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [activities, setActivities] = useState<RecentActivity[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchStats = async () => {
+  const fetchActivities = async () => {
     if (status !== 'authenticated') {
       setIsLoading(false)
       return
@@ -20,30 +20,30 @@ export function useDashboardStats() {
       setIsLoading(true)
       setError(null)
 
-      const response = await fetch('/api/dashboard/stats')
+      const response = await fetch('/api/dashboard/activity')
 
       if (!response.ok) {
-        throw new Error('Error al cargar estadísticas')
+        throw new Error('Error al cargar actividad reciente')
       }
 
       const data = await response.json()
-      setStats(data)
+      setActivities(data)
     } catch (err: any) {
-      console.error('Error fetching stats:', err)
-      setError(err.message || 'Error al cargar estadísticas')
+      console.error('Error fetching activities:', err)
+      setError(err.message || 'Error al cargar actividad reciente')
     } finally {
       setIsLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchStats()
+    fetchActivities()
   }, [status])
 
   return {
-    stats,
+    activities,
     isLoading,
     error,
-    refetch: fetchStats,
+    refetch: fetchActivities,
   }
 }

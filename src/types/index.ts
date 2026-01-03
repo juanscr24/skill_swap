@@ -32,6 +32,9 @@ export * from './reviews'
 export * from './messages'
 export * from './languages'
 
+// Dashboard Types
+export * from './dashboard'
+
 // Chat Types - Export específico para evitar conflicto con Message de models
 export type {
   ChatMessage,

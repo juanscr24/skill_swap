@@ -1,0 +1,6 @@
+export { StatsOverview } from './StatsOverview'
+export { QuickActions } from './QuickActions'
+export { UpcomingSessions } from './UpcomingSessions'
+export { RecentActivity } from './RecentActivity'
+export { UserImpact } from './UserImpact'
+export { StatCard } from './StatCard'
