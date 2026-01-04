@@ -16,9 +16,16 @@ export async function GET(request: NextRequest) {
 
     const userId = session.user.id
 
-    // Obtener actividad reciente del usuario (últimas 2 semanas)
+    // Verificar si se solicita toda la actividad
+    const { searchParams } = new URL(request.url)
+    const showAll = searchParams.get('all') === 'true'
+
+    // Obtener actividad reciente del usuario (últimas 2 semanas o toda)
     const twoWeeksAgo = new Date()
     twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14)
+    
+    // Si showAll es true, usar una fecha muy antigua
+    const dateFilter = showAll ? new Date('2020-01-01') : twoWeeksAgo
 
     // Obtener mensajes recientes
     const recentMessages = await prisma.messages.findMany({
@@ -31,7 +38,7 @@ export async function GET(request: NextRequest) {
           }
         },
         created_at: {
-          gte: twoWeeksAgo
+          gte: dateFilter
         },
         NOT: {
           sender_id: userId
@@ -49,7 +56,7 @@ export async function GET(request: NextRequest) {
       orderBy: {
         created_at: 'desc'
       },
-      take: 3
+      take: showAll ? undefined : 3
     })
 
     // Obtener matches recientes
@@ -61,7 +68,7 @@ export async function GET(request: NextRequest) {
         ],
         status: 'accepted',
         updated_at: {
-          gte: twoWeeksAgo
+          gte: dateFilter
         }
       },
       include: {
@@ -83,7 +90,7 @@ export async function GET(request: NextRequest) {
       orderBy: {
         updated_at: 'desc'
       },
-      take: 3
+      take: showAll ? undefined : 3
     })
 
     // Obtener reviews recientes
@@ -91,7 +98,7 @@ export async function GET(request: NextRequest) {
       where: {
         target_id: userId,
         created_at: {
-          gte: twoWeeksAgo
+          gte: dateFilter
         }
       },
       include: {
@@ -106,7 +113,7 @@ export async function GET(request: NextRequest) {
       orderBy: {
         created_at: 'desc'
       },
-      take: 3
+      take: showAll ? undefined : 3
     })
 
     // Obtener sesiones completadas recientes
@@ -118,7 +125,7 @@ export async function GET(request: NextRequest) {
         ],
         status: 'completed',
         end_at: {
-          gte: twoWeeksAgo
+          gte: dateFilter
         }
       },
       include: {
@@ -140,7 +147,7 @@ export async function GET(request: NextRequest) {
       orderBy: {
         end_at: 'desc'
       },
-      take: 3
+      take: showAll ? undefined : 3
     })
 
     // Consolidar todas las actividades
@@ -187,14 +194,17 @@ export async function GET(request: NextRequest) {
           title: 'Sesión completada',
           description: session.title,
           timestamp: session.end_at,
-          user: otherUser
+          user: otherUser,
+          metadata: {
+            status: session.status
+          }
         }
       })
     ]
 
-    // Ordenar por timestamp y limitar a 10
+    // Ordenar por timestamp y limitar a 10 (solo si no se solicita toda la actividad)
     activities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-    const limitedActivities = activities.slice(0, 10)
+    const limitedActivities = showAll ? activities : activities.slice(0, 10)
 
     return NextResponse.json(limitedActivities)
   } catch (error) {

@@ -41,5 +41,9 @@
     "chats": "Messages",
     "sessions": "Sessions",
     "settings": "Settings",
-    "logout": "Logout"
+    "logout": "Logout",
+    "allActivity": "All Activity",
+    "activityDescription": "Complete history of your activity on the platform",
+    "noActivity": "No activity",
+    "backToDashboard": "Back to Dashboard"
 }
