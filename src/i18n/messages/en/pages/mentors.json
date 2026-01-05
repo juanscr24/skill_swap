@@ -1,5 +1,10 @@
 {
     "mentors": "Mentors Catalog",
+    "skills": "Skills",
+    "searchSkills": "Search skills...",
+    "noSkillsFound": "No skills found",
+    "languages": "Languages",
+    "noLanguagesFound": "No languages found",
     "search": "Search mentors...",
     "filters": "Filters",
     "allSkills": "All skills",
@@ -14,5 +19,16 @@
     "viewProfile": "View profile",
     "rating": "Rating",
     "moreMentorsTitle": "More Mentors Coming Soon",
-    "moreMentorsSubtitle": "We're working to bring you more amazing mentors"
+    "moreMentorsSubtitle": "We're working to bring you more amazing mentors",
+    "rating5Stars": "5 stars",
+    "rating4Plus": "4+ stars",
+    "rating3Plus": "3+ stars",
+    "rating2Plus": "2+ stars",
+    "rating1Plus": "1+ star",
+    "nowOnline": "Now online",
+    "weekends": "Weekends",
+    "weekdays": "Weekdays",
+    "city": "City",
+    "allCitiesOption": "All cities",
+    "applyFilters": "Apply Filters"
 }
