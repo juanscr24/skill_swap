@@ -40,7 +40,7 @@ export interface UserWhereClause {
     in?: string[]
     not?: string
   }
-  role?: string
+  role?: 'USER' | 'MENTOR' | 'STUDENT' | 'ADMIN'
   city?: {
     contains: string
     mode: 'insensitive'
@@ -53,4 +53,73 @@ export interface UserWhereClause {
       }
     }
   }
+  OR?: Array<{
+    skills: {
+      some: {
+        name: {
+          equals: string
+          mode: 'insensitive'
+        }
+      }
+    }
+  }>
+  languages?: {
+    some: {
+      OR: Array<{
+        name: {
+          equals: string
+          mode: 'insensitive'
+        }
+      }>
+    }
+  }
+}
+
+export interface RatingReview {
+  rating: number
+}
+
+export interface UserWithReviews {
+  id: string
+  name: string | null
+  email: string
+  image: string | null
+  bio: string | null
+  city: string | null
+  role: string
+  skills: Array<{
+    id: string
+    name: string
+    description: string | null
+    level: string | null
+  }>
+  languages?: Array<{
+    id: string
+    name: string
+    level: string | null
+  }>
+  reviews_reviews_target_idTousers: RatingReview[]
+}
+
+export interface MentorWithRating {
+  id: string
+  name: string | null
+  email: string
+  image: string | null
+  bio: string | null
+  city: string | null
+  role: string
+  skills: Array<{
+    id: string
+    name: string
+    description: string | null
+    level: string | null
+  }>
+  languages?: Array<{
+    id: string
+    name: string
+    level: string | null
+  }>
+  averageRating: number
+  totalReviews: number
 }

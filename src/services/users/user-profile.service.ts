@@ -1,5 +1,12 @@
 import { prisma } from '@/lib/prisma'
-import type { UpdateUserProfileData, UserFilters, UserWhereClause } from '@/types'
+import type { 
+  UpdateUserProfileData, 
+  UserFilters, 
+  UserWhereClause,
+  UserWithReviews,
+  MentorWithRating,
+  RatingReview 
+} from '@/types'
 
 /**
  * Obtiene el perfil completo de un usuario por ID
@@ -115,12 +122,19 @@ export async function updateUserProfile(
   userId: string,
   data: UpdateUserProfileData
 ) {
+  const updateData: Record<string, unknown> = {
+    ...data,
+    updated_at: new Date(),
+  }
+
+  // Convertir social_links a formato JSON para Prisma
+  if (data.social_links) {
+    updateData.social_links = data.social_links
+  }
+
   return prisma.users.update({
     where: { id: userId },
-    data: {
-      ...data,
-      updated_at: new Date(),
-    },
+    data: updateData,
     select: {
       id: true,
       name: true,
@@ -141,21 +155,25 @@ export async function updateUserProfile(
 /**
  * Obtiene todos los mentores/usuarios disponibles con los que el usuario tiene match aceptado
  */
-export async function getMentors(filters?: {
+export async function getMentors(filterParams?: {
   skill?: string
+  skills?: string // Multi-select: "React,Python"
   city?: string
+  languages?: string // Multi-select: "English,Spanish"
+  minRating?: number
+  availability?: 'available' | 'all'
   role?: 'MENTOR' | 'STUDENT' | 'USER'
   userId?: string // ID del usuario actual para filtrar por matches
 }) {
   // Si se proporciona userId, filtrar solo usuarios con match aceptado
-  if (filters?.userId) {
+  if (filterParams?.userId) {
     // Obtener IDs de usuarios con match aceptado
     const matches = await prisma.matches.findMany({
       where: {
         status: 'accepted',
         OR: [
-          { sender_id: filters.userId },
-          { receiver_id: filters.userId },
+          { sender_id: filterParams.userId },
+          { receiver_id: filterParams.userId },
         ],
       },
       select: {
@@ -167,10 +185,10 @@ export async function getMentors(filters?: {
     // Extraer IDs únicos de los matches
     const matchedUserIds = new Set<string>()
     matches.forEach((match) => {
-      if (match.sender_id && match.sender_id !== filters.userId) {
+      if (match.sender_id && match.sender_id !== filterParams.userId) {
         matchedUserIds.add(match.sender_id)
       }
-      if (match.receiver_id && match.receiver_id !== filters.userId) {
+      if (match.receiver_id && match.receiver_id !== filterParams.userId) {
         matchedUserIds.add(match.receiver_id)
       }
     })
@@ -187,24 +205,53 @@ export async function getMentors(filters?: {
       },
     }
 
-    if (filters?.role) {
-      where.role = filters.role
+    if (filterParams?.role) {
+      where.role = filterParams.role
     }
 
-    if (filters?.city) {
+    if (filterParams?.city) {
       where.city = {
-        contains: filters.city,
+        contains: filterParams.city,
         mode: 'insensitive',
       }
     }
 
-    if (filters?.skill) {
+    // Filtro de skills - soporta single y multi-select
+    if (filterParams?.skills) {
+      // Para multi-select, buscar usuarios que tengan AL MENOS una de estas skills
+      const arraySkills = (filterParams.skills as string).split(',').map(s => s.trim())
+      where.OR = arraySkills.map((skillName) => ({
+        skills: {
+          some: {
+            name: {
+              equals: skillName,
+              mode: 'insensitive' as const,
+            },
+          },
+        },
+      }))
+    } else if (filterParams?.skill) {
       where.skills = {
         some: {
           name: {
-            contains: filters.skill,
-            mode: 'insensitive',
+            contains: filterParams.skill,
+            mode: 'insensitive' as const,
           },
+        },
+      }
+    }
+
+    // Filtro de languages (multi-select)
+    if (filterParams?.languages) {
+      const arrayLangs = (filterParams.languages as string).split(',').map(l => l.trim())
+      where.languages = {
+        some: {
+          OR: arrayLangs.map((langName) => ({
+            name: {
+              equals: langName,
+              mode: 'insensitive' as const,
+            },
+          })),
         },
       }
     }
@@ -228,6 +275,13 @@ export async function getMentors(filters?: {
           },
           take: 5,
         },
+        languages: {
+          select: {
+            id: true,
+            name: true,
+            level: true,
+          },
+        },
         reviews_reviews_target_idTousers: {
           select: {
             rating: true,
@@ -240,8 +294,8 @@ export async function getMentors(filters?: {
     })
 
     // Calcular rating promedio para cada usuario
-    return users.map((user) => {
-      const reviews = user.reviews_reviews_target_idTousers
+    const mentorsWithRating = (users as unknown as UserWithReviews[]).map((user): MentorWithRating => {
+      const reviews = user.reviews_reviews_target_idTousers || []
       const averageRating =
         reviews.length > 0
           ? reviews.reduce((acc, review) => acc + review.rating, 0) /
@@ -254,27 +308,36 @@ export async function getMentors(filters?: {
         totalReviews: reviews.length,
       }
     })
+
+    // Aplicar filtro de rating mínimo si se especifica
+    if (filterParams?.minRating) {
+      return mentorsWithRating.filter(
+        (mentor) => mentor.averageRating >= filterParams.minRating!
+      )
+    }
+
+    return mentorsWithRating
   }
 
   // Lógica original si no se proporciona userId (fallback)
   const where: UserWhereClause = {}
 
-  if (filters?.role) {
-    where.role = filters.role
+  if (filterParams?.role) {
+    where.role = filterParams.role
   }
 
-  if (filters?.city) {
+  if (filterParams?.city) {
     where.city = {
-      contains: filters.city,
+      contains: filterParams.city,
       mode: 'insensitive',
     }
   }
 
-  if (filters?.skill) {
+  if (filterParams?.skill) {
     where.skills = {
       some: {
         name: {
-          contains: filters.skill,
+          contains: filterParams.skill,
           mode: 'insensitive',
         },
       },
@@ -312,8 +375,8 @@ export async function getMentors(filters?: {
   })
 
   // Calcular rating promedio para cada usuario
-  return users.map((user) => {
-    const reviews = user.reviews_reviews_target_idTousers
+  return (users as unknown as UserWithReviews[]).map((user): MentorWithRating => {
+    const reviews = user.reviews_reviews_target_idTousers || []
     const averageRating =
       reviews.length > 0
         ? reviews.reduce((acc, review) => acc + review.rating, 0) /
@@ -361,3 +424,103 @@ export async function searchUsers(query: string) {
     take: 20,
   })
 }
+
+/**
+ * Obtiene las habilidades y ciudades únicas de los mentors del usuario
+ * Solo retorna los valores que existen en sus mentors (con match aceptado)
+ */
+export async function getMentorFiltersOptions(userId: string) {
+  // Obtener IDs de usuarios con match aceptado
+  const matches = await prisma.matches.findMany({
+    where: {
+      status: 'accepted',
+      OR: [
+        { sender_id: userId },
+        { receiver_id: userId },
+      ],
+    },
+    select: {
+      sender_id: true,
+      receiver_id: true,
+    },
+  })
+
+  // Extraer IDs únicos de los matches
+  const matchedUserIds = new Set<string>()
+  matches.forEach((match) => {
+    if (match.sender_id && match.sender_id !== userId) {
+      matchedUserIds.add(match.sender_id)
+    }
+    if (match.receiver_id && match.receiver_id !== userId) {
+      matchedUserIds.add(match.receiver_id)
+    }
+  })
+
+  // Si no hay matches, retornar arrays vacíos
+  if (matchedUserIds.size === 0) {
+    return {
+      skills: [],
+      languages: [],
+      cities: [],
+    }
+  }
+
+  // Obtener usuarios con sus skills, languages y cities
+  const mentors = await prisma.users.findMany({
+    where: {
+      id: {
+        in: Array.from(matchedUserIds),
+      },
+    },
+    select: {
+      city: true,
+      skills: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      languages: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  })
+
+  // Extraer skills únicas
+  const skillsMap = new Map<string, { id: string; name: string }>()
+  mentors.forEach((mentor) => {
+    mentor.skills.forEach((skill) => {
+      if (!skillsMap.has(skill.name)) {
+        skillsMap.set(skill.name, skill)
+      }
+    })
+  })
+
+  // Extraer languages únicas
+  const languagesMap = new Map<string, { id: string; name: string }>()
+  mentors.forEach((mentor) => {
+    mentor.languages?.forEach((lang) => {
+      if (!languagesMap.has(lang.name)) {
+        languagesMap.set(lang.name, lang)
+      }
+    })
+  })
+
+  // Extraer ciudades únicas (filtrar nulls)
+  const citiesSet = new Set<string>()
+  mentors.forEach((mentor) => {
+    if (mentor.city) {
+      citiesSet.add(mentor.city)
+    }
+  })
+
+  return {
+    skills: Array.from(skillsMap.values()),
+    languages: Array.from(languagesMap.values()),
+    cities: Array.from(citiesSet).sort(),
+  }
+}
+
