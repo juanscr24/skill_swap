@@ -19,7 +19,7 @@ interface Review {
   rating: number
   comment: string | null
   created_at: Date
-  users_reviews_author_idTousers: {
+  author: {
     id: string
     name: string | null
     image: string | null
@@ -88,6 +88,34 @@ export function useUserProfile(userId: string) {
     }
   }
 
+  const updateReviews = (reviewOrId: any, isDelete: boolean = false) => {
+    if (!profile) return
+
+    if (isDelete) {
+      // Eliminar review del estado local
+      const reviewId = reviewOrId
+      const updatedReviews = profile.reviews.filter(r => r.id !== reviewId)
+      setProfile({
+        ...profile,
+        reviews: updatedReviews,
+        totalReviews: updatedReviews.length,
+        averageRating: updatedReviews.length > 0 
+          ? Number((updatedReviews.reduce((acc, r) => acc + r.rating, 0) / updatedReviews.length).toFixed(1))
+          : 0
+      })
+    } else {
+      // Agregar nueva review al estado local
+      const newReview = reviewOrId
+      const updatedReviews = [newReview, ...profile.reviews]
+      setProfile({
+        ...profile,
+        reviews: updatedReviews,
+        totalReviews: updatedReviews.length,
+        averageRating: Number((updatedReviews.reduce((acc, r) => acc + r.rating, 0) / updatedReviews.length).toFixed(1))
+      })
+    }
+  }
+
   useEffect(() => {
     if (userId) {
       fetchProfile()
@@ -99,5 +127,6 @@ export function useUserProfile(userId: string) {
     isLoading,
     error,
     refetch: fetchProfile,
+    updateReviews,
   }
 }

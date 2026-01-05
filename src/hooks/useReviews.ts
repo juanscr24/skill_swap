@@ -71,12 +71,21 @@ export function useReviews(targetUserId?: string) {
         throw new Error(errorData.error || 'Error al crear reseña')
       }
 
-      const newReview = await response.json()
+      const rawReview = await response.json()
+      
+      // Transformar la estructura para que coincida con la esperada
+      const transformedReview = {
+        id: rawReview.id,
+        rating: rawReview.rating,
+        comment: rawReview.comment,
+        created_at: rawReview.created_at,
+        author: rawReview.users_reviews_author_idTousers || null
+      }
 
       // Agregar la nueva reseña a la lista local
-      setReviews((prev) => [newReview, ...prev])
+      setReviews((prev) => [transformedReview, ...prev])
 
-      return { success: true, review: newReview }
+      return { success: true, review: transformedReview }
     } catch (err: any) {
       console.error('Error creating review:', err)
       setError(err.message || 'Error al crear reseña')

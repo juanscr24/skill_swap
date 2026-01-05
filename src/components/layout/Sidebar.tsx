@@ -13,8 +13,6 @@ import {
     FiSettings,
     FiLogOut
 } from "react-icons/fi"
-import { ButtonMode } from "../ui/ButtonMode"
-import { LanguageSwitcher } from "../ui/LanguageSwitcher"
 import { useAuth } from "@/hooks/useAuth"
 import type { SidebarProps } from '@/types'
 

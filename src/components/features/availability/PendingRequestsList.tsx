@@ -4,31 +4,30 @@ import { Button } from '@/components/ui/Button'
 import { Avatar } from '@/components/ui/Avatar'
 import { useSessionRequests } from '@/hooks'
 import { FiCalendar } from 'react-icons/fi'
-import type { PendingRequestsListProps } from '@/types'
+import { useTranslations } from 'next-intl'
 
-export const PendingRequestsList = ({
-  translations,
-}: PendingRequestsListProps) => {
+export const PendingRequestsList = () => {
+  const t = useTranslations('sessions')
   const { requests, isLoading, acceptRequest, rejectRequest, refresh } =
     useSessionRequests()
 
   const handleAccept = async (sessionId: string) => {
     try {
       await acceptRequest(sessionId)
-      alert(translations.requestAccepted)
+      alert(t('requestAccepted'))
       refresh()
     } catch (error: any) {
-      alert(error.message || translations.errorManagingRequest)
+      alert(error.message || t('errorManagingRequest'))
     }
   }
 
   const handleReject = async (sessionId: string) => {
     try {
       await rejectRequest(sessionId)
-      alert(translations.requestRejected)
+      alert(t('requestRejected'))
       refresh()
     } catch (error: any) {
-      alert(error.message || translations.errorManagingRequest)
+      alert(error.message || t('errorManagingRequest'))
     }
   }
 
@@ -63,7 +62,7 @@ export const PendingRequestsList = ({
     <div className="bg-(--bg-2) border border-(--border-1) rounded-xl p-6">
       <div className="flex items-center gap-2 mb-6">
         <h2 className="text-xl font-semibold text-(--text-1)">
-          {translations.pendingRequests}
+          {t('pendingRequests')}
         </h2>
         <span className="bg-(--button-1) text-white text-xs font-bold px-2.5 py-1 rounded-full">
           {requests.length}
@@ -111,13 +110,13 @@ export const PendingRequestsList = ({
                   onClick={() => handleReject(request.id)}
                   className="w-full py-3 bg-(--bg-1) border border-(--border-1) text-(--text-1) rounded-xl hover:bg-(--bg-2) transition-colors font-medium"
                 >
-                  {translations.rejectRequest}
+                  {t('rejectRequest')}
                 </Button>
                 <Button
                   onClick={() => handleAccept(request.id)}
                   className="w-full py-3 bg-(--button-1) text-white rounded-xl hover:opacity-90 transition-opacity font-medium"
                 >
-                  {translations.acceptRequest}
+                  {t('acceptRequest')}
                 </Button>
               </div>
             </div>

@@ -22,7 +22,7 @@ export const MentorProfileHeader = ({
             <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-start">
                 {/* Left: Avatar */}
                 <div className="relative shrink-0 mx-auto md:mx-0">
-                    <Avatar src={image || ''} alt={name} size="xl" className="w-24 h-24 md:w-32 md:h-32" />
+                    <Avatar src={image || undefined} alt={name || 'User'} size="xl" className="w-24 h-24 md:w-32 md:h-32" />
                     {isOnline && (
                         <div className="absolute bottom-1 right-1 md:bottom-2 md:right-2 w-3 h-3 md:w-4 md:h-4 bg-green-500 rounded-full border-2 border-(--bg-2)" />
                     )}

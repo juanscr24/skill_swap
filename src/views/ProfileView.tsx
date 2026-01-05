@@ -1,6 +1,7 @@
 'use client'
 import { useTranslations } from "next-intl"
 import { useProfile } from "@/hooks/useProfile"
+import { useLanguages } from "@/hooks/useLanguages"
 import { useSession } from "next-auth/react"
 import { FiClock, FiCheckCircle } from "react-icons/fi"
 import { LoadingSpinner } from "@/components"
@@ -9,22 +10,21 @@ import { SocialLinks } from "@/components/features/profile/user/SocialLinks"
 import { StatsCard } from "@/components/features/profile/user/StatsCard"
 import { SkillsSection } from "@/components/features/profile/user/SkillsSection"
 import { ReviewsChart } from "@/components/features/profile/user/ReviewsChart"
-import { AvailabilitySchedule } from "@/components/features/profile/user/AvailabilitySchedule"
 import { LanguagesSection } from "@/components/features/profile/user/LanguagesSection"
-import { AvailabilityManager } from "@/components/features/availability"
-import { PendingRequestsList } from "@/components/features/availability"
 import { Card } from "@/components/ui/Card"
 import Link from "next/link"
 import { Pencil } from "lucide-react"
 
 export const ProfileView = () => {
     const t = useTranslations('profile')
-    const tSessions = useTranslations('sessions')
     const { data: session } = useSession()
     const { profile, isLoading, error, updateProfile, addSkill, removeSkill, addWantedSkill, removeWantedSkill } = useProfile()
-
-    // Un usuario es mentor si tiene skills para enseñar o si su role es MENTOR/ADMIN
-    const isMentor = (profile?.skills && profile.skills.length > 0) || profile?.role === 'MENTOR' || profile?.role === 'ADMIN'
+    const {
+        languages,
+        isLoading: isLoadingLanguages,
+        addLanguage,
+        deleteLanguage
+    } = useLanguages()
 
     // Loading state
     if (isLoading) {
@@ -61,8 +61,10 @@ export const ProfileView = () => {
                     />
 
                     <SocialLinks
-                        links={profile.social_links}
-                        onUpdate={updateProfile}
+                        links={profile.social_links || {}}
+                        onUpdate={async (data) => {
+                            await updateProfile(data)
+                        }}
                     />
 
                     <div className="flex gap-4">
@@ -99,16 +101,36 @@ export const ProfileView = () => {
                     </div>
 
                     {profile.languages && profile.languages.length > 0 && (
-                        <LanguagesSection languages={profile.languages} />
+                        <LanguagesSection 
+                            languages={languages.length > 0 ? languages : profile.languages}
+                            onAddLanguage={addLanguage}
+                            onDeleteLanguage={deleteLanguage}
+                        />
+                    )}
+
+                    {(!profile.languages || profile.languages.length === 0) && (
+                        <LanguagesSection 
+                            languages={languages}
+                            onAddLanguage={addLanguage}
+                            onDeleteLanguage={deleteLanguage}
+                        />
                     )}
 
                     <SkillsSection
                         skillsTeach={profile.skills}
                         skillsLearn={profile.wanted_skills}
-                        onAddSkill={addSkill}
-                        onRemoveSkill={removeSkill}
-                        onAddWantedSkill={addWantedSkill}
-                        onRemoveWantedSkill={removeWantedSkill}
+                        onAddSkill={async (name, level) => {
+                            await addSkill(name, level)
+                        }}
+                        onRemoveSkill={async (id) => {
+                            await removeSkill(id)
+                        }}
+                        onAddWantedSkill={async (name) => {
+                            await addWantedSkill(name)
+                        }}
+                        onRemoveWantedSkill={async (id) => {
+                            await removeWantedSkill(id)
+                        }}
                     />
 
 
@@ -117,62 +139,6 @@ export const ProfileView = () => {
                         averageRating={profile.averageRating}
                         totalReviews={profile.totalReviews}
                     />
-
-                    {isMentor && profile.id && (
-                        <>
-                            <AvailabilityManager
-                                mentorId={profile.id}
-                                translations={{
-                                    manageAvailability: tSessions('manageAvailability'),
-                                    manageScheduleSubtitle: tSessions('manageScheduleSubtitle'),
-                                    addNewAvailability: tSessions('addNewAvailability'),
-                                    dayOfWeek: tSessions('dayOfWeek'),
-                                    selectDay: tSessions('selectDay'),
-                                    startTime: tSessions('startTime'),
-                                    endTime: tSessions('endTime'),
-                                    add: tSessions('add'),
-                                    currentAvailabilities: tSessions('currentAvailabilities'),
-                                    viewFullCalendar: tSessions('viewFullCalendar'),
-                                    day: tSessions('day'),
-                                    schedule: tSessions('schedule'),
-                                    state: tSessions('state'),
-                                    actions: tSessions('actions'),
-                                    recurring: tSessions('recurring'),
-                                    oneTime: tSessions('oneTime'),
-                                    monday: tSessions('monday'),
-                                    tuesday: tSessions('tuesday'),
-                                    wednesday: tSessions('wednesday'),
-                                    thursday: tSessions('thursday'),
-                                    friday: tSessions('friday'),
-                                    saturday: tSessions('saturday'),
-                                    sunday: tSessions('sunday'),
-                                    availabilityAdded: tSessions('availabilityAdded'),
-                                    availabilityDeleted: tSessions('availabilityDeleted'),
-                                    errorAddingAvailability: tSessions('errorAddingAvailability'),
-                                    errorDeletingAvailability: tSessions('errorDeletingAvailability'),
-                                }}
-                            />
-
-                            <PendingRequestsList
-                                translations={{
-                                    pendingRequests: tSessions('pendingRequests'),
-                                    acceptRequest: tSessions('acceptRequest'),
-                                    rejectRequest: tSessions('rejectRequest'),
-                                    requestAccepted: tSessions('requestAccepted'),
-                                    requestRejected: tSessions('requestRejected'),
-                                    errorManagingRequest: tSessions('errorManagingRequest'),
-                                    topic: tSessions('topic'),
-                                    description: tSessions('description'),
-                                    duration: tSessions('duration'),
-                                    minutes: tSessions('minutes'),
-                                    date: tSessions('date'),
-                                    time: tSessions('time'),
-                                }}
-                            />
-                        </>
-                    )}
-
-                    {!isMentor && <AvailabilitySchedule availability={profile.availability} />}
                 </div>
             </div>
         </div>

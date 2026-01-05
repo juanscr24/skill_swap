@@ -24,7 +24,9 @@ export const SocialLinks = ({ links, onUpdate }: SocialLinksProps) => {
     const [urlInput, setUrlInput] = useState('')
 
     const handleUpdate = async (newLinks: any) => {
-        await onUpdate({ social_links: newLinks })
+        if (onUpdate) {
+            await onUpdate({ social_links: newLinks })
+        }
     }
 
     const handleAdd = () => {

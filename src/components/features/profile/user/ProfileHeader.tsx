@@ -25,7 +25,7 @@ export const ProfileHeader = ({
             </div>
 
             <div className="mb-4">
-                <Avatar src={image || ''} alt={name} size="xl" className="w-32 h-32" />
+                <Avatar src={image || undefined} alt={name || 'User'} size="xl" className="w-32 h-32" />
             </div>
 
             <h1 className="text-2xl font-bold text-(--text-1) mb-1">{name}</h1>
@@ -38,22 +38,24 @@ export const ProfileHeader = ({
                 </div>
             )}
 
-            <div className="flex items-center gap-2 mb-6 bg-(--bg-1) px-4 py-2 rounded-full">
-                <span className="font-bold text-(--text-1)">{rating.toFixed(1)}</span>
+            {rating !== undefined && totalReviews !== undefined && (
+                <div className="flex items-center gap-2 mb-6 bg-(--bg-1) px-4 py-2 rounded-full">
+                    <span className="font-bold text-(--text-1)">{rating.toFixed(1)}</span>
 
-                <div className="flex gap-0.5">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                            key={star}
-                            className={`w-4 h-4 ${star <= Math.round(rating) ? 'text-yellow-500' : 'text-gray-500'
-                                }`}
-                            fill={star <= Math.round(rating) ? 'currentColor' : 'none'}
-                            strokeWidth={star <= Math.round(rating) ? 0 : 2}
-                        />
-                    ))}
+                    <div className="flex gap-0.5">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                                key={star}
+                                className={`w-4 h-4 ${star <= Math.round(rating) ? 'text-yellow-500' : 'text-gray-500'
+                                    }`}
+                                fill={star <= Math.round(rating) ? 'currentColor' : 'none'}
+                                strokeWidth={star <= Math.round(rating) ? 0 : 2}
+                            />
+                        ))}
+                    </div>
+                    <span className="text-(--text-2) text-sm">({totalReviews})</span>
                 </div>
-                <span className="text-(--text-2) text-sm">({totalReviews})</span>
-            </div>
+            )}
 
 
             <Link href="/profile/edit" className="w-full">

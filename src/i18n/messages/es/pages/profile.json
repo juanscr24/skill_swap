@@ -68,5 +68,6 @@
     "yourComment": "Tu Comentario",
     "submit": "Enviar",
     "ratingRequired": "La calificación es obligatoria",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "addCustomSkill": "Agregar habilidad personalizada"
 }

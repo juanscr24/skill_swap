@@ -1,24 +1,30 @@
 import { prisma } from '@/lib'
 import type { ReviewData, ServiceReview } from '@/types'
 
-const mapReviewData = (review: ReviewData): ServiceReview => ({
-  id: review.id,
-  authorId: review.author_id || '',
-  targetId: review.target_id || '',
-  rating: review.rating,
-  comment: review.comment,
-  createdAt: review.created_at,
-  author: review.author && review.author.id ? {
-    id: review.author.id,
-    name: review.author.name || null,
-    image: review.author.image || null
-  } : null,
-  target: review.target && review.target.id ? {
-    id: review.target.id,
-    name: review.target.name || null,
-    image: review.target.image || null
-  } : null
-})
+const mapReviewData = (review: ReviewData | any): ServiceReview => {
+  // Manejar tanto la estructura con 'author' como con 'users_reviews_author_idTousers'
+  const authorData = review.author || review.users_reviews_author_idTousers
+  const targetData = review.target || review.users_reviews_target_idTousers
+  
+  return {
+    id: review.id,
+    authorId: review.author_id || '',
+    targetId: review.target_id || '',
+    rating: review.rating,
+    comment: review.comment,
+    createdAt: review.created_at,
+    author: authorData && authorData.id ? {
+      id: authorData.id,
+      name: authorData.name || null,
+      image: authorData.image || null
+    } : null,
+    target: targetData && targetData.id ? {
+      id: targetData.id,
+      name: targetData.name || null,
+      image: targetData.image || null
+    } : null
+  }
+}
 
 export const reviewsService = {
   async getUserReviews(userId: string): Promise<ServiceReview[]> {

@@ -2,13 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
-
-interface DashboardStats {
-  classesGiven: number
-  classesTaken: number
-  totalHours: number
-  totalCompleted: number
-}
+import type { DashboardStats } from '@/types/dashboard'
 
 export function useDashboardStats() {
   const { data: session, status } = useSession()

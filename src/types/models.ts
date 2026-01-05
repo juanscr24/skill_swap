@@ -115,10 +115,3 @@ export interface ChatConversation {
     lastMessage: Message
     unreadCount: number
 }
-
-export interface DashboardStats {
-    classesTaken: number
-    classesGiven: number
-    hoursTeaching: number
-    progressLevel: number
-}

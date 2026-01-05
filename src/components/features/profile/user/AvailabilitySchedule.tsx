@@ -33,7 +33,7 @@ export const AvailabilitySchedule = ({ availability }: AvailabilityScheduleProps
                     const busy = isBusy(time)
 
                     return (
-                        <div key={day} className={`rounded-xl p-4 border text-center flex flex-col items-center justify-center min-h-[100px] ${busy ? 'bg-(--bg-1) border-(--border-1) opacity-50' : 'bg-[#3B82F6]/5 border-[#3B82F6]/20'}`}>
+                        <div key={day} className={`rounded-xl p-4 border text-center flex flex-col items-center justify-center min-h-25 ${busy ? 'bg-(--bg-1) border-(--border-1) opacity-50' : 'bg-[#3B82F6]/5 border-[#3B82F6]/20'}`}>
                             <span className={`text-xs font-bold uppercase mb-2 ${busy ? 'text-(--text-2)' : 'text-[#3B82F6]'}`}>
                                 {t(`days.${day}`)}
                             </span>

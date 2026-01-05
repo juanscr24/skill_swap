@@ -56,6 +56,8 @@
     "sessionRequested": "Sesión solicitada exitosamente",
     "errorRequestingSession": "Error al solicitar sesión",
     "pendingRequests": "Solicitudes Pendientes",
+    "pendingSessions": "Sesiones Pendientes",
+    "noPendingRequests": "No hay solicitudes pendientes",
     "acceptRequest": "Aceptar",
     "rejectRequest": "Rechazar",
     "requestAccepted": "Solicitud aceptada",

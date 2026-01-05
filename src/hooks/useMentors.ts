@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import type { MentorQueryParams } from '@/types/filters'
 
 interface Mentor {
   id: string
@@ -17,15 +18,16 @@ interface Mentor {
     description: string | null
     level: string | null
   }>
+  languages?: Array<{
+    id: string
+    name: string
+    level: string | null
+  }>
   averageRating: number
   totalReviews: number
 }
 
-export function useMentors(filters?: {
-  skill?: string
-  city?: string
-  role?: 'MENTOR' | 'STUDENT' | 'USER'
-}) {
+export function useMentors(filters?: MentorQueryParams) {
   const { data: session, status } = useSession()
   const [mentors, setMentors] = useState<Mentor[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -43,9 +45,12 @@ export function useMentors(filters?: {
 
       // Construir query params
       const params = new URLSearchParams()
-      if (filters?.skill) params.append('skill', filters.skill)
+      
+      if (filters?.skills) params.append('skills', filters.skills)
+      if (filters?.languages) params.append('languages', filters.languages)
       if (filters?.city) params.append('city', filters.city)
-      if (filters?.role) params.append('role', filters.role)
+      if (filters?.minRating) params.append('minRating', filters.minRating.toString())
+      if (filters?.availability) params.append('availability', filters.availability)
 
       const url = `/api/users/mentors${params.toString() ? `?${params.toString()}` : ''}`
       const response = await fetch(url)
@@ -63,9 +68,9 @@ export function useMentors(filters?: {
         : data
       
       setMentors(filteredMentors)
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error fetching mentors:', err)
-      setError(err.message || 'Error al cargar mentores')
+      setError(err instanceof Error ? err.message : 'Error al cargar mentores')
     } finally {
       setIsLoading(false)
     }
@@ -73,7 +78,14 @@ export function useMentors(filters?: {
 
   useEffect(() => {
     fetchMentors()
-  }, [status, filters?.skill, filters?.city, filters?.role])
+  }, [
+    status, 
+    filters?.skills, 
+    filters?.languages, 
+    filters?.city, 
+    filters?.minRating, 
+    filters?.availability
+  ])
 
   return {
     mentors,
