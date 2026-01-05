@@ -1,5 +1,10 @@
 {
     "mentors": "Catálogo de Mentores",
+    "skills": "Habilidades",
+    "searchSkills": "Buscar habilidades...",
+    "noSkillsFound": "No se encontraron habilidades",
+    "languages": "Idiomas",
+    "noLanguagesFound": "No hay idiomas disponibles",
     "search": "Buscar mentores...",
     "filters": "Filtros",
     "allSkills": "Todas las habilidades",
@@ -14,5 +19,16 @@
     "viewProfile": "Ver perfil",
     "rating": "Calificación",
     "moreMentorsTitle": "Más Mentores Próximamente",
-    "moreMentorsSubtitle": "Estamos trabajando para traerte más mentores increíbles"
+    "moreMentorsSubtitle": "Estamos trabajando para traerte más mentores increíbles",
+    "rating5Stars": "5 estrellas",
+    "rating4Plus": "4+ estrellas",
+    "rating3Plus": "3+ estrellas",
+    "rating2Plus": "2+ estrellas",
+    "rating1Plus": "1+ estrella",
+    "nowOnline": "Ahora online",
+    "weekends": "Fines de semana",
+    "weekdays": "Días laborables",
+    "city": "Ciudad",
+    "allCitiesOption": "Todas las ciudades",
+    "applyFilters": "Aplicar Filtros"
 }
