@@ -185,38 +185,30 @@ export const MentorsView = () => {
       {!isLoading && !error && (
         <>
           {/* Results Count */}
-          <p className="text-(--text-2) mb-4 max-sm:mb-3 max-sm:text-sm">
-            {filteredMentors.length} {t('results')}
-          </p>
+          {filteredMentors.length > 0 && (
+            <p className="text-(--text-2) mb-4 max-sm:mb-3 max-sm:text-sm">
+              {filteredMentors.length} {t('results')}
+            </p>
+          )}
 
           {/* Mentors Grid */}
           <div className="grid grid-cols-5 max-2xl:grid-cols-4 max-xl:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 gap-6 max-md:gap-4 max-sm:gap-3">
-            {filteredMentors.length > 0 ? (
-              <>
-                {filteredMentors.map((mentor) => (
-                  <MentorCard
-                    key={mentor.id}
-                    id={mentor.id}
-                    name={mentor.name || 'Sin nombre'}
-                    image={mentor.image}
-                    city={mentor.city}
-                    bio={mentor.bio}
-                    averageRating={mentor.averageRating}
-                    totalReviews={mentor.totalReviews}
-                    skills={mentor.skills}
-                    isAvailable={true}
-                  />
-                ))}
-                {/* More Mentors Coming Soon Card */}
-                <MoreMentorsCard />
-              </>
-            ) : (
-              <div className="col-span-full">
-                <Card className="p-8 text-center">
-                  <p className="text-(--text-2)">{t('noResults')}</p>
-                </Card>
-              </div>
-            )}
+            {filteredMentors.map((mentor) => (
+              <MentorCard
+                key={mentor.id}
+                id={mentor.id}
+                name={mentor.name || 'Sin nombre'}
+                image={mentor.image}
+                city={mentor.city}
+                bio={mentor.bio}
+                averageRating={mentor.averageRating}
+                totalReviews={mentor.totalReviews}
+                skills={mentor.skills}
+                isAvailable={true}
+              />
+            ))}
+            {/* More Mentors Coming Soon Card - Always shown */}
+            <MoreMentorsCard />
           </div>
         </>
       )}
