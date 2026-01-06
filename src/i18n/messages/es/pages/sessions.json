@@ -82,5 +82,19 @@
     "friday": "Viernes",
     "saturday": "Sábado",
     "sunday": "Domingo",
-    "add": "Agregar"
+    "add": "Agregar",
+    "mentorsAvailability": "Disponibilidades de Mentores",
+    "myAvailability": "Mi Disponibilidad",
+    "mentorsAvailable": "mentores disponibles",
+    "noMentorAvailability": "No hay disponibilidades",
+    "noMentorAvailabilityDescription": "Tus mentores con match aún no tienen horarios disponibles. Revisa más tarde.",
+    "sessionsDescription": "Gestiona tus sesiones de mentoría y disponibilidad",
+    "confirmCancel": "¿Estás seguro de cancelar esta sesión?",
+    "confirmReject": "¿Estás seguro de rechazar esta sesión?",
+    "errorApproving": "Error al aprobar la sesión",
+    "errorRejecting": "Error al rechazar la sesión",
+    "errorCompleting": "Error al marcar como completada",
+    "accept": "Aceptar",
+    "reject": "Rechazar",
+    "waitingApproval": "Esperando aprobación del mentor"
 }

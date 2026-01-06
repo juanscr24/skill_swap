@@ -73,7 +73,7 @@ export const AvailabilityManager = ({ mentorId }: AvailabilityManagerProps) => {
       <div className="bg-(--bg-2) border border-(--border-1) rounded-xl p-6">
         <div className="flex items-center gap-2 mb-6">
           <div className="w-10 h-10 rounded-lg bg-(--button-1) flex items-center justify-center">
-            <FiPlus className="text-white text-xl" />
+            <FiPlus className="text-(--button-1-text) text-xl" />
           </div>
           <h2 className="text-xl font-semibold text-(--text-1)">
             {t('addNewAvailability')}
@@ -103,19 +103,15 @@ export const AvailabilityManager = ({ mentorId }: AvailabilityManagerProps) => {
               <label className="text-sm text-(--text-2)">
                 {t('startTime')}
               </label>
-              <div className="relative">
-                <input
-                  type="time"
-                  value={newSlot.startTime}
-                  onChange={(e) =>
-                    setNewSlot({ ...newSlot, startTime: e.target.value })
-                  }
-                  required
-                  className="w-full px-4 py-3 bg-(--bg-1) border border-(--border-1) rounded-lg text-(--text-1) focus:outline-none focus:ring-2 focus:ring-(--button-1) transition-all"
-                  placeholder="--:--"
-                />
-                <FiClock className="absolute right-4 top-1/2 -translate-y-1/2 text-(--text-2) pointer-events-none" />
-              </div>
+              <input
+                type="time"
+                value={newSlot.startTime}
+                onChange={(e) =>
+                  setNewSlot({ ...newSlot, startTime: e.target.value })
+                }
+                required
+                className="w-full px-4 py-3 bg-(--bg-1) border border-(--border-1) rounded-lg text-(--text-1) focus:outline-none focus:ring-2 focus:ring-(--button-1) transition-all"
+              />
             </div>
 
             {/* End Time */}
@@ -123,19 +119,15 @@ export const AvailabilityManager = ({ mentorId }: AvailabilityManagerProps) => {
               <label className="text-sm text-(--text-2)">
                 {t('endTime')}
               </label>
-              <div className="relative">
-                <input
-                  type="time"
-                  value={newSlot.endTime}
-                  onChange={(e) =>
-                    setNewSlot({ ...newSlot, endTime: e.target.value })
-                  }
-                  required
-                  className="w-full px-4 py-3 bg-(--bg-1) border border-(--border-1) rounded-lg text-(--text-1) focus:outline-none focus:ring-2 focus:ring-(--button-1) transition-all"
-                  placeholder="--:--"
-                />
-                <FiClock className="absolute right-4 top-1/2 -translate-y-1/2 text-(--text-2) pointer-events-none" />
-              </div>
+              <input
+                type="time"
+                value={newSlot.endTime}
+                onChange={(e) =>
+                  setNewSlot({ ...newSlot, endTime: e.target.value })
+                }
+                required
+                className="w-full px-4 py-3 bg-(--bg-1) border border-(--border-1) rounded-lg text-(--text-1) focus:outline-none focus:ring-2 focus:ring-(--button-1) transition-all"
+              />
             </div>
 
             {/* Add Button */}

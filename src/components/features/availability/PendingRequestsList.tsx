@@ -59,7 +59,7 @@ export const PendingRequestsList = () => {
   }
 
   return (
-    <div className="bg-(--bg-2) border border-(--border-1) rounded-xl p-6">
+    <div className="bg-(--bg-2) border border-(--border-1) rounded-xl p-6 mt-8">
       <div className="flex items-center gap-2 mb-6">
         <h2 className="text-xl font-semibold text-(--text-1)">
           {t('pendingRequests')}
@@ -69,7 +69,7 @@ export const PendingRequestsList = () => {
         </span>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 grid grid-cols-4 max-2xl:grid-cols-3 max-xl:grid-cols-2 max-sm:grid-cols-1 gap-4">
         {requests.map((request) => {
           const guest = request.users_sessions_guest_idTousers
           return (
