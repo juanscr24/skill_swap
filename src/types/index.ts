@@ -31,6 +31,7 @@ export * from './requests'
 export * from './reviews'
 export * from './messages'
 export * from './languages'
+export * from './sessions'
 
 // Dashboard Types
 export * from './dashboard'
