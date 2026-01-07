@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { useSessions, useMentorsAvailability } from "@/hooks"
 import { useProfile } from "@/hooks/useProfile"
@@ -9,7 +10,9 @@ import { useSession } from "next-auth/react"
 import { ManageAvailability } from "@/components/features/sessions/ManageAvailability"
 import { SessionCard } from "@/components/features/sessions/SessionCard"
 import { MentorsAvailabilityCalendar } from "@/components/features/sessions/MentorsAvailabilityCalendar"
+import { SessionsCalendar, EventDetailModal } from "@/components/features/calendar"
 import { SESSION_STATUS, SESSION_TAB_IDS } from "@/constants"
+import type { CalendarEvent } from "@/types/calendar"
 
 interface SessionUser {
     id: string
@@ -34,11 +37,26 @@ export const SessionsView = () => {
     const { sessions, isLoading, cancelSession, updateSessionStatus } = useSessions('all')
     const { profile } = useProfile()
     const { mentorAvailabilities, isLoading: isLoadingMentorsAvailability } = useMentorsAvailability()
+    
+    // Modal state for calendar event details
+    const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     // Check if user is a mentor
     const isMentor = (profile?.skills && profile.skills.length > 0) ||
         profile?.role === 'MENTOR' ||
         profile?.role === 'ADMIN'
+    
+    // Handle event click from calendar
+    const handleEventClick = (event: CalendarEvent) => {
+        setSelectedEvent(event)
+        setIsModalOpen(true)
+    }
+    
+    const handleCloseModal = () => {
+        setIsModalOpen(false)
+        setSelectedEvent(null)
+    }
 
     const upcomingSessions = sessions.filter(
         (s) => s.status === SESSION_STATUS.SCHEDULED
@@ -99,6 +117,13 @@ export const SessionsView = () => {
     // Define tabs
     const tabs = [
         {
+            id: 'calendar',
+            label: t('calendarView'),
+            content: (
+                <SessionsCalendar onEventClick={handleEventClick} />
+            )
+        },
+        {
             id: SESSION_TAB_IDS.AVAILABILITY,
             label: t('myAvailability'),
             content: (
@@ -151,7 +176,15 @@ export const SessionsView = () => {
                 </Link>
             </div>
 
-            <Tabs tabs={tabs} defaultTab={SESSION_TAB_IDS.AVAILABILITY} />
+            <Tabs tabs={tabs} defaultTab="calendar" />
+            
+            {/* Event Detail Modal */}
+            <EventDetailModal 
+                event={selectedEvent}
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                isMentor={isMentor}
+            />
         </div>
     )
 }

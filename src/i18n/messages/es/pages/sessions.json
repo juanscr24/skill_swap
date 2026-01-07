@@ -96,5 +96,6 @@
     "errorCompleting": "Error al marcar como completada",
     "accept": "Aceptar",
     "reject": "Rechazar",
-    "waitingApproval": "Esperando aprobación del mentor"
+    "waitingApproval": "Esperando aprobación del mentor",
+    "calendarView": "Vista de Calendario"
 }

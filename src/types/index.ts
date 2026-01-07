@@ -32,6 +32,7 @@ export * from './reviews'
 export * from './messages'
 export * from './languages'
 export * from './sessions'
+export * from './calendar'
 
 // Dashboard Types
 export * from './dashboard'
