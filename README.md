@@ -25,10 +25,13 @@ SkillSwap permite a los usuarios crear perfiles profesionales donde pueden:
 - Roles de usuario (USER, MENTOR, STUDENT, ADMIN)
 - Sistema de verificación de email
 
-### Comunicación
-- Chat en tiempo real entre usuarios
-- Sistema de mensajería con estado de lectura
-- Notificaciones de nuevos mensajes
+### Comunicación en Tiempo Real ⚡ NUEVO
+- **Chat en tiempo real** con Supabase Realtime
+- **Presencia de usuarios** (online/offline en vivo)
+- **Estados de mensaje** tipo WhatsApp (✓, ✓✓, ✓✓ leído)
+- **Contador de no leídos** actualizado automáticamente
+- **Last seen** - Última vez visto del usuario
+- Sin necesidad de refrescar la página
 
 ### Sistema de Sesiones
 - Programación de sesiones de intercambio
@@ -58,7 +61,8 @@ SkillSwap permite a los usuarios crear perfiles profesionales donde pueden:
 ### Backend
 - **Next.js API Routes** - Endpoints RESTful
 - **Prisma ORM** - Gestión de base de datos
-- **PostgreSQL** - Base de datos (Clever Cloud)
+- **PostgreSQL** - Base de datos relacional
+- **Supabase** - Realtime y autenticación
 
 ### Autenticación
 - **NextAuth.js** - Sistema de autenticación
@@ -70,7 +74,7 @@ SkillSwap permite a los usuarios crear perfiles profesionales donde pueden:
 ### Prerequisitos
 
 - Node.js 18+ instalado
-- Cuenta en [Clever Cloud](https://console.clever-cloud.com/) para la base de datos PostgreSQL
+- Cuenta en [Supabase](https://supabase.com/) para la base de datos PostgreSQL y Realtime
 
 ### Instalación
 
@@ -90,8 +94,14 @@ npm install
 Crea un archivo `.env` en la raíz del proyecto:
 
 ```env
-# Database
+# Database (Supabase)
 DATABASE_URL="postgresql://usuario:contraseña@host:puerto/database"
+DIRECT_URL="postgresql://usuario:contraseña@host:puerto/database"
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL="https://xxx.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="tu-anon-key"
+SUPABASE_SERVICE_ROLE_KEY="tu-service-role-key"
 
 # NextAuth
 NEXTAUTH_URL="http://localhost:3000"
@@ -100,19 +110,31 @@ NEXTAUTH_SECRET="tu-secret-key-aqui"
 
 4. **Configurar la base de datos**
 ```bash
-# Sincronizar el schema con la base de datos
-npx prisma db push
+# Ejecutar migraciones
+npx prisma migrate dev
 
 # Generar el cliente de Prisma
 npx prisma generate
 ```
 
-5. **Ejecutar el servidor de desarrollo**
+5. **Configurar Supabase Realtime**
+
+Sigue la guía rápida en `doc/INICIO_RAPIDO.md` para configurar:
+- Habilitar Realtime en las tablas
+- Configurar políticas de seguridad (RLS)
+- Verificar la configuración
+
+```bash
+# El script SQL está en:
+# doc/script/setup_realtime_chat.sql
+```
+
+6. **Ejecutar el servidor de desarrollo**
 ```bash
 npm run dev
 ```
 
-6. **Abrir la aplicación**
+7. **Abrir la aplicación**
 
 Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
@@ -136,16 +158,37 @@ skill_swap/
 
 ## 🗄️ Modelos de Base de Datos
 
+### Principales
 - **User** - Usuarios de la plataforma
 - **Account** - Cuentas de autenticación
 - **AccountSession** - Sesiones de usuario
 - **Skill** - Habilidades que los usuarios enseñan
 - **WantedSkill** - Habilidades que los usuarios quieren aprender
 - **Match** - Solicitudes de intercambio entre usuarios
-- **Message** - Mensajes del chat
+
+### Chat en Tiempo Real
+- **Conversation** - Conversaciones entre usuarios
+- **ConversationParticipant** - Participantes de conversaciones
+- **Message** - Mensajes con estados (enviado, entregado, leído)
+- **UserPresence** - Estado online/offline de usuarios
+
+### Otros
 - **Session** - Sesiones programadas de intercambio
 - **Review** - Reseñas y calificaciones
 - **Notification** - Notificaciones del sistema
+- **Language** - Idiomas que hablan los usuarios
+- **MentorAvailability** - Disponibilidad de mentores
+
+## 📚 Documentación Adicional
+
+### Chat en Tiempo Real
+- [🚀 Guía de Inicio Rápido](doc/INICIO_RAPIDO.md) - Configura el chat en 5 minutos
+- [📖 Resumen Completo](doc/RESUMEN_CHAT_TIEMPO_REAL.md) - Todas las características
+- [🔧 Setup Técnico](doc/REALTIME_CHAT_SETUP.md) - Documentación detallada
+- [💡 Ejemplos de Uso](doc/EJEMPLOS_USO.md) - Código de ejemplo
+
+### Scripts
+- [📝 Setup Supabase](doc/script/setup_realtime_chat.sql) - Script SQL de configuración
 
 ## Learn More
 

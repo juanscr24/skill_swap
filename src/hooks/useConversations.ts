@@ -1,21 +1,63 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import type { ConversationWithDetails } from '@/types/chat'
 
-// Hook para obtener conversaciones
+// Hook para obtener conversaciones con auto-refetch en tiempo real
 export const useConversations = () => {
-  return useQuery<ConversationWithDetails[]>({
+  const queryClient = useQueryClient()
+  const supabase = createClient()
+
+  const query = useQuery<ConversationWithDetails[]>({
     queryKey: ['conversations'],
     queryFn: async () => {
       const response = await fetch('/api/conversations')
       if (!response.ok) throw new Error('Error al obtener conversaciones')
       return response.json()
     },
-    staleTime: 5 * 60 * 1000, // 5 minutos - no refetch automático tan agresivo
+    staleTime: 0, // Siempre considerar datos stale para refetch
     gcTime: 10 * 60 * 1000, // 10 minutos antes de liberar memoria
-    refetchOnWindowFocus: false, // No refetch al cambiar de pestaña
+    refetchOnWindowFocus: true, // Refetch al volver a la pestaña
   })
+
+  // Suscribirse a cambios en mensajes para actualizar conversaciones
+  useEffect(() => {
+    const channel = supabase
+      .channel('conversations_updates')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'messages',
+        },
+        () => {
+          // Refrescar conversaciones cuando hay nuevo mensaje
+          queryClient.invalidateQueries({ queryKey: ['conversations'] })
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'user_presence',
+        },
+        () => {
+          // Refrescar conversaciones cuando cambia la presencia
+          queryClient.invalidateQueries({ queryKey: ['conversations'] })
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [supabase, queryClient])
+
+  return query
 }
 
 // Hook para crear o obtener conversación con otro usuario

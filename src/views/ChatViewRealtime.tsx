@@ -6,10 +6,13 @@ import { useSession } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import { useConversations } from '@/hooks/useConversations'
 import { useRealtimeMessages } from '@/hooks/useRealtimeMessages'
+import { useUserPresence } from '@/hooks/useUserPresence'
 import { Card } from '@/components/ui/Card'
 import { Avatar } from '@/components/ui/Avatar'
 import { LoadingSpinner } from '@/components'
-import { FiSend, FiCheck, FiSearch, FiVideo, FiInfo } from 'react-icons/fi'
+import { MessageStatusIndicator } from '@/components/features/chat/MessageStatusIndicator'
+import { PresenceIndicator } from '@/components/features/chat/PresenceIndicator'
+import { FiSend, FiSearch, FiVideo, FiInfo } from 'react-icons/fi'
 
 export const ChatView = () => {
     const t = useTranslations('chat')
@@ -20,6 +23,9 @@ export const ChatView = () => {
     const [searchQuery, setSearchQuery] = useState('')
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
+
+    // Hook de presencia de usuarios
+    const { isUserOnline, getLastSeen } = useUserPresence({ enabled: true })
 
     // Obtener lista de conversaciones usando Prisma (a través de API)
     const { data: conversations, isLoading: conversationsLoading } = useConversations()
@@ -38,34 +44,45 @@ export const ChatView = () => {
         isSubscribed,
         sendMessage,
         markAsRead,
+        getMessageStatus,
     } = useRealtimeMessages({
         conversationId: selectedConversationId,
+        currentUserId: session?.user?.id,
         enabled: !!selectedConversationId,
         onMessage: (newMessage) => {
             // Marcar como leído automáticamente cuando llega un mensaje del otro usuario
             if (newMessage.sender_id !== session?.user?.id && session?.user?.id) {
-                markAsRead(session.user.id)
+                // Marcar como leído solo si la conversación está activa
+                const unreadMessages = messages.filter(
+                    (m) => m.sender_id !== session.user.id && !m.read_at
+                )
+                if (unreadMessages.length > 0) {
+                    markAsRead(unreadMessages.map((m) => m.id))
+                }
             }
         },
     })
 
-    // Scroll automático al final cuando cambian los mensajes
     useEffect(() => {
         if (messages.length > 0) {
             messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
         }
-    }, [messages.length]) // Solo cuando cambia la cantidad, no todo el array
+    }, [messages.length])
 
-    // Marcar como leído cuando se selecciona una conversación (con debounce)
     useEffect(() => {
         if (!selectedConversationId || !session?.user?.id) return
 
         const timeoutId = setTimeout(() => {
-            markAsRead(session.user.id)
-        }, 500) // Esperar 500ms antes de marcar como leído
+            const unreadMessages = messages.filter(
+                (m) => m.sender_id !== session.user.id && !m.read_at
+            )
+            if (unreadMessages.length > 0) {
+                markAsRead(unreadMessages.map((m) => m.id))
+            }
+        }, 500)
 
         return () => clearTimeout(timeoutId)
-    }, [selectedConversationId, session?.user?.id, markAsRead])
+    }, [selectedConversationId, messages, session?.user?.id, markAsRead])
 
     // Obtener la conversación seleccionada
     const selectedConversation = conversations?.find(
@@ -87,26 +104,23 @@ export const ChatView = () => {
         })
     }, [conversations, searchQuery])
 
-    // Manejar envío de mensaje
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault()
 
         if (!messageInput.trim() || !session?.user?.id || !selectedConversationId) return
 
         const content = messageInput
-        setMessageInput('') // Limpiar input inmediatamente para mejor UX
+        setMessageInput('')
         inputRef.current?.focus()
 
         try {
             await sendMessage(content, session.user.id)
         } catch (error) {
             console.error('Error sending message:', error)
-            setMessageInput(content) // Restaurar mensaje si falla
-            // Aquí podrías mostrar un toast de error
+            setMessageInput(content)
         }
     }
 
-    // Formatear fecha de mensaje
     const formatMessageTime = (dateString: string) => {
         const date = new Date(dateString)
         const now = new Date()
@@ -119,21 +133,38 @@ export const ChatView = () => {
         }
     }
 
+    const formatLastSeen = (date: Date | null) => {
+        if (!date) return 'recently'
+
+        const now = Date.now()
+        const lastSeen = date.getTime()
+        const diffInMinutes = Math.floor((now - lastSeen) / (1000 * 60))
+
+        if (diffInMinutes < 1) return 'just now'
+        if (diffInMinutes < 60) return `${diffInMinutes}m ago`
+
+        const diffInHours = Math.floor(diffInMinutes / 60)
+        if (diffInHours < 24) return `${diffInHours}h ago`
+
+        const diffInDays = Math.floor(diffInHours / 24)
+        if (diffInDays === 1) return 'yesterday'
+        if (diffInDays < 7) return `${diffInDays}d ago`
+
+        return date.toLocaleDateString('es', { day: '2-digit', month: 'short' })
+    }
+
     if (conversationsLoading) {
         return <LoadingSpinner fullScreen />
     }
 
     return (
         <div className="flex h-[calc(100vh-4rem)] bg-(--bg-1) max-md:flex-col">
-            {/* Lista de conversaciones */}
             <div className={`w-80 max-md:w-full border-r border-(--border-1) bg-(--bg-2) flex flex-col ${selectedConversationId ? 'max-md:hidden' : ''}`}>
-                {/* Header con título y buscador */}
                 <div className="p-4 border-b border-(--border-1)">
                     <h2 className="text-xl font-bold text-(--text-1) mb-3">
                         Messages
                     </h2>
 
-                    {/* Buscador */}
                     <div className="relative">
                         <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-(--text-2)" />
                         <input
@@ -146,7 +177,6 @@ export const ChatView = () => {
                     </div>
                 </div>
 
-                {/* Tabs */}
                 <div className="flex border-b border-(--border-1) px-2">
                     <button className="px-4 py-2 text-sm font-medium text-(--text-1) border-b-2 border-(--button-1)">
                         All Chats
@@ -156,7 +186,6 @@ export const ChatView = () => {
                     </button>
                 </div>
 
-                {/* Lista de conversaciones */}
                 <div className="flex-1 overflow-y-auto">
                     {!filteredConversations || filteredConversations.length === 0 ? (
                         <div className="p-4 text-center text-(--text-2)">
@@ -178,8 +207,14 @@ export const ChatView = () => {
                                         alt={conversation.otherUser?.name || 'User'}
                                         size="md"
                                     />
-                                    {/* Indicador online */}
-                                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-(--bg-2)" />
+                                    {conversation.otherUser?.id && (
+                                        <div className="absolute bottom-0 right-0">
+                                            <PresenceIndicator
+                                                isOnline={isUserOnline(conversation.otherUser.id)}
+                                                size="md"
+                                            />
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="relative flex-1 min-w-0 text-left">
@@ -213,7 +248,6 @@ export const ChatView = () => {
                 </div>
             </div>
 
-            {/* Panel de chat */}
             <div className={`flex-1 flex flex-col bg-(--bg-1) ${!selectedConversationId ? 'max-md:hidden' : ''}`}>
                 {!selectedConversationId ? (
                     <div className="flex items-center justify-center h-full text-(--text-2)">
@@ -221,10 +255,8 @@ export const ChatView = () => {
                     </div>
                 ) : (
                     <>
-                        {/* Header del chat */}
                         <div className="px-6 py-4 border-b border-(--border-1) bg-(--bg-2) flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                {/* Botón volver en mobile */}
                                 <button
                                     onClick={() => setSelectedConversationId(null)}
                                     className="md:hidden p-2 hover:bg-(--bg-1) rounded-lg"
@@ -238,17 +270,30 @@ export const ChatView = () => {
                                         alt={selectedConversation?.otherUser?.name || 'User'}
                                         size="md"
                                     />
-                                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-(--bg-2)" />
+                                    {selectedConversation?.otherUser?.id && (
+                                        <div className="absolute bottom-0 right-0">
+                                            <PresenceIndicator
+                                                isOnline={isUserOnline(selectedConversation.otherUser.id)}
+                                                size="md"
+                                            />
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div>
                                     <h3 className="font-semibold text-(--text-1)">
                                         {selectedConversation?.otherUser?.name || selectedConversation?.otherUser?.email}
                                     </h3>
+                                    {selectedConversation?.otherUser?.id && (
+                                        <p className="text-xs text-(--text-2)">
+                                            {isUserOnline(selectedConversation.otherUser.id)
+                                                ? 'Online'
+                                                : `Last seen ${formatLastSeen(getLastSeen(selectedConversation.otherUser.id))}`}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 
-                            {/* Acciones del header */}
                             <div className="flex items-center gap-2">
                                 <button className="p-2 hover:bg-(--bg-1) rounded-lg text-(--text-2) hover:text-(--text-1)">
                                     <FiVideo className="w-5 h-5" />
@@ -262,9 +307,7 @@ export const ChatView = () => {
                             </div>
                         </div>
 
-                        {/* Mensajes */}
                         <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-(--bg-1)">
-                            {/* Fecha separador */}
                             {messages.length > 0 && (
                                 <div className="flex items-center justify-center my-4">
                                     <span className="px-3 py-1 bg-(--bg-2) text-(--text-2) text-xs rounded-full">
@@ -310,9 +353,14 @@ export const ChatView = () => {
                                                         <div className="bg-(--button-1) text-(--button-1-text) rounded-2xl rounded-br-sm px-4 py-3">
                                                             <p className="wrap-break-word">{message.content}</p>
                                                         </div>
-                                                        <span className="text-xs text-(--text-2) mr-2 mt-1">
-                                                            {formatMessageTime(message.created_at)}
-                                                        </span>
+                                                        <div className="flex items-center gap-2 mr-2 mt-1">
+                                                            <span className="text-xs text-(--text-2)">
+                                                                {formatMessageTime(message.created_at)}
+                                                            </span>
+                                                            <MessageStatusIndicator
+                                                                status={getMessageStatus(message)}
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             )}
@@ -323,7 +371,6 @@ export const ChatView = () => {
                             <div ref={messagesEndRef} />
                         </div>
 
-                        {/* Input de mensaje */}
                         <form
                             onSubmit={handleSendMessage}
                             className="p-4 border-t border-(--border-1) bg-(--bg-2)"

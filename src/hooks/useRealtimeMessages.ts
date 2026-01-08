@@ -1,26 +1,47 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { RealtimeChannel } from '@supabase/supabase-js'
-import type { ChatMessage, RealtimeMessage } from '@/types/chat'
+import type { ChatMessage, MessageStatus } from '@/types/chat'
 
 interface UseRealtimeMessagesOptions {
   conversationId: string | null
+  currentUserId?: string
   onMessage?: (message: ChatMessage) => void
   enabled?: boolean
 }
 
 export const useRealtimeMessages = ({
   conversationId,
+  currentUserId,
   onMessage,
   enabled = true,
 }: UseRealtimeMessagesOptions) => {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [isSubscribed, setIsSubscribed] = useState(false)
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
+  const onMessageRef = useRef(onMessage)
+  
+  useEffect(() => {
+    onMessageRef.current = onMessage
+  }, [onMessage])
 
-  // Fetch inicial de mensajes usando API (no Supabase directo por RLS)
+  // Obtener el estado de un mensaje
+  const getMessageStatus = useCallback(
+    (message: ChatMessage): MessageStatus => {
+      // Si no es mi mensaje, no mostrar estado
+      if (message.sender_id !== currentUserId) {
+        return 'sent'
+      }
+
+      if (message.read_at) return 'read'
+      if (message.delivered_at) return 'delivered'
+      return 'sent'
+    },
+    [currentUserId]
+  )
+
   const fetchMessages = useCallback(async () => {
     if (!conversationId) {
       setMessages([])
@@ -38,6 +59,18 @@ export const useRealtimeMessages = ({
     }
   }, [conversationId])
 
+  const markAsDelivered = useCallback(async (messageId: string) => {
+    try {
+      await fetch('/api/messages/delivered', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messageId }),
+      })
+    } catch (error) {
+      console.error('Error marking as delivered:', error)
+    }
+  }, [])
+
   useEffect(() => {
     if (!enabled || !conversationId) {
       setIsSubscribed(false)
@@ -45,12 +78,10 @@ export const useRealtimeMessages = ({
       return
     }
 
-    // Fetch inicial
     fetchMessages()
 
     let channel: RealtimeChannel
 
-    // Suscribirse a cambios en tiempo real en la tabla messages
     channel = supabase
       .channel(`messages:${conversationId}`)
       .on(
@@ -59,20 +90,41 @@ export const useRealtimeMessages = ({
           event: 'INSERT',
           schema: 'public',
           table: 'messages',
-          filter: `conversation_id=eq.${conversationId}`,
         },
         (payload) => {
           const newMessage = payload.new as ChatMessage
           
+          if (newMessage.conversation_id !== conversationId) {
+            return
+          }
+
           setMessages((prev) => {
-            // Evitar duplicados
-            const exists = prev.some((m) => m.id === newMessage.id)
-            if (exists) return prev
-            return [...prev, newMessage]
+            const isDuplicate = prev.some((m) => {
+              if (m.id === newMessage.id) return true
+              if (m.id.startsWith('temp-') && 
+                  m.sender_id === newMessage.sender_id &&
+                  m.content === newMessage.content &&
+                  Math.abs(new Date(m.created_at).getTime() - new Date(newMessage.created_at).getTime()) < 5000) {
+                return true
+              }
+              return false
+            })
+            
+            if (isDuplicate) return prev
+            
+            const withoutOldTemp = prev.filter(m => 
+              !m.id.startsWith('temp-') || 
+              m.sender_id !== newMessage.sender_id ||
+              m.content !== newMessage.content
+            )
+            return [...withoutOldTemp, newMessage]
           })
 
-          // Callback opcional
-          if (onMessage) onMessage(newMessage)
+          if (newMessage.sender_id !== currentUserId && currentUserId) {
+            markAsDelivered(newMessage.id)
+          }
+
+          if (onMessageRef.current) onMessageRef.current(newMessage)
         }
       )
       .on(
@@ -85,7 +137,7 @@ export const useRealtimeMessages = ({
         },
         (payload) => {
           const updatedMessage = payload.new as ChatMessage
-          
+
           setMessages((prev) =>
             prev.map((m) => (m.id === updatedMessage.id ? updatedMessage : m))
           )
@@ -108,8 +160,7 @@ export const useRealtimeMessages = ({
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
           setIsSubscribed(true)
-        } else if (status === 'CHANNEL_ERROR') {
-          console.error('Error subscribing to channel')
+        } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
           setIsSubscribed(false)
         }
       })
@@ -120,15 +171,29 @@ export const useRealtimeMessages = ({
         setIsSubscribed(false)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversationId, enabled])
+  }, [conversationId, enabled, currentUserId, fetchMessages, markAsDelivered, supabase])
 
-  // Función para enviar mensaje usando API (no Supabase directo por RLS)
+  const markMessagesAsRead = useCallback(
+    async (messageIds: string[]) => {
+      if (!conversationId || messageIds.length === 0) return
+
+      try {
+        await fetch('/api/messages/read', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messageIds }),
+        })
+      } catch (error) {
+        console.error('Error marking messages as read:', error)
+      }
+    },
+    [conversationId]
+  )
+
   const sendMessage = useCallback(
     async (content: string, senderId: string) => {
       if (!conversationId || !content.trim()) return null
 
-      // Crear mensaje temporal para UI optimista
       const tempId = `temp-${Date.now()}`
       const optimisticMessage: ChatMessage = {
         id: tempId,
@@ -138,7 +203,6 @@ export const useRealtimeMessages = ({
         created_at: new Date().toISOString(),
       }
 
-      // Añadir mensaje temporalmente a la UI
       setMessages((prev) => [...prev, optimisticMessage])
 
       try {
@@ -151,19 +215,22 @@ export const useRealtimeMessages = ({
           }),
         })
 
-        if (!response.ok) throw new Error('Failed to send message')
+        if (!response.ok) {
+          throw new Error('Failed to send message')
+        }
 
         const data = await response.json()
 
-        // Reemplazar mensaje temporal con el real
-        setMessages((prev) =>
-          prev.map((m) => (m.id === tempId ? data : m))
-        )
+        setMessages((prev) => {
+          const withoutTemp = prev.filter((m) => m.id !== tempId)
+          const exists = withoutTemp.some((m) => m.id === data.id)
+          if (exists) return withoutTemp
+          return [...withoutTemp, data]
+        })
 
         return data as ChatMessage
       } catch (error) {
         console.error('Error sending message:', error)
-        // Remover mensaje temporal si falla
         setMessages((prev) => prev.filter((m) => m.id !== tempId))
         throw error
       }
@@ -171,7 +238,6 @@ export const useRealtimeMessages = ({
     [conversationId]
   )
 
-  // Función para marcar conversación como leída usando API
   const markAsRead = useCallback(
     async (userId: string) => {
       if (!conversationId) return
@@ -194,7 +260,8 @@ export const useRealtimeMessages = ({
     messages,
     isSubscribed,
     sendMessage,
-    markAsRead,
+    markAsRead: markMessagesAsRead,
+    getMessageStatus,
     refetch: fetchMessages,
   }
 }

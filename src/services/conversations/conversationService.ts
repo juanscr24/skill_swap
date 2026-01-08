@@ -111,18 +111,24 @@ export async function getUserConversations(
       const currentParticipant = conv.participants.find((p) => p.user_id === userId)
       const otherParticipant = conv.participants.find((p) => p.user_id !== userId)
 
-      // Contar mensajes no leídos (después del last_read_at del usuario actual)
+      // Contar mensajes no leídos (mensajes sin read_at del otro usuario)
       const unreadCount = await prisma.messages.count({
         where: {
           conversation_id: conv.id,
           sender_id: {
             not: userId, // Solo mensajes del otro usuario
           },
-          created_at: {
-            gt: currentParticipant?.last_read_at || new Date(0), // Mensajes después de last_read_at
-          },
+          read_at: null, // Mensajes no leídos
         },
       })
+
+      // Obtener presencia del otro usuario
+      let presence = undefined
+      if (otherParticipant?.user_id) {
+        presence = await prisma.user_presence.findUnique({
+          where: { user_id: otherParticipant.user_id },
+        })
+      }
 
       return {
         id: conv.id,
@@ -145,6 +151,15 @@ export async function getUserConversations(
               name: otherParticipant.user.name,
               email: otherParticipant.user.email,
               image: otherParticipant.user.image,
+              presence: presence
+                ? {
+                    id: presence.id,
+                    user_id: presence.user_id,
+                    is_online: presence.is_online,
+                    last_seen: presence.last_seen.toISOString(),
+                    updated_at: presence.updated_at.toISOString(),
+                  }
+                : undefined,
             }
           : undefined,
         unreadCount,

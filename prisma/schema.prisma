@@ -83,6 +83,8 @@ model messages {
   sender_id       String        @db.Uuid
   content         String
   created_at      DateTime      @default(now())
+  delivered_at    DateTime?     // Cuando el mensaje fue entregado al destinatario
+  read_at         DateTime?     // Cuando el mensaje fue leído
   conversation    conversations @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
   sender          users         @relation("messages_sender", fields: [sender_id], references: [id], onDelete: Cascade)
 
@@ -186,6 +188,7 @@ model users {
   wanted_skills                        wanted_skills[]
   languages                            languages[]
   mentor_availability                  mentor_availability[]
+  user_presence                        user_presence?
 
   @@index([email], map: "idx_users_email")
 }
@@ -232,6 +235,19 @@ model mentor_availability {
 
   @@index([mentor_id, date], map: "idx_availability_mentor_date")
   @@index([mentor_id, is_booked], map: "idx_availability_mentor_booked")
+}
+
+// Tabla de presencia de usuarios - para saber si están online
+model user_presence {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id      String    @unique @db.Uuid
+  is_online    Boolean   @default(false)
+  last_seen    DateTime  @default(now())
+  updated_at   DateTime  @default(now()) @updatedAt
+  users        users     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, is_online], map: "idx_presence_user_online")
+  @@index([updated_at], map: "idx_presence_updated")
 }
 
 enum role_enum {
