@@ -1,13 +1,11 @@
 'use client'
 import { useState } from "react"
-import { useTranslations } from "next-intl"
-import { Card } from "@/components/ui/Card"
-import { Button } from "@/components"
-import { Badge } from "@/components/ui/Badge"
-import { SkillSelector } from "@/components/ui/SkillSelector"
-import { recommendedSkills } from "@/constants/recommendedSkills"
 import { FiX } from "react-icons/fi"
-import type { EditSkillsSectionProps, Skill } from '@/types'
+import { useTranslations } from "next-intl"
+import type { EditSkillsSectionProps } from '@/types'
+import { Card, Button, Badge } from "@/shared/components/ui"
+import { recommendedSkills } from "@/constants/recommendedSkills"
+import { SkillSelector } from "@/shared/components/ui/SkillSelector"
 
 export const EditSkillsSection = ({
   skills,
@@ -143,11 +141,10 @@ export const EditSkillsSection = ({
                   key={option.value}
                   type="button"
                   onClick={() => setNewSkillLevel(option.value)}
-                  className={`px-3 py-1.5 text-sm rounded-lg transition-all ${
-                    newSkillLevel === option.value
-                      ? 'bg-(--button-1) text-(--button-1-text)'
-                      : 'bg-(--bg-2) text-(--text-2) border border-(--border-1) hover:border-(--button-1)'
-                  }`}
+                  className={`px-3 py-1.5 text-sm rounded-lg transition-all ${newSkillLevel === option.value
+                    ? 'bg-(--button-1) text-(--button-1-text)'
+                    : 'bg-(--bg-2) text-(--text-2) border border-(--border-1) hover:border-(--button-1)'
+                    }`}
                 >
                   {option.label}
                 </button>

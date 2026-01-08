@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl"
 import { FiLock, FiLogOut } from "react-icons/fi"
 import { SettingsSection } from "./SettingsSection"
-import { Button } from "../../ui/Button"
+import { Button } from "../../../shared/components/ui/Button"
 
 export const SecuritySection = () => {
     const t = useTranslations('settings.security')

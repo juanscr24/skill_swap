@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { MentorAvailability } from '@/types/models'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { Textarea } from '@/components/ui/Textarea'
+import { Button } from '@/shared/components/ui/Button'
+import { Input } from '@/shared/components/ui/Input'
+import { Textarea } from '@/shared/components/ui/Textarea'
 import { useSessionRequests } from '@/hooks'
 import { useTranslations } from 'next-intl'
 import { BookSessionModalProps } from '@/types'

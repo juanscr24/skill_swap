@@ -3,9 +3,9 @@
 import { useState } from 'react'
 import { CalendarHeader } from './CalendarHeader'
 import { CalendarCell } from './CalendarCell'
-import { LoadingSpinner } from '@/components'
+import { LoadingSpinner } from '@/shared/components/ui'
 import { useCalendar } from '@/hooks/useCalendar'
-import { generateCalendarDays, getDayName } from '@/utils/calendarHelpers'
+import { generateCalendarDays, getDayName } from '@/shared/utils/calendarHelpers'
 import type { CalendarEvent } from '@/types/calendar'
 
 interface SessionsCalendarProps {

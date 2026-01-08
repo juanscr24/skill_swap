@@ -1,7 +1,7 @@
 import {motion} from "motion/react"
 import { userReviews } from "@/constants/userReviews"
 import { useTranslations } from "next-intl"
-import { CardReview } from "@/components/ui/CardReview"
+import { CardReview } from "@/shared/components/ui/CardReview"
 
 export const LandingReviews = () => {
     const t = useTranslations('landing')

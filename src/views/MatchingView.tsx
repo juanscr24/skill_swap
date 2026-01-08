@@ -3,7 +3,7 @@ import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { useMatches } from "@/hooks"
 import { MatchCard } from "@/components/features/matching"
-import { Card, Button, LoadingSpinner } from "@/components"
+import { Card, Button, LoadingSpinner } from "@/shared/components/ui"
 
 export const MatchingView = () => {
     const t = useTranslations('matching')

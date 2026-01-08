@@ -1,4 +1,4 @@
-import { CardGuide } from "@/components/ui/CardGuide"
+import { CardGuide } from "@/shared/components/ui/CardGuide"
 import { guides } from "@/constants"
 import { motion } from "motion/react"
 import { useTranslations } from "next-intl"

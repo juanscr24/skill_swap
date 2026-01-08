@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/Card"
+import { Card } from "@/shared/components/ui/Card"
 import { useTranslations } from "next-intl"
 import { FiZap, FiBookOpen } from "react-icons/fi"
 import type { MentorSkillsSectionProps } from '@/types'

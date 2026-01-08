@@ -1,5 +1,4 @@
-import { Avatar } from "@/components/ui/Avatar"
-import { Button } from "@/components"
+import { Avatar, Button } from "@/shared/components/ui"
 import Link from "next/link"
 import { FiMapPin, FiEdit, FiShare2 } from "react-icons/fi"
 import { useTranslations } from "next-intl"

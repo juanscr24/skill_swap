@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useAvailability } from '@/hooks'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/shared/components/ui/Button'
 import { FiPlus, FiClock, FiTrash2 } from 'react-icons/fi'
 import { useTranslations } from 'next-intl'
 import type { AvailabilityManagerProps } from '@/types'

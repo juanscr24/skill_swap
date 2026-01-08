@@ -1,9 +1,9 @@
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { FiCalendar, FiClock, FiArrowRight, FiSearch } from 'react-icons/fi'
-import { Avatar } from '@/components/ui/Avatar'
-import { Badge } from '@/components/ui/Badge'
-import { LoadingSpinner } from '@/components'
+import { Avatar } from '@/shared/components/ui/Avatar'
+import { Badge } from '@/shared/components/ui/Badge'
+import { LoadingSpinner } from '@/shared/components/ui'
 import type { DashboardSectionProps } from '@/types/dashboard'
 
 interface Session {

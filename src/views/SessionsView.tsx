@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { useSessions, useMentorsAvailability } from "@/hooks"
 import { useProfile } from "@/hooks/useProfile"
-import { Tabs, Button, LoadingSpinner } from "@/components"
+import { Tabs, Button, LoadingSpinner } from "@/shared/components/ui"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
 import { ManageAvailability } from "@/components/features/sessions/ManageAvailability"
@@ -37,7 +37,7 @@ export const SessionsView = () => {
     const { sessions, isLoading, cancelSession, updateSessionStatus } = useSessions('all')
     const { profile } = useProfile()
     const { mentorAvailabilities, isLoading: isLoadingMentorsAvailability } = useMentorsAvailability()
-    
+
     // Modal state for calendar event details
     const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -46,13 +46,13 @@ export const SessionsView = () => {
     const isMentor = (profile?.skills && profile.skills.length > 0) ||
         profile?.role === 'MENTOR' ||
         profile?.role === 'ADMIN'
-    
+
     // Handle event click from calendar
     const handleEventClick = (event: CalendarEvent) => {
         setSelectedEvent(event)
         setIsModalOpen(true)
     }
-    
+
     const handleCloseModal = () => {
         setIsModalOpen(false)
         setSelectedEvent(null)
@@ -177,9 +177,9 @@ export const SessionsView = () => {
             </div>
 
             <Tabs tabs={tabs} defaultTab="calendar" />
-            
+
             {/* Event Detail Modal */}
-            <EventDetailModal 
+            <EventDetailModal
                 event={selectedEvent}
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}

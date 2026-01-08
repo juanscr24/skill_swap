@@ -1,7 +1,7 @@
 'use client'
 import { useTranslations } from "next-intl"
 import Image from "next/image"
-import { Badge } from "@/components/ui/Badge"
+import { Badge } from "@/shared/components/ui/Badge"
 import { FiMapPin, FiX, FiCheck, FiStar } from "react-icons/fi"
 import { Dot, Languages } from "lucide-react"
 import type { MatchCardProps } from '@/types'

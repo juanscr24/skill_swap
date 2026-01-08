@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl'
 import { FiBookOpen, FiClock, FiTrendingUp, FiAward } from 'react-icons/fi'
 import { StatCard } from './StatCard'
 import type { DashboardStats, StatCardConfig, DashboardSectionProps } from '@/types/dashboard'
-import { LoadingSpinner } from '@/components'
+import { LoadingSpinner } from '@/shared/components/ui'
 
 interface StatsOverviewProps extends DashboardSectionProps {
   stats: DashboardStats | null

@@ -1,6 +1,3 @@
-// Authentication services
-export * from './auth'
-
 // User profile services
 export * from './users'
 

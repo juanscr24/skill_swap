@@ -4,14 +4,14 @@ import { useProfile } from "@/hooks/useProfile"
 import { useLanguages } from "@/hooks/useLanguages"
 import { useSession } from "next-auth/react"
 import { FiClock, FiCheckCircle } from "react-icons/fi"
-import { LoadingSpinner } from "@/components"
+import { LoadingSpinner } from "@/shared/components/ui"
 import { ProfileHeader } from "@/components/features/profile/user/ProfileHeader"
 import { SocialLinks } from "@/components/features/profile/user/SocialLinks"
 import { StatsCard } from "@/components/features/profile/user/StatsCard"
 import { SkillsSection } from "@/components/features/profile/user/SkillsSection"
 import { ReviewsChart } from "@/components/features/profile/user/ReviewsChart"
 import { LanguagesSection } from "@/components/features/profile/user/LanguagesSection"
-import { Card } from "@/components/ui/Card"
+import { Card } from "@/shared/components/ui/Card"
 import Link from "next/link"
 import { Pencil } from "lucide-react"
 
@@ -101,7 +101,7 @@ export const ProfileView = () => {
                     </div>
 
                     {profile.languages && profile.languages.length > 0 && (
-                        <LanguagesSection 
+                        <LanguagesSection
                             languages={languages.length > 0 ? languages : profile.languages}
                             onAddLanguage={addLanguage}
                             onDeleteLanguage={deleteLanguage}
@@ -109,7 +109,7 @@ export const ProfileView = () => {
                     )}
 
                     {(!profile.languages || profile.languages.length === 0) && (
-                        <LanguagesSection 
+                        <LanguagesSection
                             languages={languages}
                             onAddLanguage={addLanguage}
                             onDeleteLanguage={deleteLanguage}

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { Card, Avatar, LoadingSpinner, Button } from '@/components'
+import { Card, Avatar, LoadingSpinner, Button } from '@/shared/components/ui'
 import { BookSessionModal } from '../availability/BookSessionModal'
 import { FiCalendar, FiClock, FiUser } from 'react-icons/fi'
 import type { MentorsAvailabilityCalendarProps, MentorAvailabilityData } from '@/types'

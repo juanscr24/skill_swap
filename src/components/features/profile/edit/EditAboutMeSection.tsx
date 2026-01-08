@@ -1,10 +1,10 @@
 'use client'
 import { useState, useEffect } from "react"
 import { useTranslations } from "next-intl"
-import { Card } from "@/components/ui/Card"
+import { Card } from "@/shared/components/ui/Card"
 import { Button, Input } from "@/components"
-import { Textarea } from "@/components/ui/Textarea"
-import { Avatar } from "@/components/ui/Avatar"
+import { Textarea } from "@/shared/components/ui/Textarea"
+import { Avatar } from "@/shared/components/ui/Avatar"
 import { FiLoader, FiSave, FiUpload } from "react-icons/fi"
 import type { EditAboutMeSectionProps } from '@/types'
 

@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl"
 import { FiAlertTriangle } from "react-icons/fi"
-import { Button } from "../../ui/Button"
+import { Button } from "../../../shared/components/ui/Button"
 
 export const DeleteAccountSection = () => {
     const t = useTranslations('settings.danger')

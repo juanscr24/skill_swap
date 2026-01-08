@@ -1,7 +1,7 @@
 'use client'
 
-import { Avatar } from '@/components'
-import { formatEventTime, getEventColor } from '@/utils/calendarHelpers'
+import { Avatar } from '@/shared/components/ui'
+import { formatEventTime, getEventColor } from '@/shared/utils/calendarHelpers'
 import type { CalendarEvent } from '@/types/calendar'
 import { FiClock, FiUser } from 'react-icons/fi'
 

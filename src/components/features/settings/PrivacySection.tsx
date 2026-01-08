@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl"
 import { FiEye } from "react-icons/fi"
 import { SettingsSection } from "./SettingsSection"
-import { Select } from "../../ui/Select"
+import { Select } from "../../../shared/components/ui/Select"
 import { useSettingsStore } from "@/stores/settingsStore"
 
 export const PrivacySection = () => {

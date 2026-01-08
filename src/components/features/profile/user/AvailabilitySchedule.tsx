@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl"
-import { Badge } from "@/components/ui/Badge"
+import { Badge } from "@/shared/components/ui/Badge"
 import type { AvailabilityScheduleProps } from '@/types'
 
 export const AvailabilitySchedule = ({ availability }: AvailabilityScheduleProps) => {

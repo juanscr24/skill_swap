@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl"
-import { Rating } from "@/components/ui/Rating"
+import { Rating } from "@/shared/components/ui/Rating"
 import type { ReviewsChartProps, Review } from '@/types'
 
 export const ReviewsChart = ({ reviews, averageRating, totalReviews }: ReviewsChartProps) => {

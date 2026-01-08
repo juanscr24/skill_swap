@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react"
-import { Badge } from "@/components/ui/Badge"
-import { Card } from "@/components/ui/Card"
+import { Badge } from "@/shared/components/ui/Badge"
+import { Card } from "@/shared/components/ui/Card"
 import { useTranslations } from "next-intl"
 import { FiPlus, FiBookOpen, FiZap, FiX, FiSearch } from "react-icons/fi"
 import { recommendedSkills } from "@/constants/recommendedSkills"

@@ -1,4 +1,4 @@
-import { CardSkill } from "@/components/ui/CardSkill"
+import { CardSkill } from "@/shared/components/ui/CardSkill"
 import { skills } from "@/constants"
 import { useMediaQuery } from "@/hooks"
 import { motion } from "motion/react"

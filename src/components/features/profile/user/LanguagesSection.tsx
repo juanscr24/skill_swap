@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react"
-import { Card } from "@/components/ui/Card"
+import { Card } from "@/shared/components/ui/Card"
 import { useTranslations } from "next-intl"
 import { FiPlus, FiX, FiSearch, FiGlobe } from "react-icons/fi"
 import { recommendedLanguages } from "@/constants/recommendedLanguages"

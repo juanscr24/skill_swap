@@ -1,4 +1,4 @@
-export * from './useAuth'
+export * from '../features/auth/hooks/useAuth'
 export * from './useMediaQuery'
 export * from './useSessions'
 export * from './useMessages'

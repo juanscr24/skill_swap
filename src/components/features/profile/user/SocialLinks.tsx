@@ -1,9 +1,9 @@
 import { useState } from "react"
-import { FaLinkedin, FaGithub, FaInstagram, FaFacebook, FaWhatsapp, FaGlobe } from "react-icons/fa"
 import { useTranslations } from "next-intl"
-import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck } from "react-icons/fi"
-import { Button } from "@/components"
+import { Button } from "@/shared/components/ui"
 import type { SocialLinksProps } from '@/types'
+import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck } from "react-icons/fi"
+import { FaLinkedin, FaGithub, FaInstagram, FaFacebook, FaWhatsapp, FaGlobe } from "react-icons/fa"
 
 const PLATFORMS = [
     { key: 'linkedin', icon: FaLinkedin, label: 'LinkedIn', color: 'bg-[#0077B5]/10 text-[#0077B5]', placeholder: 'https://linkedin.com/in/...' },
@@ -52,7 +52,7 @@ export const SocialLinks = ({ links, onUpdate }: SocialLinksProps) => {
                 <h3 className="text-lg font-bold text-(--text-1) mb-2">{t('socialLinks')}</h3>
                 <Button onClick={() => setIsEditing(true)} secondary className="text-sm py-2 mt-2">
                     <div className="flex items-center">
-                        <FiPlus className="mr-2" /> 
+                        <FiPlus className="mr-2" />
                         <span>{t('addSocialLinks')}</span>
                     </div>
                 </Button>

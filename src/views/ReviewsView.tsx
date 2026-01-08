@@ -2,12 +2,12 @@
 import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { useReviews } from "@/hooks"
-import { Card } from "@/components/ui/Card"
-import { Avatar } from "@/components/ui/Avatar"
-import { Rating } from "@/components/ui/Rating"
-import { Button, LoadingSpinner } from "@/components"
-import { Textarea } from "@/components/ui/Textarea"
-import { Modal } from "@/components/ui/Modal"
+import { Card } from "@/shared/components/ui/Card"
+import { Avatar } from "@/shared/components/ui/Avatar"
+import { Rating } from "@/shared/components/ui/Rating"
+import { Button, LoadingSpinner } from "@/shared/components/ui"
+import { Textarea } from "@/shared/components/ui/Textarea"
+import { Modal } from "@/shared/components/ui/Modal"
 import { useSession } from "next-auth/react"
 
 export const ReviewsView = () => {
@@ -26,7 +26,7 @@ export const ReviewsView = () => {
         }
 
         const result = await createReview(targetUserId, rating, comment)
-        
+
         if (result.success) {
             setIsModalOpen(false)
             setRating(0)
@@ -58,8 +58,8 @@ export const ReviewsView = () => {
                         return (
                             <Card key={review.id}>
                                 <div className="flex flex-col sm:flex-row gap-4 max-sm:gap-3">
-                                    <Avatar 
-                                        src={review.author?.image || ''} 
+                                    <Avatar
+                                        src={review.author?.image || ''}
                                         alt={review.author?.name || 'User'}
                                         size="md"
                                     />
@@ -121,8 +121,8 @@ export const ReviewsView = () => {
                             {t('yourRating')}
                         </label>
                         <div className="flex justify-center">
-                            <Rating 
-                                value={rating} 
+                            <Rating
+                                value={rating}
                                 onChange={setRating}
                                 size="lg"
                             />
@@ -139,15 +139,15 @@ export const ReviewsView = () => {
                     />
 
                     <div className="flex gap-4 max-sm:gap-2 max-sm:flex-col">
-                        <Button 
-                            primary 
+                        <Button
+                            primary
                             className="flex-1 py-3 max-sm:py-2"
                             onClick={handleSubmit}
                         >
                             {t('submit')}
                         </Button>
-                        <Button 
-                            secondary 
+                        <Button
+                            secondary
                             className="px-8 max-sm:px-4 py-3 max-sm:py-2"
                             onClick={() => {
                                 setIsModalOpen(false)

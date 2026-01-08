@@ -5,7 +5,7 @@ import { prisma } from '@/lib'
 import { 
   mapAvailabilityToEvent, 
   mapSessionToEvent 
-} from '@/utils/calendarHelpers'
+} from '@/shared/utils/calendarHelpers'
 import type { 
   PrismaMentorAvailability, 
   PrismaSession 

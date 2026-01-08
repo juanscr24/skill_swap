@@ -1,7 +1,7 @@
 'use client'
 import { useState } from "react"
 import { useTranslations } from "next-intl"
-import { Card } from "@/components/ui/Card"
+import { Card } from "@/shared/components/ui/Card"
 import { Button, Input } from "@/components"
 import { FiX, FiPlus } from "react-icons/fi"
 import type { EditLanguagesSectionProps, Language } from '@/types'

@@ -1,8 +1,8 @@
 'use client'
 
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
-import { Button } from '@/components'
-import { getMonthName } from '@/utils/calendarHelpers'
+import { Button } from '@/shared/components/ui'
+import { getMonthName } from '@/shared/utils/calendarHelpers'
 
 interface CalendarHeaderProps {
   currentYear: number

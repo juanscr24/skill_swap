@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { FiHome } from 'react-icons/fi'
-import { Button } from '@/components'
-import { SkillSwapLogo } from '@/components/ui/SkillSwapLogo'
+import { Button } from '@/shared/components/ui'
+import { SkillSwapLogo } from '@/shared/components/ui/SkillSwapLogo'
 
 export const NotFoundView = () => {
   const t = useTranslations('common')

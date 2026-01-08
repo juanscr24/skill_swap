@@ -1,7 +1,7 @@
 'use client'
 
-import { Button } from '@/components/ui/Button'
-import { Avatar } from '@/components/ui/Avatar'
+import { Button } from '@/shared/components/ui/Button'
+import { Avatar } from '@/shared/components/ui/Avatar'
 import { useSessionRequests } from '@/hooks'
 import { FiCalendar } from 'react-icons/fi'
 import { useTranslations } from 'next-intl'

@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl"
 import { FiBell } from "react-icons/fi"
 import { SettingsSection } from "./SettingsSection"
-import { Switch } from "../../ui/Switch"
+import { Switch } from "../../../shared/components/ui/Switch"
 import { useSettingsStore } from "@/stores/settingsStore"
 
 export const NotificationsSection = () => {
