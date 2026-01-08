@@ -5,7 +5,12 @@ export interface ChatMessage {
   sender_id: string
   content: string
   created_at: string
+  delivered_at?: string | null
+  read_at?: string | null
 }
+
+// Estados del mensaje
+export type MessageStatus = 'sending' | 'sent' | 'delivered' | 'read'
 
 export interface Conversation {
   id: string
@@ -22,6 +27,15 @@ export interface ConversationParticipant {
   last_read_at: string | null
 }
 
+// Presencia de usuario
+export interface UserPresence {
+  id: string
+  user_id: string
+  is_online: boolean
+  last_seen: string
+  updated_at: string
+}
+
 export interface ConversationWithDetails extends Conversation {
   participants: ConversationParticipant[]
   lastMessage?: ChatMessage
@@ -30,6 +44,7 @@ export interface ConversationWithDetails extends Conversation {
     name: string | null
     email: string
     image: string | null
+    presence?: UserPresence
   }
   unreadCount?: number
 }

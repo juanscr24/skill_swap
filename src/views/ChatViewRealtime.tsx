@@ -6,9 +6,12 @@ import { useSession } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import { useConversations } from '@/hooks/useConversations'
 import { useRealtimeMessages } from '@/hooks/useRealtimeMessages'
+import { useUserPresence } from '@/hooks/useUserPresence'
 import { Card } from '@/components/ui/Card'
 import { Avatar } from '@/components/ui/Avatar'
 import { LoadingSpinner } from '@/components'
+import { MessageStatusIndicator } from '@/components/features/MessageStatusIndicator'
+import { PresenceIndicator } from '@/components/features/PresenceIndicator'
 import { FiSend, FiCheck, FiSearch, FiVideo, FiInfo } from 'react-icons/fi'
 
 export const ChatView = () => {
@@ -20,6 +23,9 @@ export const ChatView = () => {
     const [searchQuery, setSearchQuery] = useState('')
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
+
+    // Hook de presencia de usuarios
+    const { isUserOnline, getLastSeen } = useUserPresence({ enabled: true })
 
     // Obtener lista de conversaciones usando Prisma (a través de API)
     const { data: conversations, isLoading: conversationsLoading } = useConversations()
@@ -38,13 +44,21 @@ export const ChatView = () => {
         isSubscribed,
         sendMessage,
         markAsRead,
+        getMessageStatus,
     } = useRealtimeMessages({
         conversationId: selectedConversationId,
+        currentUserId: session?.user?.id,
         enabled: !!selectedConversationId,
         onMessage: (newMessage) => {
             // Marcar como leído automáticamente cuando llega un mensaje del otro usuario
             if (newMessage.sender_id !== session?.user?.id && session?.user?.id) {
-                markAsRead(session.user.id)
+                // Marcar como leído solo si la conversación está activa
+                const unreadMessages = messages.filter(
+                    (m) => m.sender_id !== session.user.id && !m.read_at
+                )
+                if (unreadMessages.length > 0) {
+                    markAsRead(unreadMessages.map((m) => m.id))
+                }
             }
         },
     })
@@ -61,11 +75,17 @@ export const ChatView = () => {
         if (!selectedConversationId || !session?.user?.id) return
 
         const timeoutId = setTimeout(() => {
-            markAsRead(session.user.id)
+            // Obtener mensajes no leídos del otro usuario
+            const unreadMessages = messages.filter(
+                (m) => m.sender_id !== session.user.id && !m.read_at
+            )
+            if (unreadMessages.length > 0) {
+                markAsRead(unreadMessages.map((m) => m.id))
+            }
         }, 500) // Esperar 500ms antes de marcar como leído
 
         return () => clearTimeout(timeoutId)
-    }, [selectedConversationId, session?.user?.id, markAsRead])
+    }, [selectedConversationId, messages, session?.user?.id, markAsRead])
 
     // Obtener la conversación seleccionada
     const selectedConversation = conversations?.find(
@@ -117,6 +137,27 @@ export const ChatView = () => {
         } else {
             return date.toLocaleDateString('es', { day: '2-digit', month: 'short' })
         }
+    }
+
+    // Formatear "last seen"
+    const formatLastSeen = (date: Date | null) => {
+        if (!date) return 'recently'
+
+        const now = Date.now()
+        const lastSeen = date.getTime()
+        const diffInMinutes = Math.floor((now - lastSeen) / (1000 * 60))
+
+        if (diffInMinutes < 1) return 'just now'
+        if (diffInMinutes < 60) return `${diffInMinutes}m ago`
+
+        const diffInHours = Math.floor(diffInMinutes / 60)
+        if (diffInHours < 24) return `${diffInHours}h ago`
+
+        const diffInDays = Math.floor(diffInHours / 24)
+        if (diffInDays === 1) return 'yesterday'
+        if (diffInDays < 7) return `${diffInDays}d ago`
+
+        return date.toLocaleDateString('es', { day: '2-digit', month: 'short' })
     }
 
     if (conversationsLoading) {
@@ -178,8 +219,15 @@ export const ChatView = () => {
                                         alt={conversation.otherUser?.name || 'User'}
                                         size="md"
                                     />
-                                    {/* Indicador online */}
-                                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-(--bg-2)" />
+                                    {/* Indicador online - ahora en tiempo real */}
+                                    {conversation.otherUser?.id && (
+                                        <div className="absolute bottom-0 right-0">
+                                            <PresenceIndicator
+                                                isOnline={isUserOnline(conversation.otherUser.id)}
+                                                size="md"
+                                            />
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="relative flex-1 min-w-0 text-left">
@@ -238,13 +286,28 @@ export const ChatView = () => {
                                         alt={selectedConversation?.otherUser?.name || 'User'}
                                         size="md"
                                     />
-                                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-(--bg-2)" />
+                                    {selectedConversation?.otherUser?.id && (
+                                        <div className="absolute bottom-0 right-0">
+                                            <PresenceIndicator
+                                                isOnline={isUserOnline(selectedConversation.otherUser.id)}
+                                                size="md"
+                                            />
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div>
                                     <h3 className="font-semibold text-(--text-1)">
                                         {selectedConversation?.otherUser?.name || selectedConversation?.otherUser?.email}
                                     </h3>
+                                    {/* Mostrar estado online/offline */}
+                                    {selectedConversation?.otherUser?.id && (
+                                        <p className="text-xs text-(--text-2)">
+                                            {isUserOnline(selectedConversation.otherUser.id)
+                                                ? 'Online'
+                                                : `Last seen ${formatLastSeen(getLastSeen(selectedConversation.otherUser.id))}`}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 
@@ -310,9 +373,15 @@ export const ChatView = () => {
                                                         <div className="bg-(--button-1) text-(--button-1-text) rounded-2xl rounded-br-sm px-4 py-3">
                                                             <p className="wrap-break-word">{message.content}</p>
                                                         </div>
-                                                        <span className="text-xs text-(--text-2) mr-2 mt-1">
-                                                            {formatMessageTime(message.created_at)}
-                                                        </span>
+                                                        <div className="flex items-center gap-2 mr-2 mt-1">
+                                                            <span className="text-xs text-(--text-2)">
+                                                                {formatMessageTime(message.created_at)}
+                                                            </span>
+                                                            {/* Indicador de estado del mensaje */}
+                                                            <MessageStatusIndicator
+                                                                status={getMessageStatus(message)}
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             )}
