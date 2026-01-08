@@ -7,23 +7,16 @@ import type { RealtimeChannel } from '@supabase/supabase-js'
 import type { UserPresence } from '@/types/chat'
 
 interface UseUserPresenceOptions {
-  userId?: string // ID del usuario a monitorear (si no se pasa, monitorea todos)
+  userId?: string
   enabled?: boolean
 }
 
-/**
- * Hook para manejar presencia de usuarios en tiempo real
- * - Actualiza automáticamente el estado online del usuario actual
- * - Monitorea la presencia de otros usuarios
- * - Detecta cuando los usuarios están online/offline
- */
 export const useUserPresence = ({ userId, enabled = true }: UseUserPresenceOptions = {}) => {
   const { data: session } = useSession()
   const [presenceMap, setPresenceMap] = useState<Record<string, UserPresence>>({})
   const [isOnline, setIsOnline] = useState(true)
   const supabase = createClient()
 
-  // Actualizar presencia del usuario actual
   const updateMyPresence = useCallback(
     async (online: boolean) => {
       if (!session?.user?.id || !enabled) return
@@ -45,7 +38,6 @@ export const useUserPresence = ({ userId, enabled = true }: UseUserPresenceOptio
     [session?.user?.id, enabled]
   )
 
-  // Obtener presencia de un usuario específico
   const getUserPresence = useCallback(
     (targetUserId: string): UserPresence | undefined => {
       return presenceMap[targetUserId]
@@ -53,13 +45,11 @@ export const useUserPresence = ({ userId, enabled = true }: UseUserPresenceOptio
     [presenceMap]
   )
 
-  // Verificar si un usuario está online
   const isUserOnline = useCallback(
     (targetUserId: string): boolean => {
       const presence = presenceMap[targetUserId]
       if (!presence) return false
 
-      // Considerar offline si no hay actualizaciones en los últimos 2 minutos
       const lastUpdate = new Date(presence.updated_at).getTime()
       const now = Date.now()
       const twoMinutes = 2 * 60 * 1000
@@ -69,7 +59,6 @@ export const useUserPresence = ({ userId, enabled = true }: UseUserPresenceOptio
     [presenceMap]
   )
 
-  // Obtener el último "visto" de un usuario
   const getLastSeen = useCallback(
     (targetUserId: string): Date | null => {
       const presence = presenceMap[targetUserId]
@@ -85,17 +74,14 @@ export const useUserPresence = ({ userId, enabled = true }: UseUserPresenceOptio
     let heartbeatInterval: NodeJS.Timeout
 
     const init = async () => {
-      // Marcar como online al montar
       if (session?.user?.id) {
         await updateMyPresence(true)
 
-        // Heartbeat cada 30 segundos para mantener presencia activa
         heartbeatInterval = setInterval(() => {
           updateMyPresence(true)
         }, 30000)
       }
 
-      // Suscribirse a cambios de presencia
       const filter = userId ? `user_id=eq.${userId}` : undefined
 
       channel = supabase
@@ -127,7 +113,6 @@ export const useUserPresence = ({ userId, enabled = true }: UseUserPresenceOptio
         )
         .subscribe()
 
-      // Fetch inicial de presencias si estamos monitoreando un usuario específico
       if (userId) {
         try {
           const response = await fetch(`/api/presence/${userId}`)
@@ -143,13 +128,10 @@ export const useUserPresence = ({ userId, enabled = true }: UseUserPresenceOptio
 
     init()
 
-    // Manejar visibilidad de la página
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        // Usuario cambió de pestaña - mantener online pero sin heartbeat activo
         clearInterval(heartbeatInterval)
       } else {
-        // Usuario volvió - reactivar heartbeat
         updateMyPresence(true)
         heartbeatInterval = setInterval(() => {
           updateMyPresence(true)
@@ -159,12 +141,10 @@ export const useUserPresence = ({ userId, enabled = true }: UseUserPresenceOptio
 
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
-    // Cleanup
     return () => {
       clearInterval(heartbeatInterval)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
 
-      // Marcar como offline al desmontar
       if (session?.user?.id) {
         updateMyPresence(false)
       }
@@ -175,11 +155,9 @@ export const useUserPresence = ({ userId, enabled = true }: UseUserPresenceOptio
     }
   }, [enabled, userId, session?.user?.id, updateMyPresence, supabase])
 
-  // Manejar cierre de ventana/navegador
   useEffect(() => {
     const handleBeforeUnload = () => {
       if (session?.user?.id) {
-        // Usar sendBeacon para garantizar que se envíe incluso al cerrar
         const blob = new Blob([JSON.stringify({ isOnline: false })], {
           type: 'application/json',
         })
