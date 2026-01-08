@@ -1,5 +1,4 @@
 'use client'
-
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { useTranslations } from 'next-intl'
 import { useSession } from 'next-auth/react'
@@ -7,7 +6,6 @@ import { useSearchParams } from 'next/navigation'
 import { useConversations } from '@/hooks/useConversations'
 import { useRealtimeMessages } from '@/hooks/useRealtimeMessages'
 import { useUserPresence } from '@/hooks/useUserPresence'
-import { Card } from '@/components/ui/Card'
 import { Avatar } from '@/components/ui/Avatar'
 import { LoadingSpinner } from '@/components'
 import { MessageStatusIndicator } from '@/components/features/chat/MessageStatusIndicator'
