@@ -12,7 +12,7 @@ import { MessageStatusIndicator } from '@/components/features/chat/MessageStatus
 import { PresenceIndicator } from '@/components/features/chat/PresenceIndicator'
 import { FiSend, FiSearch, FiVideo, FiInfo } from 'react-icons/fi'
 
-export const ChatView = () => {
+export const ChatPage = () => {
     const t = useTranslations('chat')
     const { data: session } = useSession()
     const searchParams = useSearchParams()

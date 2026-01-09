@@ -1,7 +1,7 @@
 'use client'
 import { useState } from "react"
-import { Sidebar } from "@/components/layout/Sidebar"
-import { DashboardNavbar } from "@/components/layout/DashboardNavbar"
+import { Sidebar } from "@/shared/components/layout/Sidebar"
+import { DashboardNavbar } from "@/shared/components/layout/DashboardNavbar"
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
     const [sidebarOpen, setSidebarOpen] = useState(false)

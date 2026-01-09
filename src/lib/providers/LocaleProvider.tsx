@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NextIntlClientProvider } from 'next-intl'
 import { useLocaleStore } from '@/stores/localeStore'
 import type { LocaleProviderProps } from '@/types'

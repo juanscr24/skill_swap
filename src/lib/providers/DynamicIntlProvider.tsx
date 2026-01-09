@@ -1,7 +1,5 @@
 'use client'
 
-import { useClientLocale } from '@/contexts/LocaleProvider'
-import { ReactNode } from 'react'
 import type { DynamicIntlProviderProps } from '@/types'
 
 export function DynamicIntlProvider({ children }: DynamicIntlProviderProps) {

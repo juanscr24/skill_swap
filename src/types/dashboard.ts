@@ -46,25 +46,6 @@ export interface UpcomingSession {
   } | null
 }
 
-/**
- * Actividad reciente del usuario
- */
-export interface RecentActivity {
-  id: string
-  type: 'message' | 'match' | 'review' | 'session'
-  title: string
-  description: string
-  timestamp: Date
-  user?: {
-    id: string
-    name: string | null
-    image: string | null
-  }
-  metadata?: {
-    rating?: number
-    status?: string
-  }
-}
 
 /**
  * Impacto del usuario en la plataforma

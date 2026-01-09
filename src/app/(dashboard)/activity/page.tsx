@@ -1,5 +1,5 @@
-import { ActivityView } from '@/views/ActivityView'
+import { ActivityPage } from "@/features/activity";
 
-export default function ActivityPage() {
-  return <ActivityView />
+export default function Activity() {
+  return <ActivityPage />
 }
