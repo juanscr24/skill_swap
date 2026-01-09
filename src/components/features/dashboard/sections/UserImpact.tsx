@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl'
 import { FiZap, FiUsers, FiStar, FiGlobe } from 'react-icons/fi'
-import { LoadingSpinner } from '@/shared/components/ui'
+import { LoadingSpinner } from '@/shared/components'
 import type { UserImpact as ImpactType, DashboardSectionProps } from '@/types/dashboard'
 
 interface UserImpactProps extends DashboardSectionProps {

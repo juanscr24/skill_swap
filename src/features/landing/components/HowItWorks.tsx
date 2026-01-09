@@ -1,7 +1,7 @@
-import { CardGuide } from "@/shared/components/ui/CardGuide"
-import { guides } from "@/constants"
+import { guides } from "@/shared/constants"
 import { motion } from "motion/react"
 import { useTranslations } from "next-intl"
+import { CardGuide } from "@/shared/components/ui/CardGuide"
 
 export const HowItWorks = () => {
     const t = useTranslations('landing')

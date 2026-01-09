@@ -1,7 +1,7 @@
-import { LandingView } from "@/views/LandingView";
+import { LandingPage } from "@/features/landing/components/LandingPage";
 
 export default function Home() {
   return (
-    <LandingView />
+    <LandingPage />
   );
 }

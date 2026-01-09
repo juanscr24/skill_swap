@@ -2,8 +2,9 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { FiMessageCircle, FiUsers, FiStar, FiCheckCircle, FiArrowRight } from 'react-icons/fi'
 import { Avatar } from '@/shared/components/ui/Avatar'
-import { LoadingSpinner } from '@/shared/components/ui'
-import type { RecentActivity as ActivityType, DashboardSectionProps } from '@/types/dashboard'
+import { LoadingSpinner } from '@/shared/components/feedback'
+import { DashboardSectionProps } from '@/types'
+import { RecentActivity as ActivityType } from '@/features/activity/types/activity'
 
 interface RecentActivityProps extends DashboardSectionProps {
   activities: ActivityType[]

@@ -7,7 +7,7 @@ import { useAvailability } from '@/hooks'
 import { Button } from '@/shared/components/ui/Button'
 import { BookSessionModal } from '@/components/features/availability'
 import type { MentorAvailabilityProps } from '@/types'
-import LoadingSpinner from '@/shared/components/ui/LoadingSpinner'
+import LoadingSpinner from '@/shared/components/feedback/LoadingSpinner'
 
 export const MentorAvailability = ({
   mentorId,

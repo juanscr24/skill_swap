@@ -1,11 +1,11 @@
 import Link from "next/link"
 import { Avatar } from "./Avatar"
-import { Rating } from "./Rating"
+import { Rating } from "../feedback/Rating"
 import { Button } from "./Button"
 import { FiMapPin, FiCheck } from "react-icons/fi"
 import { useTranslations } from "next-intl"
 import { MessageSquare } from "lucide-react"
-import type { MentorCardProps } from '@/types'
+import { MentorCardProps } from "@/shared/types/ui"
 
 interface MentorCardPropsExtended extends MentorCardProps {
     isAvailable?: boolean

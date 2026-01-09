@@ -1,8 +1,4 @@
-export interface BadgeProps {
-    children: React.ReactNode
-    variant?: 'default' | 'success' | 'warning' | 'error' | 'info'
-    className?: string
-}
+import { BadgeProps } from "@/shared/types/ui"
 
 export const Badge = ({ children, variant = 'default', className = '' }: BadgeProps) => {
     const variants = {

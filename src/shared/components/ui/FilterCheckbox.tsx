@@ -1,14 +1,4 @@
-/**
- * 🎨 COMPONENTE: FilterCheckbox
- * 
- * Checkbox personalizado para filtros multi-select
- */
-
-interface FilterCheckboxProps {
-  label: string
-  checked: boolean
-  onChange: (checked: boolean) => void
-}
+import { FilterCheckboxProps } from "@/shared/types/ui"
 
 export const FilterCheckbox = ({ label, checked, onChange }: FilterCheckboxProps) => {
   return (

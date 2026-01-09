@@ -1,9 +1,4 @@
-export interface SearchBarProps {
-    value?: string
-    onChange?: (value: string) => void
-    placeholder?: string
-    className?: string
-}
+import { SearchBarProps } from "@/shared/types/ui"
 
 export const SearchBar = ({ value, onChange, placeholder, className = '' }: SearchBarProps) => {
     return (

@@ -3,7 +3,7 @@ import { Badge } from "@/shared/components/ui/Badge"
 import { Card } from "@/shared/components/ui/Card"
 import { useTranslations } from "next-intl"
 import { FiPlus, FiBookOpen, FiZap, FiX, FiSearch } from "react-icons/fi"
-import { recommendedSkills } from "@/constants/recommendedSkills"
+import { recommendedSkills } from "@/shared/constants/recommendedSkills"
 import type { SkillsSectionProps } from '@/types'
 
 export const SkillsSection = ({

@@ -1,5 +1,5 @@
 import { CardSkill } from "@/shared/components/ui/CardSkill"
-import { skills } from "@/constants"
+import { skills } from "@/shared/constants"
 import { useMediaQuery } from "@/hooks"
 import { motion } from "motion/react"
 import { useTranslations } from "next-intl"

@@ -1,4 +1,4 @@
-import { CardSkillProps } from "@/types"
+import { CardSkillProps } from "@/shared/types/ui"
 
 export const CardSkill = ({ icon, skill }: CardSkillProps) => {
     return (

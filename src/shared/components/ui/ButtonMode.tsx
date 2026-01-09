@@ -1,6 +1,6 @@
 'use client'
 import { Moon, Sun } from 'lucide-react'
-import { ButtonModeProps } from '@/types'
+import { ButtonModeProps } from '@/shared/types/ui'
 import { useThemeStore } from '@/stores/themeStore'
 
 export const ButtonMode = ({ className }: ButtonModeProps) => {

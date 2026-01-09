@@ -1,17 +1,11 @@
 'use client'
+import { SkillSelectorPropsExtended } from '@/shared/types/ui'
 import { useState, useRef, useEffect } from 'react'
-import { FiX, FiPlus, FiSearch } from 'react-icons/fi'
-import { Badge } from './Badge'
-import type { SkillSelectorProps } from '@/types'
+import { FiPlus, FiSearch } from 'react-icons/fi'
 
-interface SkillSelectorPropsExtended extends SkillSelectorProps {
-    recommendations?: string[]
-    label?: string
-}
-
-export const SkillSelector = ({ 
-    onAdd, 
-    placeholder = 'Buscar o agregar habilidad...', 
+export const SkillSelector = ({
+    onAdd,
+    placeholder = 'Buscar o agregar habilidad...',
     recommendations = [],
     label
 }: SkillSelectorPropsExtended) => {
@@ -64,7 +58,7 @@ export const SkillSelector = ({
                     {label}
                 </label>
             )}
-            
+
             <div className="relative">
                 <button
                     type="button"

@@ -1,12 +1,4 @@
-import { ReactNode } from "react"
-
-export interface ModalProps {
-    isOpen: boolean
-    onClose: () => void
-    children: ReactNode
-    title?: string
-    className?: string
-}
+import { ModalProps } from "@/shared/types"
 
 export const Modal = ({ isOpen, onClose, children, title, className = '' }: ModalProps) => {
     if (!isOpen) return null
@@ -18,7 +10,7 @@ export const Modal = ({ isOpen, onClose, children, title, className = '' }: Moda
                 className="absolute inset-0 bg-black/50 backdrop-blur-sm"
                 onClick={onClose}
             />
-            
+
             {/* Modal Content */}
             <div className={`relative bg-(--bg-2) rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto ${className}`}>
                 {title && (

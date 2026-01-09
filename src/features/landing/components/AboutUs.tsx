@@ -1,10 +1,10 @@
 'use client'
 import Image from "next/image"
+import Link from "next/link"
 import { motion } from "motion/react"
-import { Button } from "../../../shared/components/ui/Button"
 import { landing } from "@public/images"
 import { useTranslations } from "next-intl"
-import Link from "next/link"
+import { Button } from "../../../shared/components/ui/Button"
 
 export const AboutUs = () => {
     const t = useTranslations('aboutUs')

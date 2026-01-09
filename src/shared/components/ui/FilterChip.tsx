@@ -1,16 +1,5 @@
-/**
- * 🎨 COMPONENTE: FilterChip
- * 
- * Chip pequeño que muestra un filtro activo
- * Permite removerlo al hacer click en la X
- */
-
 import { FiX } from 'react-icons/fi'
-
-interface FilterChipProps {
-  label: string
-  onRemove: () => void
-}
+import { FilterChipProps } from '@/shared/types/ui'
 
 export const FilterChip = ({ label, onRemove }: FilterChipProps) => {
   return (

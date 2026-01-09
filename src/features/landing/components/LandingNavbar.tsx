@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl"
 import { Button } from "../../../shared/components/ui/Button"
 import { ButtonMode } from "../../../shared/components/ui/ButtonMode"
 import { LanguageSwitcher } from "../../../shared/components/ui/LanguageSwitcher"
-import { NAVBAR_ITEMS } from "@/constants/navbar_item"
+import { NAVBAR_ITEMS } from "@/shared/constants/navbar_item"
 import { scrollToTop, scrollToElement } from "@/shared/utils/scroll"
 import { SkillSwapLogo } from "../../../shared/components/ui/SkillSwapLogo"
 

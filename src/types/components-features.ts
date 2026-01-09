@@ -4,11 +4,6 @@ export interface AvailabilityManagerProps {
   mentorId: string
 }
 
-export interface SidebarProps {
-  isOpen: boolean
-  setIsOpen: (isOpen: boolean) => void
-}
-
 export interface MatchCardProps {
   user: {
     id: string
@@ -28,5 +23,4 @@ export interface MatchCardProps {
   onReject: () => void
 }
 
-export type DashboardNavbarProps = SidebarProps
 

@@ -3,7 +3,7 @@
 import { Card, Avatar, Badge, Button } from '@/shared/components/ui'
 import { FiCalendar, FiClock } from 'react-icons/fi'
 import { useTranslations } from 'next-intl'
-import { SESSION_STATUS_VARIANTS } from '@/constants'
+import { SESSION_STATUS_VARIANTS } from '@/shared/constants'
 
 interface SessionUser {
   id: string

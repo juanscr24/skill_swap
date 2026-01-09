@@ -21,7 +21,7 @@ import { MentorCard } from '@/shared/components/ui/MentorCard'
 import { MoreMentorsCard } from '@/shared/components/ui/MoreMentorsCard'
 import { SearchBar } from '@/shared/components/ui/SearchBar'
 import { Button } from '@/shared/components/ui/Button'
-import { LoadingSpinner } from '@/shared/components/ui'
+import { LoadingSpinner } from '@/shared/components'
 import { FilterChip } from '@/shared/components/ui/FilterChip'
 import { MentorFiltersPanel } from '@/components/features/mentors/MentorFiltersPanel'
 import type { FilterOption } from '@/types/filters'
@@ -177,7 +177,7 @@ export const MentorsView = () => {
       {/* Error state */}
       {error && (
         <Card className="p-6 text-center">
-          <p className="text-red-500">{error}</p>
+          <p className="text-red-500">{error.message}</p>
         </Card>
       )}
 

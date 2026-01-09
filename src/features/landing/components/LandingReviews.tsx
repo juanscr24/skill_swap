@@ -1,5 +1,5 @@
 import {motion} from "motion/react"
-import { userReviews } from "@/constants/userReviews"
+import { userReviews } from "@/shared/constants/userReviews"
 import { useTranslations } from "next-intl"
 import { CardReview } from "@/shared/components/ui/CardReview"
 

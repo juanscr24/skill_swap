@@ -11,7 +11,7 @@ import { ManageAvailability } from "@/components/features/sessions/ManageAvailab
 import { SessionCard } from "@/components/features/sessions/SessionCard"
 import { MentorsAvailabilityCalendar } from "@/components/features/sessions/MentorsAvailabilityCalendar"
 import { SessionsCalendar, EventDetailModal } from "@/components/features/calendar"
-import { SESSION_STATUS, SESSION_TAB_IDS } from "@/constants"
+import { SESSION_STATUS, SESSION_TAB_IDS } from "@/shared/constants"
 import type { CalendarEvent } from "@/types/calendar"
 
 interface SessionUser {

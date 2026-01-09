@@ -13,8 +13,9 @@ import {
     FiSettings,
     FiLogOut
 } from "react-icons/fi"
+import { SidebarProps } from "@/shared/types"
 import { useAuth } from "@/features/auth/hooks/useAuth"
-import type { SidebarProps } from '@/types'
+
 
 export const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
     const pathname = usePathname()

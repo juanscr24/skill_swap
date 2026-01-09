@@ -7,7 +7,7 @@ export const MoreMentorsCard = () => {
 
     return (
         <Link href="/matching">
-            <div className="bg-(--bg-2) border-2 border-dashed border-(--border-1) rounded-2xl p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-(--button-1) cursor-pointer h-full flex flex-col items-center justify-center min-h-[400px] group">
+            <div className="bg-(--bg-2) border-2 border-dashed border-(--border-1) rounded-2xl p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-(--button-1) cursor-pointer h-full flex flex-col items-center justify-center min-h-100 group">
                 {/* Icon */}
                 <div className="w-20 h-20 rounded-full bg-(--bg-1) flex items-center justify-center mb-4 group-hover:bg-(--button-1)/10 transition-colors duration-300">
                     <FiUsers className="w-10 h-10 text-(--text-2) group-hover:text-(--button-1) transition-colors duration-300" />

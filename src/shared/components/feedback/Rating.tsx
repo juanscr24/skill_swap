@@ -1,12 +1,6 @@
-import { useState } from "react"
 
-export interface RatingProps {
-    value?: number
-    onChange?: (value: number) => void
-    readonly?: boolean
-    size?: 'sm' | 'md' | 'lg'
-    className?: string
-}
+import { RatingProps } from "@/shared/types"
+import { useState } from "react"
 
 const sizes = {
     sm: 'w-4 h-4',
@@ -31,11 +25,10 @@ export const Rating = ({ value = 0, onChange, readonly = false, size = 'md', cla
                     className={`${readonly ? 'cursor-default' : 'cursor-pointer hover:scale-110'} transition-transform`}
                 >
                     <svg
-                        className={`${sizeClass} ${
-                            star <= (hover || value)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'fill-none text-(--text-2)'
-                        }`}
+                        className={`${sizeClass} ${star <= (hover || value)
+                            ? 'fill-yellow-400 text-yellow-400'
+                            : 'fill-none text-(--text-2)'
+                            }`}
                         stroke="currentColor"
                         strokeWidth="2"
                         viewBox="0 0 24 24"

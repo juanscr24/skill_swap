@@ -1,5 +1,5 @@
 'use client'
-import { FOOTER_ITEMS } from "@/constants/footer_item"
+import { FOOTER_ITEMS } from "@/shared/constants/footer_item"
 import { Component } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { motion } from "motion/react"

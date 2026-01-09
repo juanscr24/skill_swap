@@ -4,7 +4,6 @@ import { useProfile } from "@/hooks/useProfile"
 import { useLanguages } from "@/hooks/useLanguages"
 import { useSession } from "next-auth/react"
 import { FiClock, FiCheckCircle } from "react-icons/fi"
-import { LoadingSpinner } from "@/shared/components/ui"
 import { ProfileHeader } from "@/components/features/profile/user/ProfileHeader"
 import { SocialLinks } from "@/components/features/profile/user/SocialLinks"
 import { StatsCard } from "@/components/features/profile/user/StatsCard"
@@ -14,6 +13,7 @@ import { LanguagesSection } from "@/components/features/profile/user/LanguagesSe
 import { Card } from "@/shared/components/ui/Card"
 import Link from "next/link"
 import { Pencil } from "lucide-react"
+import { LoadingSpinner } from "@/shared/components"
 
 export const ProfileView = () => {
     const t = useTranslations('profile')

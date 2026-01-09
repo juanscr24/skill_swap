@@ -4,7 +4,7 @@ import { FiX } from "react-icons/fi"
 import { useTranslations } from "next-intl"
 import type { EditSkillsSectionProps } from '@/types'
 import { Card, Button, Badge } from "@/shared/components/ui"
-import { recommendedSkills } from "@/constants/recommendedSkills"
+import { recommendedSkills } from "@/shared/constants/recommendedSkills"
 import { SkillSelector } from "@/shared/components/ui/SkillSelector"
 
 export const EditSkillsSection = ({

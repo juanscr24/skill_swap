@@ -1,14 +1,4 @@
-export interface SelectProps {
-    id?: string
-    label?: string
-    value?: string
-    onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void
-    options: { value: string; label: string }[]
-    placeholder?: string
-    className?: string
-    error?: string
-    required?: boolean
-}
+import { SelectProps } from "@/shared/types/ui"
 
 export const Select = ({
     id,

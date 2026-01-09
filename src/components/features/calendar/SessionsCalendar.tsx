@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { CalendarHeader } from './CalendarHeader'
 import { CalendarCell } from './CalendarCell'
-import { LoadingSpinner } from '@/shared/components/ui'
+import { LoadingSpinner } from '@/shared/components'
 import { useCalendar } from '@/hooks/useCalendar'
 import { generateCalendarDays, getDayName } from '@/shared/utils/calendarHelpers'
 import type { CalendarEvent } from '@/types/calendar'

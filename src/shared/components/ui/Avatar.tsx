@@ -1,11 +1,5 @@
+import { AvatarProps } from "@/shared/types/ui"
 import Image from "next/image"
-
-export interface AvatarProps {
-    src?: string
-    alt?: string
-    size?: 'sm' | 'md' | 'lg' | 'xl'
-    className?: string
-}
 
 const sizes = {
     sm: 'w-8 h-8',
@@ -16,7 +10,7 @@ const sizes = {
 
 export const Avatar = ({ src, alt = 'Avatar', size = 'md', className = '' }: AvatarProps) => {
     const sizeClass = sizes[size]
-    
+
     return (
         <div className={`${sizeClass} rounded-full overflow-hidden bg-(--button-2) flex items-center justify-center ${className}`}>
             {src ? (

@@ -1,11 +1,4 @@
-import { ReactNode } from "react"
-
-export interface CardProps {
-    children: ReactNode
-    className?: string
-    hover?: boolean
-    onClick?: () => void
-}
+import { CardProps } from "@/shared/types/ui"
 
 export const Card = ({ children, className = '', hover = false, onClick }: CardProps) => {
     return (

@@ -3,7 +3,7 @@
 import { useUserProfile } from '@/hooks/useUserProfile'
 import { useReviews } from '@/hooks/useReviews'
 import { useState } from 'react'
-import { LoadingSpinner } from '@/shared/components/ui'
+import { LoadingSpinner } from '@/shared/components'
 import { Card } from '@/shared/components/ui/Card'
 import { MentorProfileHeader } from '@/components/features/profile/mentor/MentorProfileHeader'
 import { MentorAboutSection } from '@/components/features/profile/mentor/MentorAboutSection'
@@ -122,10 +122,10 @@ export const UserProfileView = ({ userId }: UserProfileViewProps) => {
 
         {/* Right Column */}
         <div className="lg:col-span-4 space-y-6">
-          <MentorAvailability 
+          <MentorAvailability
             mentorId={userId}
             mentorName={profile.name || 'this mentor'}
-            availability={profile.availability} 
+            availability={profile.availability}
           />
 
           <MentorStats

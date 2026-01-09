@@ -1,17 +1,6 @@
 'use client'
-import { useState, ReactNode } from "react"
-
-export interface Tab {
-    id: string
-    label: string
-    content: ReactNode
-}
-
-export interface TabsProps {
-    tabs: Tab[]
-    defaultTab?: string
-    className?: string
-}
+import { TabsProps } from "@/shared/types/ui"
+import { useState } from "react"
 
 export const Tabs = ({ tabs, defaultTab, className = '' }: TabsProps) => {
     const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id)

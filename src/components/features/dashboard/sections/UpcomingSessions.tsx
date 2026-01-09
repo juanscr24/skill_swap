@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { FiCalendar, FiClock, FiArrowRight, FiSearch } from 'react-icons/fi'
 import { Avatar } from '@/shared/components/ui/Avatar'
 import { Badge } from '@/shared/components/ui/Badge'
-import { LoadingSpinner } from '@/shared/components/ui'
+import { LoadingSpinner } from '@/shared/components'
 import type { DashboardSectionProps } from '@/types/dashboard'
 
 interface Session {

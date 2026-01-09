@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { FiArrowLeft } from 'react-icons/fi'
-import { LoadingSpinner } from '@/shared/components/ui'
+import { LoadingSpinner } from '@/shared/components'
 import { useAllActivity, ActivityFilters, ActivityItem, EmptyActivityState } from '..'
 
 export const ActivityPage = () => {

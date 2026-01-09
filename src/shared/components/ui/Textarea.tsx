@@ -1,13 +1,4 @@
-export interface TextareaProps {
-    id?: string
-    label?: string
-    placeholder?: string
-    value?: string
-    onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
-    rows?: number
-    className?: string
-    error?: string
-}
+import { TextareaProps } from "@/shared/types/ui"
 
 export const Textarea = ({
     id,

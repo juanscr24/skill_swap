@@ -7,9 +7,9 @@ import { useConversations } from '@/hooks/useConversations'
 import { useRealtimeMessages } from '@/hooks/useRealtimeMessages'
 import { useUserPresence } from '@/hooks/useUserPresence'
 import { Avatar } from '@/shared/components/ui/Avatar'
-import { LoadingSpinner } from '@/shared/components/ui'
-import { MessageStatusIndicator } from '@/components/features/chat/MessageStatusIndicator'
-import { PresenceIndicator } from '@/components/features/chat/PresenceIndicator'
+import { LoadingSpinner } from '@/shared/components'
+import { MessageStatusIndicator } from '@/features/chat/components/MessageStatusIndicator'
+import { PresenceIndicator } from '@/features/chat/components/PresenceIndicator'
 import { FiSend, FiSearch, FiVideo, FiInfo } from 'react-icons/fi'
 
 export const ChatPage = () => {

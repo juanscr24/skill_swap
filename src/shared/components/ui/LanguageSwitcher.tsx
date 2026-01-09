@@ -2,9 +2,9 @@
 
 import Image from 'next/image'
 import { useTransition } from 'react'
-import { LanguageSwitcherProps } from '@/types'
 import { useLocaleStore } from '@/stores/localeStore'
 import { flagEn, flagEs } from '@public/index'
+import { LanguageSwitcherProps } from '@/shared/types/ui'
 
 export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
     const { locale, setLocale } = useLocaleStore()
