@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
+import { useApiQuery, useApiMutation } from '@/shared/hooks'
 
 interface Conversation {
   userId: string
@@ -28,107 +27,76 @@ interface Message {
   }
 }
 
+interface SendMessageData {
+  receiverId: string
+  content: string
+}
+
+/**
+ * Hook refactorizado para manejar mensajes y conversaciones
+ * Usa React Query para caching y sincronización automática
+ */
 export function useMessages(otherUserId?: string) {
-  const { data: session, status } = useSession()
-  const [conversations, setConversations] = useState<Conversation[]>([])
-  const [messages, setMessages] = useState<Message[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const fetchConversations = async () => {
-    if (status !== 'authenticated') {
-      setIsLoading(false)
-      return
+  // Query para conversaciones (cuando no hay otherUserId)
+  const conversationsQuery = useApiQuery<Conversation[]>(
+    'conversations',
+    !otherUserId ? '/api/messages/conversations' : null,
+    {
+      requireAuth: true,
+      staleTime: 1000 * 60, // 1 minuto
+      enabled: !otherUserId,
     }
+  )
 
-    try {
-      setIsLoading(true)
-      setError(null)
-
-      const response = await fetch('/api/messages/conversations')
-
-      if (!response.ok) {
-        throw new Error('Error al cargar conversaciones')
-      }
-
-      const data = await response.json()
-      setConversations(data)
-    } catch (err: any) {
-      console.error('Error fetching conversations:', err)
-      setError(err.message || 'Error al cargar conversaciones')
-    } finally {
-      setIsLoading(false)
+  // Query para mensajes específicos (cuando hay otherUserId)
+  const messagesQuery = useApiQuery<Message[]>(
+    ['messages', otherUserId],
+    otherUserId ? `/api/messages/${otherUserId}` : null,
+    {
+      requireAuth: true,
+      staleTime: 1000 * 30, // 30 segundos
+      refetchInterval: 1000 * 10, // Refetch cada 10 segundos
+      enabled: !!otherUserId,
     }
-  }
+  )
 
-  const fetchMessages = async (userId: string) => {
-    if (status !== 'authenticated') {
-      return
-    }
-
-    try {
-      setIsLoading(true)
-      setError(null)
-
-      const response = await fetch(`/api/messages/${userId}`)
-
-      if (!response.ok) {
-        throw new Error('Error al cargar mensajes')
-      }
-
-      const data = await response.json()
-      setMessages(data)
-    } catch (err: any) {
-      console.error('Error fetching messages:', err)
-      setError(err.message || 'Error al cargar mensajes')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const sendMessage = async (receiverId: string, content: string) => {
-    try {
-      setError(null)
-
+  // Mutation para enviar mensaje
+  const sendMutation = useApiMutation<Message, SendMessageData>({
+    mutationFn: async (data) => {
       const response = await fetch('/api/messages/send', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ receiverId, content }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
       })
-
-      if (!response.ok) {
-        throw new Error('Error al enviar mensaje')
-      }
-
-      const newMessage = await response.json()
-      
-      // Agregar el nuevo mensaje a la lista local
-      setMessages((prev) => [...prev, newMessage])
-
-      return { success: true, message: newMessage }
-    } catch (err: any) {
-      console.error('Error sending message:', err)
-      setError(err.message || 'Error al enviar mensaje')
-      return { success: false, error: err.message }
-    }
-  }
-
-  useEffect(() => {
-    if (otherUserId) {
-      fetchMessages(otherUserId)
-    } else {
-      fetchConversations()
-    }
-  }, [status, otherUserId])
+      if (!response.ok) throw new Error('Error al enviar mensaje')
+      return response.json()
+    },
+    invalidateKeys: [['messages', otherUserId], 'conversations'],
+    optimistic: otherUserId
+      ? {
+          queryKey: ['messages', otherUserId],
+          updateFn: (old: Message[] = [], newMsg: SendMessageData) => {
+            const tempMessage: Message = {
+              id: 'temp-' + Date.now(),
+              senderId: '',
+              receiverId: newMsg.receiverId,
+              content: newMsg.content,
+              read: false,
+              createdAt: new Date(),
+              sender: { id: '', name: null, image: null },
+            }
+            return [...old, tempMessage]
+          },
+        }
+      : undefined,
+  })
 
   return {
-    conversations,
-    messages,
-    isLoading,
-    error,
-    sendMessage,
-    refetch: otherUserId ? () => fetchMessages(otherUserId) : fetchConversations,
+    conversations: conversationsQuery.data ?? [],
+    messages: messagesQuery.data ?? [],
+    isLoading: otherUserId ? messagesQuery.isLoading : conversationsQuery.isLoading,
+    error: otherUserId ? messagesQuery.error : conversationsQuery.error,
+    sendMessage: sendMutation.mutateAsync,
+    refetch: otherUserId ? messagesQuery.refetch : conversationsQuery.refetch,
   }
 }

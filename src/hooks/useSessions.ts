@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
+import { useMemo } from 'react'
+import { useApiQuery, useApiMutation } from '@/shared/hooks'
 
 interface SessionUser {
   id: string
@@ -20,106 +20,70 @@ interface Session {
   users_sessions_guest_idTousers: SessionUser | null
 }
 
+interface UpdateSessionStatusData {
+  sessionId: string
+  status: string
+}
+
+/**
+ * Hook refactorizado para manejar sesiones
+ * Usa React Query para caching y sincronización automática
+ */
 export function useSessions(type: 'all' | 'upcoming' = 'all') {
-  const { data: session, status } = useSession()
-  const [sessions, setSessions] = useState<Session[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const fetchSessions = async () => {
-    if (status !== 'authenticated') {
-      setIsLoading(false)
-      return
+  // Query para obtener sesiones
+  const sessionsQuery = useApiQuery<Session[]>(
+    ['sessions', type],
+    `/api/sessions?type=${type}`,
+    {
+      requireAuth: true,
+      staleTime: 1000 * 60 * 3, // 3 minutos
     }
+  )
 
-    try {
-      setIsLoading(true)
-      setError(null)
-
-      const response = await fetch(`/api/sessions?type=${type}`)
-
-      if (!response.ok) {
-        throw new Error('Error al cargar sesiones')
-      }
-
-      const data = await response.json()
-      setSessions(data)
-    } catch (err: any) {
-      console.error('Error fetching sessions:', err)
-      setError(err.message || 'Error al cargar sesiones')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const cancelSession = async (sessionId: string) => {
-    try {
-      setError(null)
-
+  // Mutation para cancelar sesión
+  const cancelMutation = useApiMutation<any, string>({
+    mutationFn: async (sessionId) => {
       const response = await fetch(`/api/sessions?id=${sessionId}`, {
         method: 'DELETE',
       })
+      if (!response.ok) throw new Error('Error al cancelar sesión')
+      return response.json()
+    },
+    invalidateKeys: [['sessions', type], ['sessions', 'all']],
+    optimistic: {
+      queryKey: ['sessions', type],
+      updateFn: (old: Session[] = [], sessionId: string) =>
+        old.map((s) => (s.id === sessionId ? { ...s, status: 'cancelled' } : s)),
+    },
+  })
 
-      if (!response.ok) {
-        throw new Error('Error al cancelar sesión')
-      }
-
-      // Actualizar la lista local
-      setSessions(
-        sessions.map((s) =>
-          s.id === sessionId ? { ...s, status: 'cancelled' } : s
-        )
-      )
-
-      return { success: true }
-    } catch (err: any) {
-      console.error('Error cancelling session:', err)
-      setError(err.message || 'Error al cancelar sesión')
-      return { success: false, error: err.message }
-    }
-  }
-
-  const updateSessionStatus = async (sessionId: string, status: string) => {
-    try {
-      setError(null)
-
+  // Mutation para actualizar estado de sesión
+  const updateStatusMutation = useApiMutation<any, UpdateSessionStatusData>({
+    mutationFn: async (data) => {
       const response = await fetch('/api/sessions', {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ sessionId, status }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
       })
-
-      if (!response.ok) {
-        throw new Error('Error al actualizar sesión')
-      }
-
-      // Actualizar la lista local
-      setSessions(
-        sessions.map((s) =>
-          s.id === sessionId ? { ...s, status } : s
-        )
-      )
-
-      return { success: true }
-    } catch (err: any) {
-      console.error('Error updating session:', err)
-      setError(err.message || 'Error al actualizar sesión')
-      return { success: false, error: err.message }
-    }
-  }
-
-  useEffect(() => {
-    fetchSessions()
-  }, [status, type])
+      if (!response.ok) throw new Error('Error al actualizar sesión')
+      return response.json()
+    },
+    invalidateKeys: [['sessions', type], ['sessions', 'all']],
+    optimistic: {
+      queryKey: ['sessions', type],
+      updateFn: (old: Session[] = [], data: UpdateSessionStatusData) =>
+        old.map((s) => (s.id === data.sessionId ? { ...s, status: data.status } : s)),
+    },
+  })
 
   return {
-    sessions,
-    isLoading,
-    error,
-    cancelSession,
-    updateSessionStatus,
-    refetch: fetchSessions,
+    sessions: sessionsQuery.data ?? [],
+    isLoading: sessionsQuery.isLoading,
+    error: sessionsQuery.error,
+    cancelSession: cancelMutation.mutateAsync,
+    updateSessionStatus: async (sessionId: string, status: string) => {
+      return updateStatusMutation.mutateAsync({ sessionId, status })
+    },
+    refetch: sessionsQuery.refetch,
   }
 }

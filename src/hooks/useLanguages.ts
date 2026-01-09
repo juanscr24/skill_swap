@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react'
+'use client'
+
+import { useApiQuery, useApiMutation, apiMutationHelpers } from '@/shared/hooks'
 
 interface Language {
   id: string
@@ -7,83 +9,51 @@ interface Language {
   created_at: string
 }
 
+interface AddLanguageData {
+  name: string
+  level: string
+}
+
+/**
+ * Hook refactorizado para manejar idiomas del usuario
+ * Usa React Query para caching y sincronización automática
+ */
 export const useLanguages = () => {
-  const [languages, setLanguages] = useState<Language[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  // Query para obtener idiomas
+  const languagesQuery = useApiQuery<Language[]>('languages', '/api/languages', {
+    requireAuth: true,
+    staleTime: 1000 * 60 * 5, // 5 minutos
+  })
 
-  const fetchLanguages = async () => {
-    try {
-      setIsLoading(true)
-      const response = await fetch('/api/languages')
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch languages')
-      }
+  // Mutation para agregar idioma
+  const addLanguageMutation = useApiMutation<Language, AddLanguageData>({
+    ...apiMutationHelpers.post<Language, AddLanguageData>('/api/languages'),
+    invalidateKeys: ['languages', 'profile'],
+    optimistic: {
+      queryKey: 'languages',
+      updateFn: (old: Language[] = [], newLang: AddLanguageData) => [
+        { id: 'temp-' + Date.now(), ...newLang, created_at: new Date().toISOString() },
+        ...old,
+      ],
+    },
+  })
 
-      const data = await response.json()
-      setLanguages(data)
-      setError(null)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error loading languages')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchLanguages()
-  }, [])
-
-  const addLanguage = async (data: { name: string; level: string }) => {
-    try {
-      const response = await fetch('/api/languages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to add language')
-      }
-
-      const newLanguage = await response.json()
-      setLanguages((prev) => [newLanguage, ...prev])
-      
-      return { success: true }
-    } catch (err) {
-      console.error('Error adding language:', err)
-      return { success: false, error: err instanceof Error ? err.message : 'Error adding language' }
-    }
-  }
-
-  const deleteLanguage = async (languageId: string) => {
-    try {
-      const response = await fetch(`/api/languages?id=${languageId}`, {
-        method: 'DELETE',
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to delete language')
-      }
-
-      setLanguages((prev) => prev.filter((lang) => lang.id !== languageId))
-      
-      return { success: true }
-    } catch (err) {
-      console.error('Error deleting language:', err)
-      return { success: false, error: err instanceof Error ? err.message : 'Error deleting language' }
-    }
-  }
+  // Mutation para eliminar idioma
+  const deleteLanguageMutation = useApiMutation<void, string>({
+    ...apiMutationHelpers.delete<void>((id) => `/api/languages?id=${id}`),
+    invalidateKeys: ['languages', 'profile'],
+    optimistic: {
+      queryKey: 'languages',
+      updateFn: (old: Language[] = [], langId: string) => old.filter((lang) => lang.id !== langId),
+    },
+  })
 
   return {
-    languages,
-    isLoading,
-    error,
-    addLanguage,
-    deleteLanguage,
-    refetch: fetchLanguages
+    languages: languagesQuery.data ?? [],
+    isLoading: languagesQuery.isLoading,
+    error: languagesQuery.error,
+    addLanguage: addLanguageMutation.mutateAsync,
+    deleteLanguage: deleteLanguageMutation.mutateAsync,
+    refetch: languagesQuery.refetch,
   }
 }

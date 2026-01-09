@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import { useApiQuery, useApiMutation } from '@/shared/hooks'
 
 interface Review {
   id: string
@@ -22,116 +23,98 @@ interface Review {
   } | null
 }
 
+interface CreateReviewData {
+  targetId: string
+  rating: number
+  comment?: string
+}
+
+/**
+ * Hook refactorizado para manejar reseñas
+ * Usa React Query para caching y sincronización automática
+ */
 export function useReviews(targetUserId?: string) {
-  const { data: session, status } = useSession()
-  const [reviews, setReviews] = useState<Review[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { data: session } = useSession()
+  
+  // Determinar el userId a usar
+  const userId = targetUserId || session?.user?.id
 
-  const fetchReviews = async (userId: string) => {
-    if (status !== 'authenticated') {
-      setIsLoading(false)
-      return
+  // Query para obtener reviews
+  const reviewsQuery = useApiQuery<Review[]>(
+    ['reviews', userId],
+    userId ? `/api/reviews?targetId=${userId}` : null,
+    {
+      requireAuth: true,
+      staleTime: 1000 * 60 * 5, // 5 minutos
+      enabled: !!userId,
     }
+  )
 
-    try {
-      setIsLoading(true)
-      setError(null)
-
-      const response = await fetch(`/api/reviews?targetId=${userId}`)
-
-      if (!response.ok) {
-        throw new Error('Error al cargar reseñas')
-      }
-
-      const data = await response.json()
-      setReviews(data)
-    } catch (err: any) {
-      console.error('Error fetching reviews:', err)
-      setError(err.message || 'Error al cargar reseñas')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const createReview = async (targetId: string, rating: number, comment?: string) => {
-    try {
-      setError(null)
-
+  // Mutation para crear review
+  const createMutation = useApiMutation<any, CreateReviewData>({
+    mutationFn: async (data) => {
       const response = await fetch('/api/reviews/create', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ targetId, rating, comment }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
       })
-
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData.error || 'Error al crear reseña')
       }
+      return response.json()
+    },
+    invalidateKeys: [['reviews', userId], 'profile'],
+    optimistic: {
+      queryKey: ['reviews', userId],
+      updateFn: (old: Review[] = [], newReview: CreateReviewData) => {
+        const transformedReview = {
+          id: 'temp-' + Date.now(),
+          authorId: session?.user?.id || '',
+          targetId: newReview.targetId,
+          rating: newReview.rating,
+          comment: newReview.comment || null,
+          createdAt: new Date(),
+          author: {
+            id: session?.user?.id || '',
+            name: session?.user?.name || null,
+            image: session?.user?.image || null,
+          },
+          target: null,
+        }
+        return [transformedReview, ...old]
+      },
+    },
+  })
 
-      const rawReview = await response.json()
-      
-      // Transformar la estructura para que coincida con la esperada
-      const transformedReview = {
-        id: rawReview.id,
-        rating: rawReview.rating,
-        comment: rawReview.comment,
-        created_at: rawReview.created_at,
-        author: rawReview.users_reviews_author_idTousers || null
-      }
-
-      // Agregar la nueva reseña a la lista local
-      setReviews((prev) => [transformedReview, ...prev])
-
-      return { success: true, review: transformedReview }
-    } catch (err: any) {
-      console.error('Error creating review:', err)
-      setError(err.message || 'Error al crear reseña')
-      return { success: false, error: err.message }
-    }
-  }
-
-  const deleteReview = async (reviewId: string) => {
-    try {
-      setError(null)
-
+  // Mutation para eliminar review
+  const deleteMutation = useApiMutation<any, string>({
+    mutationFn: async (reviewId) => {
       const response = await fetch(`/api/reviews/${reviewId}`, {
         method: 'DELETE',
       })
-
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData.message || 'Error al eliminar reseña')
       }
-
-      // Eliminar la reseña de la lista local
-      setReviews((prev) => prev.filter((review) => review.id !== reviewId))
-
-      return { success: true }
-    } catch (err: any) {
-      console.error('Error deleting review:', err)
-      setError(err.message || 'Error al eliminar reseña')
-      return { success: false, error: err.message }
-    }
-  }
-
-  useEffect(() => {
-    if (targetUserId) {
-      fetchReviews(targetUserId)
-    } else if (session?.user?.id) {
-      // Si no se proporciona un targetUserId, cargar las reseñas del usuario actual
-      fetchReviews(session.user.id)
-    }
-  }, [status, targetUserId, session?.user?.id])
+      return response.json()
+    },
+    invalidateKeys: [['reviews', userId], 'profile'],
+    optimistic: {
+      queryKey: ['reviews', userId],
+      updateFn: (old: Review[] = [], reviewId: string) =>
+        old.filter((review) => review.id !== reviewId),
+    },
+  })
 
   return {
-    reviews,
-    isLoading,
-    error,
-    createReview,
-    deleteReview,
-    refetch: targetUserId ? () => fetchReviews(targetUserId) : undefined,
+    reviews: reviewsQuery.data ?? [],
+    isLoading: reviewsQuery.isLoading,
+    error: reviewsQuery.error,
+    createReview: async (targetId: string, rating: number, comment?: string) => {
+      return createMutation.mutateAsync({ targetId, rating, comment })
+    },
+    deleteReview: deleteMutation.mutateAsync,
+    refetch: reviewsQuery.refetch,
   }
 }

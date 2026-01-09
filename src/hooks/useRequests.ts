@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
+import { useMemo } from 'react'
+import { useApiQuery, useApiMutation } from '@/shared/hooks'
 
 interface MatchRequest {
   id: string
@@ -22,133 +22,91 @@ interface MatchRequest {
   } | null
 }
 
+/**
+ * Hook refactorizado para manejar solicitudes de match
+ * Usa React Query para caching y sincronización automática
+ */
 export function useRequests(type: 'received' | 'sent' | 'accepted' = 'received') {
-  const { data: session, status } = useSession()
-  const [requests, setRequests] = useState<MatchRequest[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const fetchRequests = async () => {
-    if (status !== 'authenticated') {
-      setIsLoading(false)
-      return
+  // Determinar endpoint basado en tipo
+  const endpoint = useMemo(() => {
+    switch (type) {
+      case 'sent':
+        return '/api/matches/sent'
+      case 'accepted':
+        return '/api/matches/accepted'
+      default:
+        return '/api/matches/received'
     }
+  }, [type])
 
-    try {
-      setIsLoading(true)
-      setError(null)
-
-      let endpoint = '/api/matches/received'
-      if (type === 'sent') {
-        endpoint = '/api/matches/sent'
-      } else if (type === 'accepted') {
-        endpoint = '/api/matches/accepted'
-      }
-      
-      const response = await fetch(endpoint)
-
-      if (!response.ok) {
-        throw new Error('Error al cargar solicitudes')
-      }
-
-      const data = await response.json()
-      setRequests(data)
-    } catch (err: any) {
-      console.error('Error fetching requests:', err)
-      setError(err.message || 'Error al cargar solicitudes')
-    } finally {
-      setIsLoading(false)
+  // Query para obtener requests
+  const requestsQuery = useApiQuery<MatchRequest[]>(
+    ['requests', type],
+    endpoint,
+    {
+      requireAuth: true,
+      staleTime: 1000 * 60 * 2, // 2 minutos
     }
-  }
+  )
 
-  const acceptRequest = async (requestId: string) => {
-    try {
-      setError(null)
-
+  // Mutation para aceptar request
+  const acceptMutation = useApiMutation<any, string>({
+    mutationFn: async (requestId) => {
       const response = await fetch(`/api/matches/${requestId}/accept`, {
         method: 'POST',
       })
+      if (!response.ok) throw new Error('Error al aceptar solicitud')
+      return response.json()
+    },
+    invalidateKeys: [['requests', 'received'], ['requests', 'accepted'], 'sessions'],
+    optimistic: {
+      queryKey: ['requests', type],
+      updateFn: (old: MatchRequest[] = [], requestId: string) =>
+        old.map((r) => (r.id === requestId ? { ...r, status: 'accepted' } : r)),
+    },
+  })
 
-      if (!response.ok) {
-        throw new Error('Error al aceptar solicitud')
-      }
-
-      // Actualizar la lista local
-      setRequests((prev) =>
-        prev.map((r) =>
-          r.id === requestId ? { ...r, status: 'accepted' } : r
-        )
-      )
-
-      return { success: true }
-    } catch (err: any) {
-      console.error('Error accepting request:', err)
-      setError(err.message || 'Error al aceptar solicitud')
-      return { success: false, error: err.message }
-    }
-  }
-
-  const rejectRequest = async (requestId: string) => {
-    try {
-      setError(null)
-
+  // Mutation para rechazar request
+  const rejectMutation = useApiMutation<any, string>({
+    mutationFn: async (requestId) => {
       const response = await fetch(`/api/matches/${requestId}/reject`, {
         method: 'POST',
       })
+      if (!response.ok) throw new Error('Error al rechazar solicitud')
+      return response.json()
+    },
+    invalidateKeys: [['requests', 'received']],
+    optimistic: {
+      queryKey: ['requests', type],
+      updateFn: (old: MatchRequest[] = [], requestId: string) =>
+        old.map((r) => (r.id === requestId ? { ...r, status: 'rejected' } : r)),
+    },
+  })
 
-      if (!response.ok) {
-        throw new Error('Error al rechazar solicitud')
-      }
-
-      // Actualizar la lista local
-      setRequests((prev) =>
-        prev.map((r) =>
-          r.id === requestId ? { ...r, status: 'rejected' } : r
-        )
-      )
-
-      return { success: true }
-    } catch (err: any) {
-      console.error('Error rejecting request:', err)
-      setError(err.message || 'Error al rechazar solicitud')
-      return { success: false, error: err.message }
-    }
-  }
-
-  const cancelRequest = async (requestId: string) => {
-    try {
-      setError(null)
-
+  // Mutation para cancelar request
+  const cancelMutation = useApiMutation<any, string>({
+    mutationFn: async (requestId) => {
       const response = await fetch(`/api/matches/${requestId}/cancel`, {
         method: 'DELETE',
       })
-
-      if (!response.ok) {
-        throw new Error('Error al cancelar solicitud')
-      }
-
-      // Eliminar de la lista local
-      setRequests((prev) => prev.filter((r) => r.id !== requestId))
-
-      return { success: true }
-    } catch (err: any) {
-      console.error('Error cancelling request:', err)
-      setError(err.message || 'Error al cancelar solicitud')
-      return { success: false, error: err.message }
-    }
-  }
-
-  useEffect(() => {
-    fetchRequests()
-  }, [status, type])
+      if (!response.ok) throw new Error('Error al cancelar solicitud')
+      return response.json()
+    },
+    invalidateKeys: [['requests', 'sent']],
+    optimistic: {
+      queryKey: ['requests', type],
+      updateFn: (old: MatchRequest[] = [], requestId: string) =>
+        old.filter((r) => r.id !== requestId),
+    },
+  })
 
   return {
-    requests,
-    isLoading,
-    error,
-    acceptRequest,
-    rejectRequest,
-    cancelRequest,
-    refetch: fetchRequests,
+    requests: requestsQuery.data ?? [],
+    isLoading: requestsQuery.isLoading,
+    error: requestsQuery.error,
+    acceptRequest: acceptMutation.mutateAsync,
+    rejectRequest: rejectMutation.mutateAsync,
+    cancelRequest: cancelMutation.mutateAsync,
+    refetch: requestsQuery.refetch,
   }
 }
