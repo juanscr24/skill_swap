@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { prisma } from '@/lib/prisma'
-import type { RegisterInput } from '@/validations/auth'
+import { RegisterInput } from '../../validations/register'
 
 const SALT_ROUNDS = 10
 
