@@ -2,7 +2,7 @@
 import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { Card } from "@/shared/components/ui/Card"
-import { Button, Input } from "@/components"
+import { Button, Input } from "@/shared/components"
 import { FiX, FiPlus } from "react-icons/fi"
 import type { EditLanguagesSectionProps, Language } from '@/types'
 
@@ -117,11 +117,10 @@ export const EditLanguagesSection = ({
                   key={level.value}
                   type="button"
                   onClick={() => setNewLanguageLevel(level.value)}
-                  className={`px-3 py-1.5 text-sm rounded-lg transition-all ${
-                    newLanguageLevel === level.value
-                      ? 'bg-(--button-1) text-(--button-1-text)'
-                      : 'bg-(--bg-2) text-(--text-2) border border-(--border-1) hover:border-(--button-1)'
-                  }`}
+                  className={`px-3 py-1.5 text-sm rounded-lg transition-all ${newLanguageLevel === level.value
+                    ? 'bg-(--button-1) text-(--button-1-text)'
+                    : 'bg-(--bg-2) text-(--text-2) border border-(--border-1) hover:border-(--button-1)'
+                    }`}
                 >
                   {level.label}
                 </button>

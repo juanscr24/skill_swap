@@ -1,15 +1,16 @@
 'use client'
 import { useTranslations } from "next-intl"
-import { useProfile } from "@/hooks/useProfile"
+import { useProfile, useProfileMutations } from "@/hooks/useProfile"
+import { useSkills } from "@/hooks/useSkills"
 import { useLanguages } from "@/hooks/useLanguages"
 import { useSession } from "next-auth/react"
 import { FiClock, FiCheckCircle } from "react-icons/fi"
-import { ProfileHeader } from "@/components/features/profile/user/ProfileHeader"
-import { SocialLinks } from "@/components/features/profile/user/SocialLinks"
-import { StatsCard } from "@/components/features/profile/user/StatsCard"
-import { SkillsSection } from "@/components/features/profile/user/SkillsSection"
-import { ReviewsChart } from "@/components/features/profile/user/ReviewsChart"
-import { LanguagesSection } from "@/components/features/profile/user/LanguagesSection"
+import { ProfileHeader } from "./user/ProfileHeader"
+import { SocialLinks } from "./user/SocialLinks"
+import { StatsCard } from "./user/StatsCard"
+import { SkillsSection } from "./user/SkillsSection"
+import { ReviewsChart } from "./user/ReviewsChart"
+import { LanguagesSection } from "./user/LanguagesSection"
 import { Card } from "@/shared/components/ui/Card"
 import Link from "next/link"
 import { Pencil } from "lucide-react"
@@ -18,7 +19,9 @@ import { LoadingSpinner } from "@/shared/components"
 export const ProfileView = () => {
     const t = useTranslations('profile')
     const { data: session } = useSession()
-    const { profile, isLoading, error, updateProfile, addSkill, removeSkill, addWantedSkill, removeWantedSkill } = useProfile()
+    const { profile, isLoading, error } = useProfile()
+    const { updateProfile } = useProfileMutations()
+    const { addSkill, deleteSkill, addWantedSkill, deleteWantedSkill } = useSkills()
     const {
         languages,
         isLoading: isLoadingLanguages,
@@ -40,7 +43,7 @@ export const ProfileView = () => {
         return (
             <div className="p-8 max-md:p-6 max-sm:p-4 max-w-7xl mx-auto">
                 <Card className="p-6 text-center">
-                    <p className="text-red-500">{error || 'Error al cargar el perfil'}</p>
+                    <p className="text-red-500">{error?.message || 'Error al cargar el perfil'}</p>
                 </Card>
             </div>
         )
@@ -63,7 +66,7 @@ export const ProfileView = () => {
                     <SocialLinks
                         links={profile.social_links || {}}
                         onUpdate={async (data) => {
-                            await updateProfile(data)
+                            await updateProfile.mutateAsync(data)
                         }}
                     />
 
@@ -120,16 +123,16 @@ export const ProfileView = () => {
                         skillsTeach={profile.skills}
                         skillsLearn={profile.wanted_skills}
                         onAddSkill={async (name, level) => {
-                            await addSkill(name, level)
+                            await addSkill.mutateAsync({ name, level })
                         }}
                         onRemoveSkill={async (id) => {
-                            await removeSkill(id)
+                            await deleteSkill.mutateAsync(id)
                         }}
                         onAddWantedSkill={async (name) => {
-                            await addWantedSkill(name)
+                            await addWantedSkill.mutateAsync({ name })
                         }}
                         onRemoveWantedSkill={async (id) => {
-                            await removeWantedSkill(id)
+                            await deleteWantedSkill.mutateAsync(id)
                         }}
                     />
 

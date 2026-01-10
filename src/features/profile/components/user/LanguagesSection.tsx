@@ -1,3 +1,4 @@
+'use client'
 import { useState, useRef, useEffect } from "react"
 import { Card } from "@/shared/components/ui/Card"
 import { useTranslations } from "next-intl"
@@ -16,13 +17,13 @@ interface LanguagesSectionPropsExtended {
   onDeleteLanguage?: (languageId: string) => Promise<{ success: boolean }>
 }
 
-export const LanguagesSection = ({ 
+export const LanguagesSection = ({
   languages,
   onAddLanguage,
-  onDeleteLanguage 
+  onDeleteLanguage
 }: LanguagesSectionPropsExtended) => {
   const t = useTranslations('profile')
-  
+
   const [isAdding, setIsAdding] = useState(false)
   const [languageInput, setLanguageInput] = useState('')
   const [selectedLevel, setSelectedLevel] = useState('')
@@ -43,7 +44,7 @@ export const LanguagesSection = ({
     !languages.some(l => l.name.toLowerCase() === lang.toLowerCase())
   ).slice(0, 8)
 
-  const isCustomLanguage = languageInput.trim() && 
+  const isCustomLanguage = languageInput.trim() &&
     filteredLanguages.length === 0 ||
     !filteredLanguages.some(lang => lang.toLowerCase() === languageInput.toLowerCase())
 
@@ -132,14 +133,14 @@ export const LanguagesSection = ({
 
   if (!languages || languages.length === 0) {
     if (!onAddLanguage) return null
-    
+
     return (
       <Card>
         <div className="flex items-center gap-2 mb-4">
           <FiGlobe className="text-(--button-1)" size={20} />
           <h2 className="text-xl font-bold text-(--text-1)">Languages</h2>
         </div>
-        
+
         {!isAdding ? (
           <>
             <p className="text-(--text-2) text-sm italic text-center py-4">No languages added yet.</p>
@@ -229,11 +230,10 @@ export const LanguagesSection = ({
                       key={level.value}
                       type="button"
                       onClick={() => setSelectedLevel(level.value)}
-                      className={`px-3 py-2 text-sm rounded-lg border transition-all ${
-                        selectedLevel === level.value
+                      className={`px-3 py-2 text-sm rounded-lg border transition-all ${selectedLevel === level.value
                           ? level.color
                           : 'bg-(--bg-2) text-(--text-2) border-(--border-1) hover:border-(--button-1)'
-                      }`}
+                        }`}
                     >
                       {level.label}
                     </button>
@@ -384,11 +384,10 @@ export const LanguagesSection = ({
                           key={level.value}
                           type="button"
                           onClick={() => setSelectedLevel(level.value)}
-                          className={`px-3 py-2 text-sm rounded-lg border transition-all ${
-                            selectedLevel === level.value
+                          className={`px-3 py-2 text-sm rounded-lg border transition-all ${selectedLevel === level.value
                               ? level.color
                               : 'bg-(--bg-2) text-(--text-2) border-(--border-1) hover:border-(--button-1)'
-                          }`}
+                            }`}
                         >
                           {level.label}
                         </button>

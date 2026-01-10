@@ -1,4 +1,4 @@
-import { ScheduleSessionView } from "@/views/ScheduleSessionView"
+import { ScheduleSessionView } from "@/features/session"
 
 export default function ScheduleSessionPage() {
     return <ScheduleSessionView />

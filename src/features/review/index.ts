@@ -1,1 +1,2 @@
-9
+// Views
+export { ReviewsView } from './components/ReviewsView'

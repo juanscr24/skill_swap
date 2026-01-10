@@ -1,8 +1,9 @@
+'use client'
+import Link from "next/link"
+import { useRef } from "react"
 import { Avatar } from "@/shared/components/ui/Avatar"
 import { useTranslations } from "next-intl"
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi"
-import Link from "next/link"
-import { useRef } from "react"
 import type { MentorSimilarProfilesProps, SimilarMentor } from '@/types'
 
 export const MentorSimilarProfiles = ({ mentorName, similarMentors }: MentorSimilarProfilesProps) => {

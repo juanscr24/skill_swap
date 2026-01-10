@@ -11,7 +11,7 @@ import {
   UpcomingSessions, 
   RecentActivity, 
   UserImpact 
-} from "@/components/features/dashboard/sections"
+} from "./sections"
 
 export const DashboardView = () => {
   const t = useTranslations('dashboard')

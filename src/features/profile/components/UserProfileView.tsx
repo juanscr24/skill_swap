@@ -5,13 +5,13 @@ import { useReviews } from '@/hooks/useReviews'
 import { useState } from 'react'
 import { LoadingSpinner } from '@/shared/components'
 import { Card } from '@/shared/components/ui/Card'
-import { MentorProfileHeader } from '@/components/features/profile/mentor/MentorProfileHeader'
-import { MentorAboutSection } from '@/components/features/profile/mentor/MentorAboutSection'
-import { MentorSkillsSection } from '@/components/features/profile/mentor/MentorSkillsSection'
-import { MentorReviewsSection } from '@/components/features/profile/mentor/MentorReviewsSection'
-import { MentorAvailability } from '@/components/features/profile/mentor/MentorAvailability'
-import { MentorSimilarProfiles } from '@/components/features/profile/mentor/MentorSimilarProfiles'
-import { MentorStats } from '@/components/features/profile/mentor/MentorStats'
+import { MentorProfileHeader } from './mentor/MentorProfileHeader'
+import { MentorAboutSection } from './mentor/MentorAboutSection'
+import { MentorSkillsSection } from './mentor/MentorSkillsSection'
+import { MentorReviewsSection } from './mentor/MentorReviewsSection'
+import { MentorAvailability } from './mentor/MentorAvailability'
+import { MentorSimilarProfiles } from './mentor/MentorSimilarProfiles'
+import { MentorStats } from './mentor/MentorStats'
 import { useMentors } from '@/hooks/useMentors'
 import type { UserProfileViewProps } from '@/types'
 
@@ -24,11 +24,9 @@ export const UserProfileView = ({ userId }: UserProfileViewProps) => {
   const handleAddReview = async (rating: number, comment: string) => {
     try {
       setIsSubmitting(true)
-      const result = await createReview(userId, rating, comment)
-      if (result.success && result.review) {
-        // Actualizar reviews en el estado local sin recargar todo el perfil
-        updateReviews?.(result.review)
-      }
+      const newReview = await createReview(userId, rating, comment)
+      // Actualizar reviews en el estado local sin recargar todo el perfil
+      updateReviews?.(newReview)
     } catch (err) {
       throw err
     } finally {
@@ -39,13 +37,9 @@ export const UserProfileView = ({ userId }: UserProfileViewProps) => {
   const handleDeleteReview = async (reviewId: string) => {
     try {
       setIsSubmitting(true)
-      const result = await deleteReview(reviewId)
-      if (result.success) {
-        // Actualizar reviews en el estado local sin recargar todo el perfil
-        updateReviews?.(reviewId, true)
-      } else {
-        throw new Error(result.error)
-      }
+      await deleteReview(reviewId)
+      // Actualizar reviews en el estado local sin recargar todo el perfil
+      updateReviews?.(reviewId, true)
     } catch (err) {
       throw err
     } finally {

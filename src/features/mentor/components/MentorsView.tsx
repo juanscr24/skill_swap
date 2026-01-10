@@ -23,7 +23,7 @@ import { SearchBar } from '@/shared/components/ui/SearchBar'
 import { Button } from '@/shared/components/ui/Button'
 import { LoadingSpinner } from '@/shared/components'
 import { FilterChip } from '@/shared/components/ui/FilterChip'
-import { MentorFiltersPanel } from '@/components/features/mentors/MentorFiltersPanel'
+import { MentorFiltersPanel } from './MentorFiltersPanel'
 import type { FilterOption } from '@/types/filters'
 
 export const MentorsView = () => {

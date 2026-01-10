@@ -1,4 +1,4 @@
-import { UserProfileView } from '@/views/UserProfileView'
+import { UserProfileView } from '@/features/profile'
 
 interface ProfilePageProps {
   params: Promise<{

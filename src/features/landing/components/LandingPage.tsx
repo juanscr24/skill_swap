@@ -1,9 +1,10 @@
 'use client'
-import { AboutUs, LandingNavbar } from "@/components"
-import { HowItWorks } from "@/features/landing/components/HowItWorks"
-import { LadingFooter } from "@/features/landing/components/LadingFooter"
-import { PopularSkills } from "@/features/landing/components/PopularSkills"
-import { LandingReviews } from "@/features/landing/components/LandingReviews"
+import { AboutUs } from "./AboutUs"
+import { HowItWorks } from "./HowItWorks"
+import { LadingFooter } from "./LadingFooter"
+import { PopularSkills } from "./PopularSkills"
+import { LandingReviews } from "./LandingReviews"
+import { LandingNavbar } from "./LandingNavbar"
 
 export const LandingPage = () => {
     return (

@@ -7,11 +7,11 @@ import { Card } from "@/shared/components/ui/Card"
 import { Button, LoadingSpinner } from "@/shared/components"
 import { FiArrowLeft } from "react-icons/fi"
 import Link from "next/link"
-import { EditAboutMeSection } from "@/components/features/profile/edit/EditAboutMeSection"
+import { EditAboutMeSection } from "./edit/EditAboutMeSection"
 
 export const EditProfileView = () => {
     const t = useTranslations('profile')
-    const { profile, isLoading: isLoadingProfile, updateProfile } = useProfile()
+    const { profile, isLoading: isLoadingProfile } = useProfile()
     const {
         isLoading: isLoadingSkills,
     } = useSkills()

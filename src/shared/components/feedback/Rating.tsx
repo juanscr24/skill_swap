@@ -1,6 +1,7 @@
 
-import { RatingProps } from "@/shared/types"
+'use client'
 import { useState } from "react"
+import { RatingProps } from "@/shared/types"
 
 const sizes = {
     sm: 'w-4 h-4',

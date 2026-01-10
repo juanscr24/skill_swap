@@ -1,4 +1,4 @@
-import { RequestsView } from "@/views/RequestsView"
+import { RequestsView } from "@/features/request"
 
 export default function RequestsPage() {
     return <RequestsView />

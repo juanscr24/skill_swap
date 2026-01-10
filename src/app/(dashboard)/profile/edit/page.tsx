@@ -1,4 +1,4 @@
-import { EditProfileView } from "@/views/EditProfileView"
+import { EditProfileView } from "@/features/profile"
 
 export default function EditProfilePage() {
     return <EditProfileView />

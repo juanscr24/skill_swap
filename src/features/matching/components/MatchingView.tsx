@@ -2,7 +2,7 @@
 import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { useMatches } from "@/hooks"
-import { MatchCard } from "@/components/features/matching"
+import { MatchCard } from "./MatchCard"
 import { Card, Button, LoadingSpinner } from "@/shared/components"
 
 export const MatchingView = () => {
@@ -18,7 +18,10 @@ export const MatchingView = () => {
             const firstSkill = currentProfile.skills.find(s => s.level !== 'wanted')
             if (firstSkill) {
                 try {
-                    const result = await sendMatchRequest(currentProfile.id, firstSkill.name)
+                    const result = await sendMatchRequest({
+                        receiverId: currentProfile.id,
+                        skill: firstSkill.name
+                    })
                     if (result.success) {
                         // Mostrar mensaje de éxito
                         alert(t('matchRequestSent'))

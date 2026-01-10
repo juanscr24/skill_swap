@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import { useTranslations } from "next-intl"
 import { Card } from "@/shared/components/ui/Card"
-import { Button, Input } from "@/components"
+import { Button, Input } from "@/shared/components"
 import { Textarea } from "@/shared/components/ui/Textarea"
 import { Avatar } from "@/shared/components/ui/Avatar"
 import { FiLoader, FiSave, FiUpload } from "react-icons/fi"
@@ -10,14 +10,14 @@ import type { EditAboutMeSectionProps } from '@/types'
 
 export const EditAboutMeSection = ({ profile, onUpdate }: EditAboutMeSectionProps) => {
   const t = useTranslations('profile')
-  
+
   const [name, setName] = useState(profile.name || '')
   const [title, setTitle] = useState(profile.title || '')
   const [city, setCity] = useState(profile.city || '')
   const [bio, setBio] = useState(profile.bio || '')
   const [imageUrl, setImageUrl] = useState(profile.image || '')
   const [imagePublicId, setImagePublicId] = useState(profile.image_public_id || '')
-  
+
   const [isSaving, setIsSaving] = useState(false)
   const [isUploadingImage, setIsUploadingImage] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')

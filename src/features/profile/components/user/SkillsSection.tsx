@@ -1,5 +1,5 @@
+'use client'
 import { useState, useRef, useEffect } from "react"
-import { Badge } from "@/shared/components/ui/Badge"
 import { Card } from "@/shared/components/ui/Card"
 import { useTranslations } from "next-intl"
 import { FiPlus, FiBookOpen, FiZap, FiX, FiSearch } from "react-icons/fi"
@@ -21,7 +21,7 @@ export const SkillsSection = ({
     const [selectedTeachLevel, setSelectedTeachLevel] = useState('')
     const [showTeachRecommendations, setShowTeachRecommendations] = useState(false)
     const [showTeachLevelSelection, setShowTeachLevelSelection] = useState(false)
-    
+
     const [addingLearn, setAddingLearn] = useState(false)
     const [learnInput, setLearnInput] = useState('')
     const [showLearnRecommendations, setShowLearnRecommendations] = useState(false)
@@ -94,11 +94,11 @@ export const SkillsSection = ({
         setShowLearnRecommendations(false)
     }
 
-    const isCustomTeachSkill = teachInput.trim() && 
+    const isCustomTeachSkill = teachInput.trim() &&
         filteredTeachRecommendations.length === 0 ||
         !filteredTeachRecommendations.some(skill => skill.toLowerCase() === teachInput.toLowerCase())
 
-    const isCustomLearnSkill = learnInput.trim() && 
+    const isCustomLearnSkill = learnInput.trim() &&
         filteredLearnRecommendations.length === 0 ||
         !filteredLearnRecommendations.some(skill => skill.toLowerCase() === learnInput.toLowerCase())
 
@@ -215,11 +215,10 @@ export const SkillsSection = ({
                                                 key={level.value}
                                                 type="button"
                                                 onClick={() => setSelectedTeachLevel(level.value)}
-                                                className={`px-3 py-2 text-sm rounded-lg border transition-all ${
-                                                    selectedTeachLevel === level.value
-                                                        ? level.color
-                                                        : 'bg-(--bg-2) text-(--text-2) border-(--border-1) hover:border-[#3B82F6]'
-                                                }`}
+                                                className={`px-3 py-2 text-sm rounded-lg border transition-all ${selectedTeachLevel === level.value
+                                                    ? level.color
+                                                    : 'bg-(--bg-2) text-(--text-2) border-(--border-1) hover:border-[#3B82F6]'
+                                                    }`}
                                             >
                                                 {level.label}
                                             </button>

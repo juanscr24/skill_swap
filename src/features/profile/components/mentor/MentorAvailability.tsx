@@ -5,9 +5,9 @@ import { useTranslations } from 'next-intl'
 import { FiCalendar, FiClock } from 'react-icons/fi'
 import { useAvailability } from '@/hooks'
 import { Button } from '@/shared/components/ui/Button'
-import { BookSessionModal } from '@/components/features/availability'
+import { BookSessionModal } from '@/features/session/components/availability'
 import type { MentorAvailabilityProps } from '@/types'
-import LoadingSpinner from '@/shared/components/feedback/LoadingSpinner'
+import { LoadingSpinner } from '@/shared/components'
 
 export const MentorAvailability = ({
   mentorId,

@@ -1,6 +1,7 @@
+'use client'
 import { useState } from "react"
 import { Avatar } from "@/shared/components/ui/Avatar"
-import { Button, LoadingSpinner } from "@/shared/components/ui"
+import { Button, LoadingSpinner } from "@/shared/components"
 import { Rating } from "@/shared/components/feedback/Rating"
 import { useTranslations } from "next-intl"
 import { Trash2, Edit3 } from "lucide-react"

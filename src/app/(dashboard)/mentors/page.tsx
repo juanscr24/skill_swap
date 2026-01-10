@@ -1,4 +1,4 @@
-import { MentorsView } from "@/views/MentorsView"
+import { MentorsView } from "@/features/mentor"
 
 export default function MentorsPage() {
     return <MentorsView />

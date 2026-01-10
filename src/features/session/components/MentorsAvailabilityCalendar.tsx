@@ -2,14 +2,15 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { Card, Avatar, LoadingSpinner, Button } from '@/shared/components/ui'
-import { BookSessionModal } from '../availability/BookSessionModal'
+import { Card, Avatar, Button } from '@/shared/components/ui'
+import { LoadingSpinner } from '@/shared/components'
+import { BookSessionModal } from './availability/BookSessionModal'
 import { FiCalendar, FiClock, FiUser } from 'react-icons/fi'
 import type { MentorsAvailabilityCalendarProps, MentorAvailabilityData } from '@/types'
 
-export const MentorsAvailabilityCalendar = ({ 
-  mentorAvailabilities, 
-  isLoading 
+export const MentorsAvailabilityCalendar = ({
+  mentorAvailabilities,
+  isLoading
 }: MentorsAvailabilityCalendarProps) => {
   const t = useTranslations('sessions')
   const [selectedMentor, setSelectedMentor] = useState<MentorAvailabilityData | null>(null)
@@ -81,11 +82,11 @@ export const MentorsAvailabilityCalendar = ({
       if (!groupedByDate[dateKey]) {
         groupedByDate[dateKey] = []
       }
-      
+
       const existingMentor = groupedByDate[dateKey].find(
         (item) => item.mentor.mentorId === mentor.mentorId
       )
-      
+
       if (existingMentor) {
         existingMentor.slots.push(slot)
       } else {
@@ -130,15 +131,15 @@ export const MentorsAvailabilityCalendar = ({
 
                 <div className="space-y-4">
                   {mentorsForDate.map(({ mentor, slots }) => (
-                    <div 
+                    <div
                       key={mentor.mentorId}
                       className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 rounded-lg bg-(--bg-1) hover:bg-(--bg-3) transition-colors"
                     >
                       {/* Mentor Info */}
                       <div className="flex items-center gap-3 flex-1">
-                        <Avatar 
-                          src={mentor.mentorImage || ''} 
-                          alt={mentor.mentorName} 
+                        <Avatar
+                          src={mentor.mentorImage || ''}
+                          alt={mentor.mentorName}
                           size="md"
                         />
                         <div>
@@ -170,7 +171,7 @@ export const MentorsAvailabilityCalendar = ({
                       </div>
 
                       {/* Book Button */}
-                      <Button 
+                      <Button
                         primary
                         onClick={() => handleBookSession(mentor)}
                         className="px-4 py-2 whitespace-nowrap"
