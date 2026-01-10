@@ -1,7 +1,6 @@
 'use client'
 import { useState } from "react"
 import { useTranslations } from "next-intl"
-import { useReviews } from "@/hooks"
 import { Card } from "@/shared/components/ui/Card"
 import { Avatar } from "@/shared/components/ui/Avatar"
 import { Rating } from "@/shared/components/feedback/Rating"
@@ -9,6 +8,7 @@ import { Button, LoadingSpinner } from "@/shared/components"
 import { Textarea } from "@/shared/components/ui/Textarea"
 import { Modal } from "@/shared/components/feedback/Modal"
 import { useSession } from "next-auth/react"
+import { useReviews } from "../hooks/useReviews"
 
 export const ReviewsView = () => {
     const t = useTranslations('reviews')

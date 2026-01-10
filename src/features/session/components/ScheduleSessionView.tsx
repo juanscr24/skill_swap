@@ -6,9 +6,10 @@ import { Card } from "@/shared/components/ui/Card"
 import { Button, Input, LoadingSpinner } from "@/shared/components"
 import { Textarea } from "@/shared/components/ui/Textarea"
 import { Select } from "@/shared/components/ui/Select"
-import { useMentors, useAvailability } from "@/hooks"
 import { FiLoader, FiArrowLeft, FiCalendar, FiClock } from "react-icons/fi"
 import Link from "next/link"
+import { useMentors } from "@/features/mentor/hooks/useMentors"
+import { useAvailability } from "@/features/mentor/hooks/useAvailability"
 
 export const ScheduleSessionView = () => {
     const t = useTranslations('sessions')
@@ -215,8 +216,8 @@ export const ScheduleSessionView = () => {
                                                         type="button"
                                                         onClick={() => setSelectedAvailability(slot.id)}
                                                         className={`p-4 rounded-lg border-2 text-left transition-all ${selectedAvailability === slot.id
-                                                                ? 'border-(--button-1) bg-(--button-1)/10'
-                                                                : 'border-(--border-1) hover:border-(--button-1)/50'
+                                                            ? 'border-(--button-1) bg-(--button-1)/10'
+                                                            : 'border-(--border-1) hover:border-(--button-1)/50'
                                                             }`}
                                                     >
                                                         <p className="font-semibold text-(--text-1) mb-1 flex items-center gap-2">

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { FiCalendar, FiClock } from 'react-icons/fi'
-import { useAvailability } from '@/hooks'
+import { useAvailability } from '@/features/mentor/hooks/useAvailability'
 import { Button } from '@/shared/components/ui/Button'
 import { BookSessionModal } from '@/features/session/components/availability'
 import type { MentorAvailabilityProps } from '@/types'

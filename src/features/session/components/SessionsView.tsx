@@ -2,8 +2,9 @@
 
 import { useState } from "react"
 import { useTranslations } from "next-intl"
-import { useSessions, useMentorsAvailability } from "@/hooks"
-import { useProfile } from "@/hooks/useProfile"
+import { useSessions } from "@/features/session/hooks/useSessions"
+import { useMentorsAvailability } from "@/features/mentor/hooks/useMentorsAvailability"
+import { useProfile } from "@/features/profile/hooks/useProfile"
 import { Tabs, Button, LoadingSpinner } from "@/shared/components"
 import Link from "next/link"
 import { useSession } from "next-auth/react"

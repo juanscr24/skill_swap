@@ -5,7 +5,7 @@ import { MentorAvailability } from '@/types/models'
 import { Button } from '@/shared/components/ui/Button'
 import { Input } from '@/shared/components/ui/Input'
 import { Textarea } from '@/shared/components/ui/Textarea'
-import { useSessionRequests } from '@/hooks'
+import { useSessionRequests } from '@/features/session/hooks/useSessionRequests'
 import { useTranslations } from 'next-intl'
 import { BookSessionModalProps } from '@/types'
 
@@ -118,8 +118,8 @@ export const BookSessionModal = ({
                     type="button"
                     onClick={() => setSelectedAvailability(slot.id)}
                     className={`p-4 rounded-lg border-2 text-left transition-all ${selectedAvailability === slot.id
-                        ? 'border-(--button-1) bg-(--button-1)/10'
-                        : 'border-(--border-1) hover:border-(--button-1)/50'
+                      ? 'border-(--button-1) bg-(--button-1)/10'
+                      : 'border-(--border-1) hover:border-(--button-1)/50'
                       }`}
                   >
                     <p className="font-semibold text-(--text-1)">

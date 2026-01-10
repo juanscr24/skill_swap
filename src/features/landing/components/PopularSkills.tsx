@@ -1,6 +1,6 @@
 import { CardSkill } from "@/shared/components/ui/CardSkill"
 import { skills } from "@/shared/constants"
-import { useMediaQuery } from "@/hooks"
+import { useMediaQuery } from "@/shared/hooks/useMediaQuery"
 import { motion } from "motion/react"
 import { useTranslations } from "next-intl"
 

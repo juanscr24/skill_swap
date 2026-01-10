@@ -1,7 +1,7 @@
 'use client'
 
-import { useUserProfile } from '@/hooks/useUserProfile'
-import { useReviews } from '@/hooks/useReviews'
+import { useUserProfile } from '@/features/profile/hooks/useUserProfile'
+import { useReviews } from '@/features/review/hooks/useReviews'
 import { useState } from 'react'
 import { LoadingSpinner } from '@/shared/components'
 import { Card } from '@/shared/components/ui/Card'
@@ -12,7 +12,7 @@ import { MentorReviewsSection } from './mentor/MentorReviewsSection'
 import { MentorAvailability } from './mentor/MentorAvailability'
 import { MentorSimilarProfiles } from './mentor/MentorSimilarProfiles'
 import { MentorStats } from './mentor/MentorStats'
-import { useMentors } from '@/hooks/useMentors'
+import { useMentors } from '@/features/mentor/hooks/useMentors'
 import type { UserProfileViewProps } from '@/types'
 
 export const UserProfileView = ({ userId }: UserProfileViewProps) => {

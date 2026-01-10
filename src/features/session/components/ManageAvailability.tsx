@@ -1,5 +1,6 @@
-import { AvailabilityManager, PendingRequestsList } from "../availability"
-import { AvailabilitySchedule } from "../profile/user/AvailabilitySchedule"
+import { AvailabilitySchedule } from "@/features/profile"
+import { AvailabilityManager, PendingRequestsList } from "./availability"
+
 
 interface ManageAvailabilityProps {
     profile: {

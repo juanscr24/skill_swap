@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useAvailability } from '@/hooks'
+import { useAvailability } from '@/features/mentor/hooks/useAvailability'
 import { Button } from '@/shared/components/ui/Button'
 import { FiPlus, FiClock, FiTrash2 } from 'react-icons/fi'
 import { useTranslations } from 'next-intl'

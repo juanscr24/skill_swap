@@ -1,9 +1,9 @@
 'use client'
 import { useState } from "react"
 import { useTranslations } from "next-intl"
-import { useMatches } from "@/hooks"
 import { MatchCard } from "./MatchCard"
 import { Card, Button, LoadingSpinner } from "@/shared/components"
+import { useMatches } from "../hooks/useMatches"
 
 export const MatchingView = () => {
     const t = useTranslations('matching')

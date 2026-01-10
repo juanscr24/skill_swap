@@ -1,13 +1,13 @@
 'use client'
 import { useTranslations } from "next-intl"
-import { useProfile } from "@/hooks/useProfile"
-import { useSkills } from "@/hooks/useSkills"
-import { useLanguages } from "@/hooks/useLanguages"
 import { Card } from "@/shared/components/ui/Card"
 import { Button, LoadingSpinner } from "@/shared/components"
 import { FiArrowLeft } from "react-icons/fi"
 import Link from "next/link"
 import { EditAboutMeSection } from "./edit/EditAboutMeSection"
+import { useProfile } from "../hooks/useProfile"
+import { useSkills } from "../hooks/useSkills"
+import { useLanguages } from "../hooks/useLanguages"
 
 export const EditProfileView = () => {
     const t = useTranslations('profile')

@@ -2,7 +2,7 @@
 
 import { Button } from '@/shared/components/ui/Button'
 import { Avatar } from '@/shared/components/ui/Avatar'
-import { useSessionRequests } from '@/hooks'
+import { useSessionRequests } from '@/features/session/hooks/useSessionRequests'
 import { FiCalendar } from 'react-icons/fi'
 import { useTranslations } from 'next-intl'
 

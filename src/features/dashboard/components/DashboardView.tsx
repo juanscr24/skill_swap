@@ -1,21 +1,21 @@
 'use client'
 
 import { useTranslations } from "next-intl"
-import { useDashboardStats } from "@/hooks/useDashboardStats"
-import { useSessions } from "@/hooks/useSessions"
-import { useRecentActivity } from "@/hooks/useRecentActivity"
-import { useUserImpact } from "@/hooks/useUserImpact"
-import { 
-  StatsOverview, 
-  QuickActions, 
-  UpcomingSessions, 
-  RecentActivity, 
-  UserImpact 
+import { useDashboardStats } from "@/features/dashboard/hooks/useDashboardStats"
+import { useSessions } from "@/features/session/hooks/useSessions"
+import { useRecentActivity } from "@/features/activity/hooks/useRecentActivity"
+import { useUserImpact } from "@/features/dashboard/hooks/useUserImpact"
+import {
+  StatsOverview,
+  QuickActions,
+  UpcomingSessions,
+  RecentActivity,
+  UserImpact
 } from "./sections"
 
 export const DashboardView = () => {
   const t = useTranslations('dashboard')
-  
+
   // Hooks para obtener datos de manera modular
   const { stats, isLoading: isLoadingStats } = useDashboardStats()
   const { sessions, isLoading: isLoadingSessions } = useSessions('upcoming')
@@ -35,9 +35,9 @@ export const DashboardView = () => {
       </div>
 
       {/* Stats Overview Section */}
-      <StatsOverview 
-        stats={stats} 
-        isLoading={isLoadingStats} 
+      <StatsOverview
+        stats={stats}
+        isLoading={isLoadingStats}
         className="mb-8"
       />
 
@@ -49,14 +49,14 @@ export const DashboardView = () => {
         {/* Left Column - 2/3 width */}
         <div className="lg:col-span-2 space-y-6">
           {/* Upcoming Sessions */}
-          <UpcomingSessions 
-            sessions={sessions} 
+          <UpcomingSessions
+            sessions={sessions}
             isLoading={isLoadingSessions}
           />
 
           {/* Recent Activity */}
-          <RecentActivity 
-            activities={activities} 
+          <RecentActivity
+            activities={activities}
             isLoading={isLoadingActivities}
           />
         </div>
@@ -64,8 +64,8 @@ export const DashboardView = () => {
         {/* Right Column - 1/3 width */}
         <div className="lg:col-span-1">
           {/* User Impact */}
-          <UserImpact 
-            impact={impact} 
+          <UserImpact
+            impact={impact}
             isLoading={isLoadingImpact}
           />
         </div>

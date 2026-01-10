@@ -2,13 +2,13 @@
 import { useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
-import { useRequests } from "@/hooks"
 import { Card } from "@/shared/components/ui/Card"
 import { Avatar } from "@/shared/components/ui/Avatar"
 import { Badge } from "@/shared/components/ui/Badge"
 import { Tabs } from "@/shared/components/ui/Tabs"
 import { Button, LoadingSpinner } from "@/shared/components"
 import { FiCheck, FiX, FiMessageSquare } from "react-icons/fi"
+import { useRequests } from "../hooks/useRequests"
 
 interface MatchRequest {
     id: string

@@ -1,8 +1,8 @@
 'use client'
 import { useTranslations } from "next-intl"
-import { useProfile, useProfileMutations } from "@/hooks/useProfile"
-import { useSkills } from "@/hooks/useSkills"
-import { useLanguages } from "@/hooks/useLanguages"
+import { useProfile, useProfileMutations } from "@/features/profile/hooks/useProfile"
+import { useSkills } from "@/features/profile/hooks/useSkills"
+import { useLanguages } from "@/features/profile/hooks/useLanguages"
 import { useSession } from "next-auth/react"
 import { FiClock, FiCheckCircle } from "react-icons/fi"
 import { ProfileHeader } from "./user/ProfileHeader"

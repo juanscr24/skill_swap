@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { CalendarHeader } from './CalendarHeader'
 import { CalendarCell } from './CalendarCell'
 import { LoadingSpinner } from '@/shared/components'
-import { useCalendar } from '@/hooks/useCalendar'
+import { useCalendar } from '@/features/session/hooks/useCalendar'
 import { generateCalendarDays, getDayName } from '@/shared/utils/calendarHelpers'
 import type { CalendarEvent } from '@/types/calendar'
 
@@ -27,16 +27,16 @@ export const SessionsCalendar = ({ onEventClick }: SessionsCalendarProps) => {
   const today = new Date()
   const [currentYear, setCurrentYear] = useState(today.getFullYear())
   const [currentMonth, setCurrentMonth] = useState(today.getMonth())
-  
+
   // Calculate date range for current month
   const startDate = new Date(currentYear, currentMonth, 1)
   const endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59)
-  
+
   const { events, isLoading, error, isMentor, refetch } = useCalendar(startDate, endDate)
-  
+
   // Generate calendar grid
   const calendarDays = generateCalendarDays(currentYear, currentMonth, events)
-  
+
   const handlePrevMonth = () => {
     if (currentMonth === 0) {
       setCurrentMonth(11)
@@ -45,7 +45,7 @@ export const SessionsCalendar = ({ onEventClick }: SessionsCalendarProps) => {
       setCurrentMonth(currentMonth - 1)
     }
   }
-  
+
   const handleNextMonth = () => {
     if (currentMonth === 11) {
       setCurrentMonth(0)
@@ -54,26 +54,26 @@ export const SessionsCalendar = ({ onEventClick }: SessionsCalendarProps) => {
       setCurrentMonth(currentMonth + 1)
     }
   }
-  
+
   const handleToday = () => {
     const now = new Date()
     setCurrentYear(now.getFullYear())
     setCurrentMonth(now.getMonth())
   }
-  
+
   // Refetch when month changes
   useState(() => {
     const newStartDate = new Date(currentYear, currentMonth, 1)
     const newEndDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59)
     refetch(newStartDate, newEndDate)
   })
-  
+
   const handleEventClick = (event: CalendarEvent) => {
     if (onEventClick) {
       onEventClick(event)
     }
   }
-  
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-20">
@@ -81,7 +81,7 @@ export const SessionsCalendar = ({ onEventClick }: SessionsCalendarProps) => {
       </div>
     )
   }
-  
+
   if (error) {
     return (
       <div className="text-center py-20">
@@ -89,7 +89,7 @@ export const SessionsCalendar = ({ onEventClick }: SessionsCalendarProps) => {
       </div>
     )
   }
-  
+
   return (
     <div className="space-y-6">
       <CalendarHeader
@@ -99,7 +99,7 @@ export const SessionsCalendar = ({ onEventClick }: SessionsCalendarProps) => {
         onNextMonth={handleNextMonth}
         onToday={handleToday}
       />
-      
+
       {/* Legend */}
       <div className="flex flex-wrap items-center gap-4 text-xs">
         <div className="flex items-center gap-2">
@@ -123,7 +123,7 @@ export const SessionsCalendar = ({ onEventClick }: SessionsCalendarProps) => {
           <span className="text-(--text-2)">Cancelled</span>
         </div>
       </div>
-      
+
       {/* Calendar grid */}
       <div className="bg-(--bg-2) rounded-lg border border-(--border-1) overflow-hidden">
         {/* Day headers */}
@@ -137,7 +137,7 @@ export const SessionsCalendar = ({ onEventClick }: SessionsCalendarProps) => {
             </div>
           ))}
         </div>
-        
+
         {/* Calendar cells */}
         <div className="grid grid-cols-7">
           {calendarDays.map((dayData, index) => (
@@ -149,11 +149,11 @@ export const SessionsCalendar = ({ onEventClick }: SessionsCalendarProps) => {
           ))}
         </div>
       </div>
-      
+
       {/* Empty state */}
       {events.length === 0 && (
         <div className="text-center py-8 text-(--text-2)">
-          {isMentor 
+          {isMentor
             ? 'No availability or sessions scheduled for this month'
             : 'No sessions scheduled for this month'
           }
