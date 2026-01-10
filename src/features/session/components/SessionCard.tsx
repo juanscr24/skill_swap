@@ -4,6 +4,7 @@ import { Card, Avatar, Badge, Button } from '@/shared/components/ui'
 import { FiCalendar, FiClock } from 'react-icons/fi'
 import { useTranslations } from 'next-intl'
 import { SESSION_STATUS_VARIANTS } from '@/shared/constants'
+import { formatLongDate, formatTime } from '@/shared/utils/date'
 
 interface SessionUser {
   id: string
@@ -31,8 +32,8 @@ interface SessionCardProps {
   onComplete: (id: string) => Promise<{ success: boolean; error?: string }>
 }
 
-export const SessionCard = ({ 
-  sessionData, 
+export const SessionCard = ({
+  sessionData,
   currentUserId,
   onCancel,
   onApprove,
@@ -40,11 +41,11 @@ export const SessionCard = ({
   onComplete
 }: SessionCardProps) => {
   const t = useTranslations('sessions')
-  
+
   const isHost = sessionData.users_sessions_host_idTousers?.id === currentUserId
   const isGuest = sessionData.users_sessions_guest_idTousers?.id === currentUserId
-  const otherUser = isHost 
-    ? sessionData.users_sessions_guest_idTousers 
+  const otherUser = isHost
+    ? sessionData.users_sessions_guest_idTousers
     : sessionData.users_sessions_host_idTousers
 
   const statusVariant = SESSION_STATUS_VARIANTS[
@@ -112,25 +113,22 @@ export const SessionCard = ({
           <div className="flex flex-wrap items-center gap-4 max-sm:gap-2 text-sm max-sm:text-xs text-(--text-2) mb-3 max-sm:mb-2">
             <div className="flex items-center gap-2 max-sm:gap-1">
               <FiCalendar className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
-              <span>{startAt.toLocaleDateString()}</span>
+              <span>{formatLongDate(startAt)}</span>
             </div>
             <div className="flex items-center gap-2 max-sm:gap-1">
               <FiClock className="w-4 h-4 max-sm:w-3 max-sm:h-3" />
               <span>
-                {startAt.toLocaleTimeString('es-ES', {
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
+                {formatTime(startAt)}
               </span>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <Avatar 
-                src={otherUser?.image || ''} 
-                alt={otherUser?.name || 'User'} 
-                size="sm" 
+              <Avatar
+                src={otherUser?.image || ''}
+                alt={otherUser?.name || 'User'}
+                size="sm"
               />
               <div>
                 <p className="text-sm max-sm:text-xs font-medium text-(--text-1)">
@@ -145,16 +143,16 @@ export const SessionCard = ({
             {/* Action buttons based on status and role */}
             {sessionData.status === 'pending' && isHost && (
               <div className="flex gap-2 max-sm:gap-1 flex-wrap">
-                <Button 
-                  primary 
-                  onClick={handleApprove} 
+                <Button
+                  primary
+                  onClick={handleApprove}
                   className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs"
                 >
                   {t('accept')}
                 </Button>
-                <Button 
-                  secondary 
-                  onClick={handleReject} 
+                <Button
+                  secondary
+                  onClick={handleReject}
                   className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs"
                 >
                   {t('reject')}
@@ -167,9 +165,9 @@ export const SessionCard = ({
                 <span className="text-sm max-sm:text-xs text-(--text-2) italic">
                   {t('waitingApproval')}
                 </span>
-                <Button 
-                  secondary 
-                  onClick={handleCancel} 
+                <Button
+                  secondary
+                  onClick={handleCancel}
                   className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs"
                 >
                   {t('cancel')}
@@ -179,16 +177,16 @@ export const SessionCard = ({
 
             {sessionData.status === 'scheduled' && (
               <div className="flex gap-2 max-sm:gap-1 flex-wrap">
-                <Button 
-                  primary 
-                  onClick={handleComplete} 
+                <Button
+                  primary
+                  onClick={handleComplete}
                   className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs"
                 >
                   {t('markAsCompleted')}
                 </Button>
-                <Button 
-                  secondary 
-                  onClick={handleCancel} 
+                <Button
+                  secondary
+                  onClick={handleCancel}
                   className="px-4 max-sm:px-3 py-2 max-sm:py-1.5 max-sm:text-xs"
                 >
                   {t('cancel')}

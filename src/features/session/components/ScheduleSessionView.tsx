@@ -10,6 +10,7 @@ import { FiLoader, FiArrowLeft, FiCalendar, FiClock } from "react-icons/fi"
 import Link from "next/link"
 import { useMentors } from "@/features/mentor/hooks/useMentors"
 import { useAvailability } from "@/features/mentor/hooks/useAvailability"
+import { formatLongDate } from "@/shared/utils/date"
 
 export const ScheduleSessionView = () => {
     const t = useTranslations('sessions')
@@ -34,13 +35,6 @@ export const ScheduleSessionView = () => {
 
     const availableSlots = availability.filter(slot => !slot.is_booked)
 
-    const formatDate = (dateString: string | Date) => {
-        return new Date(dateString).toLocaleDateString('es-ES', {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric',
-        })
-    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -222,7 +216,7 @@ export const ScheduleSessionView = () => {
                                                     >
                                                         <p className="font-semibold text-(--text-1) mb-1 flex items-center gap-2">
                                                             <FiCalendar className="w-4 h-4" />
-                                                            {formatDate(slot.date)}
+                                                            {formatLongDate(slot.date)}
                                                         </p>
                                                         <p className="text-(--text-2) text-sm flex items-center gap-2">
                                                             <FiClock className="w-4 h-4" />

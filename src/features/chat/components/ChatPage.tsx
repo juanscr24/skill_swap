@@ -11,6 +11,7 @@ import { LoadingSpinner } from '@/shared/components'
 import { MessageStatusIndicator } from '@/features/chat/components/MessageStatusIndicator'
 import { PresenceIndicator } from '@/features/chat/components/PresenceIndicator'
 import { FiSend, FiSearch, FiVideo, FiInfo } from 'react-icons/fi'
+import { formatMessageTime, formatRelativeTime } from '@/shared/utils/date'
 
 export const ChatPage = () => {
     const t = useTranslations('chat')
@@ -119,37 +120,6 @@ export const ChatPage = () => {
         }
     }
 
-    const formatMessageTime = (dateString: string) => {
-        const date = new Date(dateString)
-        const now = new Date()
-        const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
-
-        if (diffInHours < 24) {
-            return date.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })
-        } else {
-            return date.toLocaleDateString('es', { day: '2-digit', month: 'short' })
-        }
-    }
-
-    const formatLastSeen = (date: Date | null) => {
-        if (!date) return 'recently'
-
-        const now = Date.now()
-        const lastSeen = date.getTime()
-        const diffInMinutes = Math.floor((now - lastSeen) / (1000 * 60))
-
-        if (diffInMinutes < 1) return 'just now'
-        if (diffInMinutes < 60) return `${diffInMinutes}m ago`
-
-        const diffInHours = Math.floor(diffInMinutes / 60)
-        if (diffInHours < 24) return `${diffInHours}h ago`
-
-        const diffInDays = Math.floor(diffInHours / 24)
-        if (diffInDays === 1) return 'yesterday'
-        if (diffInDays < 7) return `${diffInDays}d ago`
-
-        return date.toLocaleDateString('es', { day: '2-digit', month: 'short' })
-    }
 
     if (conversationsLoading) {
         return <LoadingSpinner fullScreen />
@@ -286,7 +256,7 @@ export const ChatPage = () => {
                                         <p className="text-xs text-(--text-2)">
                                             {isUserOnline(selectedConversation.otherUser.id)
                                                 ? 'Online'
-                                                : `Last seen ${formatLastSeen(getLastSeen(selectedConversation.otherUser.id))}`}
+                                                : `Last seen ${formatRelativeTime(getLastSeen(selectedConversation.otherUser.id))}`}
                                         </p>
                                     )}
                                 </div>
