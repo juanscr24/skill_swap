@@ -11,7 +11,8 @@
 Se han verificado los siguientes cambios manuales realizados con éxito:
 - **Estructura por Features**: Todo el código se ha movido a `src/features/` y `src/shared/`.
 - **Abstracción de Data Fetching**: Implementación de `useApiQuery` y `useApiMutation` en `src/shared/hooks/`.
-- **Lógica de Formateo de Fechas**: Centralizada en `src/shared/utils/date.ts` y aplicada en todo el proyecto.
+- **Lógica de Formateo de Fechas**: Centralizada en `src/shared/utils/date.ts`.
+- **Manejo de Errores y Validaciones**: Implementado `ErrorBoundary`, `validateOwnership` y Esquemas de Zod compartidos.
 - **Limpieza de Hooks**: Consolidación de lógica en hooks dedicados (ej. `useSkillMutations`).
 - **Eliminación de Código Muerto**: `ChatView.tsx` y otros archivos antiguos han sido eliminados/reemplazados.
 
@@ -31,42 +32,8 @@ Todavía existen componentes que mezclan demasiada lógica, UI y sub-componentes
 
 ---
 
----
-
 ### 3. **Refactor de ChatPage.tsx (Prioridad Alta)**
 El nuevo sistema de chat es potente pero el componente principal es difícil de leer.
-
-**Propuesta de Estructura:**
-```
-📁 src/features/chat/components/
-├── ChatPage.tsx (Solo orquestación)
-├── ConversationList/
-│   ├── index.tsx
-│   ├── ConversationItem.tsx
-│   └── SearchBar.tsx
-├── ChatWindow/
-│   ├── index.tsx
-│   ├── ChatHeader.tsx
-│   ├── MessageList.tsx
-│   └── MessageInput.tsx
-```
-
----
-
-### 4. **Manejo de Errores y Validaciones**
-
-- **Validación de Propiedad (validateOwnership)**:
-    Muchos servicios aún comprueban manualmente si un recurso pertenece al usuario. 
-    *Propuesta*: Crear una utilidad en `src/shared/utils/auth.ts` para estandarizar esto.
-    
-- **Error Boundaries**:
-    Si un componente de feature falla, toda la app puede caer.
-    *Propuesta*: Implementar un `ErrorBoundary` por feature para mejorar la resiliencia.
-
-- **Centralización de Zod Schemas**:
-    Mover esquemas comunes (email, id, etc.) a `src/shared/validations` para reutilización total.
-
----
 
 ## 📋 Roadmap Actualizado
 
