@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { messagesService } from '@/services'
+import { messagesService } from '@/features/chat/services'
 
 export async function GET() {
   try {

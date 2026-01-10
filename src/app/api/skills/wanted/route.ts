@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
-import {
-  getUserWantedSkills,
-  createWantedSkill,
-  deleteWantedSkill,
-} from '@/services/skills'
+import { createWantedSkill, deleteWantedSkill, getUserWantedSkills } from '@/features/profile/services'
+
 
 /**
  * GET /api/skills/wanted

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
-import { getMentors } from '@/services/users'
+import { getMentors } from '@/features/profile/services'
 
 /**
  * GET /api/users/mentors

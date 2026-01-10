@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib'
-import { reviewsService } from '@/services'
+import { reviewsService } from '@/features/review/services'
 
 export async function POST(request: NextRequest) {
   try {

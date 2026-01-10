@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { availabilityService } from '@/services/availability'
+import { availabilityService } from '@/features/mentor/services'
 
 /**
  * Obtiene todas las sesiones de un usuario (como host o guest)

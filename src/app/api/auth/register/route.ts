@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createUser } from '@/features/auth/services/auth/user.service'
+import { createUser } from '@/features/auth/services/user.service'
 import { registerSchema } from '@/features/auth'
 
 

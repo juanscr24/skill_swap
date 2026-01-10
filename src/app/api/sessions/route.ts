@@ -1,13 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
-import {
-  getUserSessions,
-  getUpcomingSessions,
-  createSession,
-  cancelSession,
-} from '@/services/sessions'
+
 import { prisma } from '@/lib/prisma'
+import { cancelSession, createSession, getUpcomingSessions, getUserSessions } from '@/features/session/services'
 
 /**
  * GET /api/sessions

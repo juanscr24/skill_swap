@@ -2,7 +2,7 @@ import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import GitHubProvider from 'next-auth/providers/github'
-import { createUserFromOAuth, getUserByEmail, verifyPassword } from '@/features/auth/services/auth/user.service'
+import { createUserFromOAuth, getUserByEmail, verifyPassword } from '@/features/auth/services/user.service'
 
 export const authOptions: NextAuthOptions = {
   session: {

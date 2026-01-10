@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
-import { updateUserProfile } from '@/services/users'
+import { updateUserProfile } from '@/features/profile/services'
 
 /**
  * PATCH /api/users/profile/about-me

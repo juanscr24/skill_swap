@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { messagesService } from '@/services'
+import { messagesService } from '@/features/chat/services'
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     // Si viene conversationId, usar la nueva estructura
     if (conversationId) {
       const { prisma } = await import('@/lib/prisma')
-      
+
       // Verificar que el usuario es participante
       const participant = await prisma.conversation_participants.findFirst({
         where: {

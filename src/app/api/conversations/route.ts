@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { getUserConversations, getOrCreateConversation } from '@/services/conversations'
+import { getOrCreateConversation, getUserConversations } from '@/features/chat/services'
 
 // GET - Obtener todas las conversaciones del usuario
 export async function GET() {

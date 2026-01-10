@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { getConversationById, deleteConversation } from '@/services/conversations'
+import { deleteConversation, getConversationById } from '@/features/chat/services'
+
 
 // GET - Obtener una conversación específica
 export async function GET(
