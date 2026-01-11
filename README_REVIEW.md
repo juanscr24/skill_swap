@@ -26,8 +26,8 @@ Todavía existen componentes que mezclan demasiada lógica, UI y sub-componentes
 | Archivo | Líneas | Problema | Recomendación |
 |---------|--------|----------|---------------|
 | `LanguagesSection.tsx` | ✅ MODULARIZADO | Dividido en `LanguageList`, `LanguageItem` y `LanguageModal`. | Refactor completo |
-| `ChatPage.tsx` | ~420 | Vista monolítica de chat | Extraer `ConversationList`, `ChatHeader`, `MessageList` y `MessageInput`. |
-| `SkillsSection.tsx` | ~360 | Lógica pesada de UI inline | Extraer a sub-componentes y hook de gestión. |
+| `ChatPage.tsx` | ✅ MODULARIZADO | Dividido en `ConversationList`, `ChatHeader`, `MessageList` y `MessageInput`. | Refactor completo |
+| `SkillsSection.tsx` | ✅ MODULARIZADO | Dividido en `SkillList`, `SkillItem`, `SkillModal` y `WantedSkillModal`. | Refactor completo |
 | `MentorFiltersPanel.tsx` | ~370 | Lógica de filtros inline | Mover lógica a un hook o Zustand store. |
 
 ---

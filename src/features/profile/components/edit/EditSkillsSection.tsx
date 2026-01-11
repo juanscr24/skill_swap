@@ -1,11 +1,11 @@
 'use client'
 import { useState } from "react"
-import { FiX } from "react-icons/fi"
 import { useTranslations } from "next-intl"
 import type { EditSkillsSectionProps } from '@/types'
-import { Card, Button, Badge } from "@/shared/components/ui"
-import { recommendedSkills } from "@/shared/constants/recommendedSkills"
-import { SkillSelector } from "@/shared/components/ui/SkillSelector"
+import { Card } from "@/shared/components/ui"
+import { SkillList } from "../skills/SkillList"
+import { SkillModal } from "../skills/SkillModal"
+import { WantedSkillModal } from "../skills/WantedSkillModal"
 
 export const EditSkillsSection = ({
   skills,
@@ -17,37 +17,18 @@ export const EditSkillsSection = ({
 }: EditSkillsSectionProps) => {
   const t = useTranslations('profile')
 
-  const [newSkillLevel, setNewSkillLevel] = useState('')
-  const [skillToAddWithLevel, setSkillToAddWithLevel] = useState('')
+  const [isAddingTeach, setIsAddingTeach] = useState(false)
+  const [isAddingLearn, setIsAddingLearn] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
-  const levelOptions = [
-    { value: 'beginner', label: t('beginner') },
-    { value: 'intermediate', label: t('intermediate') },
-    { value: 'advanced', label: t('advanced') },
-    { value: 'expert', label: 'Expert' }
-  ]
-
-  const handleAddSkill = async (skillName: string) => {
-    if (!skillName.trim()) return
-    setSkillToAddWithLevel(skillName)
-  }
-
-  const handleConfirmAddSkill = async () => {
-    if (!skillToAddWithLevel || !newSkillLevel) return
-
+  const handleAddSkill = async (name: string, level: 'beginner' | 'intermediate' | 'advanced' | 'expert') => {
     setSuccessMessage('')
     setErrorMessage('')
 
-    const result = await onAddSkill({
-      name: skillToAddWithLevel.trim(),
-      level: newSkillLevel as 'beginner' | 'intermediate' | 'advanced' | 'expert'
-    })
+    const result = await onAddSkill({ name, level })
 
     if (result.success) {
-      setSkillToAddWithLevel('')
-      setNewSkillLevel('')
       setSuccessMessage('Skill added successfully')
       setTimeout(() => setSuccessMessage(''), 3000)
     } else {
@@ -72,12 +53,10 @@ export const EditSkillsSection = ({
   }
 
   const handleAddWantedSkill = async (skillName: string) => {
-    if (!skillName.trim()) return
-
     setSuccessMessage('')
     setErrorMessage('')
 
-    const result = await onAddWantedSkill(skillName.trim())
+    const result = await onAddWantedSkill(skillName)
 
     if (result.success) {
       setSuccessMessage('Wanted skill added successfully')
@@ -124,80 +103,21 @@ export const EditSkillsSection = ({
         <h3 className="text-lg font-semibold text-(--text-1) mb-2">{t('skillsTeach')}</h3>
         <p className="text-sm text-(--text-2) mb-4">{t('selectSkillsYouTeach')}</p>
 
-        <SkillSelector
-          onAdd={handleAddSkill}
-          placeholder={t('searchOrAddSkillTeach')}
-          recommendations={recommendedSkills}
+        <SkillList
+          skills={skills}
+          onDelete={handleDeleteSkill}
+          onAddClick={() => setIsAddingTeach(true)}
+          variant="teach"
+          emptyText="No skills added yet."
+          showAddButton={true}
         />
 
-        {skillToAddWithLevel && (
-          <div className="mt-4 p-4 bg-(--bg-1) rounded-xl border border-(--border-1) animate-in fade-in slide-in-from-top-2">
-            <p className="text-sm font-medium text-(--text-1) mb-3">
-              Select level for <span className="font-bold text-(--button-1)">{skillToAddWithLevel}</span>
-            </p>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {levelOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => setNewSkillLevel(option.value)}
-                  className={`px-3 py-1.5 text-sm rounded-lg transition-all ${newSkillLevel === option.value
-                    ? 'bg-(--button-1) text-(--button-1-text)'
-                    : 'bg-(--bg-2) text-(--text-2) border border-(--border-1) hover:border-(--button-1)'
-                    }`}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                onClick={handleConfirmAddSkill}
-                disabled={!newSkillLevel}
-                primary
-                className="text-sm py-1.5"
-              >
-                Confirm
-              </Button>
-              <Button
-                secondary
-                type="button"
-                onClick={() => {
-                  setSkillToAddWithLevel('')
-                  setNewSkillLevel('')
-                }}
-                className="text-sm py-1.5"
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        )}
-
-        <div className="mt-6 space-y-2">
-          {skills.length === 0 ? (
-            <p className="text-(--text-2) text-sm italic">No skills added yet.</p>
-          ) : (
-            skills.map((skill) => (
-              <div key={skill.id} className="flex items-center justify-between p-3 bg-(--bg-1) rounded-xl border border-(--border-1)">
-                <div>
-                  <p className="font-semibold text-(--text-1)">{skill.name}</p>
-                  {skill.level && (
-                    <span className="text-xs text-(--text-2) uppercase tracking-wider">{skill.level}</span>
-                  )}
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleDeleteSkill(skill.id)}
-                  className="text-(--text-2) hover:text-red-500 p-2"
-                >
-                  <FiX />
-                </button>
-              </div>
-            ))
-          )}
-        </div>
+        <SkillModal
+          isOpen={isAddingTeach}
+          onClose={() => setIsAddingTeach(false)}
+          onAddSkill={handleAddSkill}
+          existingSkills={skills}
+        />
       </div>
 
       {/* Skills I Want to Learn */}
@@ -205,34 +125,21 @@ export const EditSkillsSection = ({
         <h3 className="text-lg font-semibold text-(--text-1) mb-2">{t('skillsLearn')}</h3>
         <p className="text-sm text-(--text-2) mb-4">{t('selectSkillsYouLearn')}</p>
 
-        <SkillSelector
-          onAdd={handleAddWantedSkill}
-          placeholder={t('searchOrAddSkillLearn')}
-          recommendations={recommendedSkills}
+        <SkillList
+          skills={wantedSkills}
+          onDelete={handleDeleteWantedSkill}
+          onAddClick={() => setIsAddingLearn(true)}
+          variant="learn"
+          emptyText="No wanted skills added yet."
+          showAddButton={true}
         />
 
-        <div className="mt-6 flex flex-wrap gap-2">
-          {wantedSkills.length === 0 ? (
-            <p className="text-(--text-2) text-sm italic">No wanted skills added yet.</p>
-          ) : (
-            wantedSkills.map((skill) => (
-              <Badge
-                key={skill.id}
-                variant="warning"
-                className="pl-3 pr-1 py-1.5 flex items-center gap-1 group bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20"
-              >
-                {skill.name}
-                <button
-                  type="button"
-                  onClick={() => handleDeleteWantedSkill(skill.id)}
-                  className="p-1 hover:text-red-500 rounded-full transition-colors"
-                >
-                  <FiX size={14} />
-                </button>
-              </Badge>
-            ))
-          )}
-        </div>
+        <WantedSkillModal
+          isOpen={isAddingLearn}
+          onClose={() => setIsAddingLearn(false)}
+          onAddSkill={handleAddWantedSkill}
+          existingSkills={wantedSkills}
+        />
       </div>
     </Card>
   )
