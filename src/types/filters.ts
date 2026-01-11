@@ -78,20 +78,23 @@ export interface UseMentorFiltersReturn {
   // Estado
   filters: MentorFilters
   activeChips: ActiveFilterChip[]
+  activeFiltersCount: number
   isFiltersPanelOpen: boolean
   hasActiveFilters: boolean
-  
+
   // Acciones
   setFilters: (filters: MentorFilters) => void
   updateFilter: <K extends keyof MentorFilters>(
     key: K,
     value: MentorFilters[K]
   ) => void
+  toggleSkill: (skillId: string) => void
+  toggleLanguage: (langId: string) => void
   clearFilters: () => void
   removeChip: (chipKey: string) => void
   toggleFiltersPanel: () => void
   applyFilters: () => void
-  
+
   // Query params para API
   queryParams: MentorQueryParams
 }

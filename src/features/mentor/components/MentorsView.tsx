@@ -36,11 +36,14 @@ export const MentorsView = () => {
     activeChips,
     isFiltersPanelOpen,
     hasActiveFilters,
+    activeFiltersCount,
     updateFilter,
     clearFilters,
     removeChip,
     toggleFiltersPanel,
     applyFilters,
+    toggleSkill,
+    toggleLanguage,
     queryParams,
   } = useMentorFilters()
 
@@ -221,6 +224,9 @@ export const MentorsView = () => {
         onApply={applyFilters}
         onClear={clearFilters}
         onUpdateFilter={updateFilter}
+        onToggleSkill={toggleSkill}
+        onToggleLanguage={toggleLanguage}
+        activeFiltersCount={activeFiltersCount}
         skillOptions={skillOptions}
         languageOptions={languageOptions}
         cityOptions={cityOptions}

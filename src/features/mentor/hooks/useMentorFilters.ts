@@ -39,10 +39,10 @@ const initialFilters: MentorFilters = {
 export function useMentorFilters(): UseMentorFiltersReturn {
   // Estado local (draft) - se actualiza mientras el usuario edita
   const [draftFilters, setDraftFilters] = useState<MentorFilters>(initialFilters)
-  
+
   // Estado aplicado - solo se actualiza al hacer click en "Aplicar"
   const [appliedFilters, setAppliedFilters] = useState<MentorFilters>(initialFilters)
-  
+
   // Estado del panel de filtros
   const [isFiltersPanelOpen, setIsFiltersPanelOpen] = useState(false)
 
@@ -241,13 +241,53 @@ export function useMentorFilters(): UseMentorFiltersReturn {
     }
   }, [isFiltersPanelOpen, appliedFilters])
 
+  /**
+   * Contar filtros activos (draft)
+   */
+  const activeFiltersCount = useMemo(() => {
+    return (
+      draftFilters.skills.length +
+      draftFilters.languages.length +
+      (draftFilters.minRating ? 1 : 0) +
+      (draftFilters.availability === 'available' ? 1 : 0) +
+      (draftFilters.city ? 1 : 0)
+    )
+  }, [draftFilters])
+
+  /**
+   * Toggle skill helper
+   */
+  const toggleSkill = useCallback((skillId: string) => {
+    setDraftFilters((prev) => ({
+      ...prev,
+      skills: prev.skills.includes(skillId)
+        ? prev.skills.filter((id) => id !== skillId)
+        : [...prev.skills, skillId],
+    }))
+  }, [])
+
+  /**
+   * Toggle language helper
+   */
+  const toggleLanguage = useCallback((langId: string) => {
+    setDraftFilters((prev) => ({
+      ...prev,
+      languages: prev.languages.includes(langId)
+        ? prev.languages.filter((id) => id !== langId)
+        : [...prev.languages, langId],
+    }))
+  }, [])
+
   return {
     filters: draftFilters,
     activeChips,
+    activeFiltersCount,
     isFiltersPanelOpen,
     hasActiveFilters,
     setFilters,
     updateFilter,
+    toggleSkill,
+    toggleLanguage,
     clearFilters,
     removeChip,
     toggleFiltersPanel,
