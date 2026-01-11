@@ -6,13 +6,11 @@ import { useSearchParams } from 'next/navigation'
 import { useConversations } from '@/features/chat/hooks/useConversations'
 import { useRealtimeMessages } from '@/features/chat/hooks/useRealtimeMessages'
 import { useUserPresence } from '@/features/chat/hooks/useUserPresence'
-import { Avatar } from '@/shared/components/ui/Avatar'
-import { LoadingSpinner } from '@/shared/components'
+import { Avatar, LoadingSpinner, ErrorBoundary } from '@/shared/components'
 import { MessageStatusIndicator } from '@/features/chat/components/MessageStatusIndicator'
 import { PresenceIndicator } from '@/features/chat/components/PresenceIndicator'
 import { FiSend, FiSearch, FiVideo, FiInfo } from 'react-icons/fi'
 import { formatMessageTime, formatRelativeTime } from '@/shared/utils/date'
-import { ErrorBoundary } from '@/shared/components/feedback'
 
 export const ChatPage = () => {
     const t = useTranslations('chat')
