@@ -1,13 +1,3 @@
-/**
- * 🎯 VISTA: Catálogo de Mentores
- * 
- * Arquitectura:
- * - Usa useMentorFilters para la lógica de filtros
- * - Usa useMentors para fetch de datos
- * - Componentes UI separados y reutilizables
- * - Sin lógica de negocio en el componente
- */
-
 'use client'
 
 import { useState, useMemo } from 'react'

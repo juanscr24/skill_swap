@@ -1,8 +1,8 @@
 'use client'
 
-import { RecentActivity } from '..'
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import { RecentActivity } from '../types/activity.types'
 
 interface UseAllActivityReturn {
   activities: RecentActivity[]

@@ -6,10 +6,5 @@ export { EmptyActivityState } from './components/EmptyActivityState'
 export { ActivityFilters } from './components/ActivityFilters'
 // Hooks
 export { useAllActivity } from './hooks/useAllActivity'
-// Types
-export type {
-    ActivityItemProps,
-    ActivityFiltersProps,
-    EmptyActivityStateProps,
-    RecentActivity
-} from './types/activity'
+
+export type * from './types/activity.types'

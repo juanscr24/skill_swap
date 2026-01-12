@@ -2,7 +2,8 @@ import { ACTIVITY_TYPES } from '@/data/activity'
 import { Avatar } from '@/shared/components/ui/Avatar'
 import { getActivityColor, formatTimestamp } from '@/shared/utils/activity'
 import { FiMessageCircle } from 'react-icons/fi'
-import { ActivityItemProps } from '../types/activity'
+import { ActivityItemProps } from '../types/activity.types'
+
 
 export const ActivityItem = ({ activity }: ActivityItemProps) => {
     const Icon = ACTIVITY_TYPES.find(t => t.value === activity.type)?.icon || FiMessageCircle

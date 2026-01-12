@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
-import type { RecentActivity } from '@/types/dashboard'
+import { RecentActivity } from '../types/activity.types'
+
 
 export function useRecentActivity() {
   const { data: session, status } = useSession()

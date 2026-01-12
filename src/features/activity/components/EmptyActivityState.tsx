@@ -2,7 +2,7 @@
 import { useTranslations } from 'next-intl'
 import { FiMessageCircle } from 'react-icons/fi'
 import { ACTIVITY_TYPES } from '@/data/activity'
-import { EmptyActivityStateProps } from '../types/activity'
+import { EmptyActivityStateProps } from '../types/activity.types'
 
 export const EmptyActivityState = ({ filterType }: EmptyActivityStateProps) => {
   const t = useTranslations('dashboard')

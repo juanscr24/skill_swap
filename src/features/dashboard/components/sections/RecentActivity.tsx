@@ -4,7 +4,7 @@ import { FiMessageCircle, FiUsers, FiStar, FiCheckCircle, FiArrowRight } from 'r
 import { Avatar } from '@/shared/components/ui/Avatar'
 import { LoadingSpinner } from '@/shared/components/feedback'
 import { DashboardSectionProps } from '@/types'
-import { RecentActivity as ActivityType } from '@/features/activity/types/activity'
+import { RecentActivity as ActivityType } from '@/features/activity/types/activity.types'
 
 interface RecentActivityProps extends DashboardSectionProps {
   activities: ActivityType[]

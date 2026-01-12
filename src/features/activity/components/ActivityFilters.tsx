@@ -2,7 +2,7 @@
 import { Button } from '@/shared/components/ui'
 import { ACTIVITY_TYPES } from '@/data/activity'
 import { FiFilter } from 'react-icons/fi'
-import { ActivityFiltersProps } from '../types/activity'
+import { ActivityFiltersProps } from '../types/activity.types'
 
 export const ActivityFilters = ({ filterType, onFilterChange }: ActivityFiltersProps) => (
     <div className="bg-(--bg-2) border border-(--border-1) rounded-xl p-4 mb-6">
