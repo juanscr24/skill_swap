@@ -1,4 +1,4 @@
-import { LoadingSpinnerProps } from '@/shared/types/feedback'
+import { LoadingSpinnerProps } from '@/shared/types/feedback.types'
 import { FiLoader } from 'react-icons/fi'
 
 interface LoadingSpinnerPropsExtended extends LoadingSpinnerProps {

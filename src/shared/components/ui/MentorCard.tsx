@@ -5,7 +5,7 @@ import { Button } from "./Button"
 import { FiMapPin, FiCheck } from "react-icons/fi"
 import { useTranslations } from "next-intl"
 import { MessageSquare } from "lucide-react"
-import { MentorCardProps } from "@/shared/types/ui"
+import { MentorCardProps } from "@/shared/types/ui.types"
 
 interface MentorCardPropsExtended extends MentorCardProps {
     isAvailable?: boolean

@@ -1,4 +1,4 @@
-import { CardProps } from "@/shared/types/ui"
+import { CardProps } from "@/shared/types/ui.types"
 
 export const Card = ({ children, className = '', hover = false, onClick }: CardProps) => {
     return (

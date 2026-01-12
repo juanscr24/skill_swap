@@ -1,4 +1,4 @@
-import { AvatarProps } from "@/shared/types/ui"
+import { AvatarProps } from "@/shared/types/ui.types"
 import Image from "next/image"
 
 const sizes = {

@@ -1,5 +1,5 @@
 'use client'
-import { SwitchPropsExtended } from "@/shared/types/ui"
+import { SwitchPropsExtended } from "@/shared/types/ui.types"
 
 export const Switch = ({ checked, onChange, disabled = false, className = '' }: SwitchPropsExtended) => {
     return (

@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useTransition } from 'react'
 import { useLocaleStore } from '@/stores/localeStore'
 import { flagEn, flagEs } from '@public/index'
-import { LanguageSwitcherProps } from '@/shared/types/ui'
+import { LanguageSwitcherProps } from '@/shared/types/ui.types'
 
 export const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
     const { locale, setLocale } = useLocaleStore()

@@ -1,4 +1,4 @@
-import { InputProps } from "@/shared/types/ui"
+import { InputProps } from "@/shared/types/ui.types"
 import { forwardRef } from "react"
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(

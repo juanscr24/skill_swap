@@ -1,4 +1,4 @@
-import { SelectProps } from "@/shared/types/ui"
+import { SelectProps } from "@/shared/types/ui.types"
 
 export const Select = ({
     id,

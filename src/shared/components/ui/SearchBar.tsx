@@ -1,4 +1,4 @@
-import { SearchBarProps } from "@/shared/types/ui"
+import { SearchBarProps } from "@/shared/types/ui.types"
 
 export const SearchBar = ({ value, onChange, placeholder, className = '' }: SearchBarProps) => {
     return (

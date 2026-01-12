@@ -1,4 +1,4 @@
-import { CardGuideProps } from "@/shared/types/ui"
+import { CardGuideProps } from "@/shared/types/ui.types"
 
 export const CardGuide = ({ icon, title, description }: CardGuideProps) => {
     return (

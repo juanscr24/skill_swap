@@ -1,5 +1,5 @@
 'use client'
-import { SkillSelectorPropsExtended } from '@/shared/types/ui'
+import { SkillSelectorPropsExtended } from '@/shared/types/ui.types'
 import { useState, useRef, useEffect } from 'react'
 import { FiPlus, FiSearch } from 'react-icons/fi'
 

@@ -1,5 +1,5 @@
 import { FiX } from 'react-icons/fi'
-import { FilterChipProps } from '@/shared/types/ui'
+import { FilterChipProps } from '@/shared/types/ui.types'
 
 export const FilterChip = ({ label, onRemove }: FilterChipProps) => {
   return (

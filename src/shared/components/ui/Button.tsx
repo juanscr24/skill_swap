@@ -1,4 +1,4 @@
-import { ButtonProps } from "@/shared/types/ui"
+import { ButtonProps } from "@/shared/types/ui.types"
 
 export const Button = ({
     title,

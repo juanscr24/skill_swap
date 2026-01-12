@@ -1,7 +1,7 @@
 
 import Image from "next/image"
 import { Quote, Star } from "lucide-react"
-import { CardReviewProps } from "@/shared/types/ui"
+import { CardReviewProps } from "@/shared/types/ui.types"
 
 export const CardReview = ({ review, username, occupation }: CardReviewProps) => {
     // Generar avatar dinámico usando DiceBear API con expresión seria/neutral

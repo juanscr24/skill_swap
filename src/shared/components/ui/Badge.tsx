@@ -1,4 +1,4 @@
-import { BadgeProps } from "@/shared/types/ui"
+import { BadgeProps } from "@/shared/types/ui.types"
 
 export const Badge = ({ children, variant = 'default', className = '' }: BadgeProps) => {
     const variants = {

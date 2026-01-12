@@ -1,4 +1,4 @@
-import { FilterCheckboxProps } from "@/shared/types/ui"
+import { FilterCheckboxProps } from "@/shared/types/ui.types"
 
 export const FilterCheckbox = ({ label, checked, onChange }: FilterCheckboxProps) => {
   return (

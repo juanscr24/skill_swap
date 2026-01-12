@@ -1,4 +1,4 @@
-import { TextareaProps } from "@/shared/types/ui"
+import { TextareaProps } from "@/shared/types/ui.types"
 
 export const Textarea = ({
     id,

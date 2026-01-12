@@ -1,5 +1,5 @@
 'use client'
-import { TabsProps } from "@/shared/types/ui"
+import { TabsProps } from "@/shared/types/ui.types"
 import { useState } from "react"
 
 export const Tabs = ({ tabs, defaultTab, className = '' }: TabsProps) => {
