@@ -19,5 +19,8 @@
     "about": "About Me",
     "rating": "Reviews",
     "swipeInstructions": "Swipe left to pass, right to connect",
-    "unknown": "Not set"
+    "unknown": "Not set",
+    "incompleteProfile": "Complete your profile to get started",
+    "incompleteProfileDescription": "To discover mentors and connect with other users, you first need to add the skills you want to teach and the ones you want to learn in your profile.",
+    "goToProfile": "Go to my profile"
 }
