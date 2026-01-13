@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useApiQuery } from '@/shared/hooks'
+import { useCallback } from 'react'
 
 interface Skill {
   id: string
@@ -26,7 +27,7 @@ interface Review {
   } | null
 }
 
-interface UserProfile {
+export interface UserProfile {
   id: string
   name: string | null
   email: string
@@ -56,77 +57,33 @@ interface UserProfile {
   totalHours: number
 }
 
+/**
+ * Hook refactorizado para manejar perfiles de usuario
+ * Usa React Query para caching y sincronización automática
+ */
 export function useUserProfile(userId: string) {
-  const [profile, setProfile] = useState<UserProfile | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const fetchProfile = async () => {
-    try {
-      setIsLoading(true)
-      setError(null)
-
-      const response = await fetch(`/api/users/${userId}`)
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error('Usuario no encontrado')
-        }
-        if (response.status === 401) {
-          throw new Error('No autorizado')
-        }
-        throw new Error('Error al cargar el perfil')
-      }
-
-      const data = await response.json()
-      setProfile(data)
-    } catch (err: any) {
-      console.error('Error fetching user profile:', err)
-      setError(err.message || 'Error al cargar el perfil')
-    } finally {
-      setIsLoading(false)
+  const query = useApiQuery<UserProfile>(
+    ['profile', userId],
+    userId ? `/api/users/${userId}` : null,
+    {
+      requireAuth: true,
+      staleTime: 1000 * 60 * 5, // 5 minutos
     }
-  }
+  )
 
-  const updateReviews = (reviewOrId: any, isDelete: boolean = false) => {
-    if (!profile) return
-
-    if (isDelete) {
-      // Eliminar review del estado local
-      const reviewId = reviewOrId
-      const updatedReviews = profile.reviews.filter(r => r.id !== reviewId)
-      setProfile({
-        ...profile,
-        reviews: updatedReviews,
-        totalReviews: updatedReviews.length,
-        averageRating: updatedReviews.length > 0 
-          ? Number((updatedReviews.reduce((acc, r) => acc + r.rating, 0) / updatedReviews.length).toFixed(1))
-          : 0
-      })
-    } else {
-      // Agregar nueva review al estado local
-      const newReview = reviewOrId
-      const updatedReviews = [newReview, ...profile.reviews]
-      setProfile({
-        ...profile,
-        reviews: updatedReviews,
-        totalReviews: updatedReviews.length,
-        averageRating: Number((updatedReviews.reduce((acc, r) => acc + r.rating, 0) / updatedReviews.length).toFixed(1))
-      })
-    }
-  }
-
-  useEffect(() => {
-    if (userId) {
-      fetchProfile()
-    }
-  }, [userId])
+  // Nota: updateReviews ya no es necesario manejarlo manualmente aquí
+  // porque useReviews invalida la clave ['profile', userId] (o 'profile')
+  // lo que provoca que este hook vuelva a cargar los datos actualizados.
+  // Sin embargo, para compatibilidad con código existente, mantenemos la firma.
+  const updateReviews = useCallback(() => {
+    query.refetch()
+  }, [query])
 
   return {
-    profile,
-    isLoading,
-    error,
-    refetch: fetchProfile,
+    profile: query.data ?? null,
+    isLoading: query.isLoading,
+    error: query.error ? query.error.message : null,
+    refetch: query.refetch,
     updateReviews,
   }
 }

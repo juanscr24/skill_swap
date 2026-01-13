@@ -1,46 +1,29 @@
-import { useState, useEffect } from 'react'
+'use client'
+
+import { useApiQuery, useApiMutation } from '@/shared/hooks'
 import { SessionViewData } from '../types'
 
+/**
+ * Hook refactorizado para manejar solicitudes de sesión
+ * Usa React Query para caching y sincronización automática
+ */
 export function useSessionRequests() {
-  const [requests, setRequests] = useState<SessionViewData[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  // Query para obtener solicitudes pendientes
+  const requestsQuery = useApiQuery<SessionViewData[]>(
+    'sessions-pending',
+    '/api/sessions/pending',
+    { requireAuth: true }
+  )
 
-  const fetchPendingRequests = async () => {
-    setIsLoading(true)
-    setError(null)
-
-    try {
-      const response = await fetch('/api/sessions/pending')
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch pending requests')
-      }
-
-      const data = await response.json()
-      setRequests(data)
-    } catch (err: any) {
-      setError(err.message)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchPendingRequests()
-  }, [])
-
-  const createSessionRequest = async (data: {
+  // Mutation para crear una solicitud de sesión
+  const createMutation = useApiMutation<any, {
     mentor_id: string
     availability_id: string
     title: string
     description?: string
     duration_minutes: number
-  }) => {
-    setIsLoading(true)
-    setError(null)
-
-    try {
+  }>({
+    mutationFn: async (data) => {
       const response = await fetch('/api/sessions/request', {
         method: 'POST',
         headers: {
@@ -51,78 +34,52 @@ export function useSessionRequests() {
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.message || 'Failed to create session request')
+        throw new Error(errorData.message || 'Error al crear solicitud de sesión')
       }
 
-      const newRequest = await response.json()
-      return newRequest
-    } catch (err: any) {
-      setError(err.message)
-      throw err
-    } finally {
-      setIsLoading(false)
-    }
-  }
+      return response.json()
+    },
+    invalidateKeys: ['sessions', 'sessions-pending', 'availability'],
+  })
 
-  const acceptRequest = async (sessionId: string) => {
-    setIsLoading(true)
-    setError(null)
-
-    try {
+  // Mutation para aceptar solicitud
+  const acceptMutation = useApiMutation<any, string>({
+    mutationFn: async (sessionId) => {
       const response = await fetch(`/api/sessions/${sessionId}/accept`, {
         method: 'POST',
       })
-
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.message || 'Failed to accept request')
+        throw new Error(errorData.message || 'Error al aceptar solicitud')
       }
+      return response.json()
+    },
+    invalidateKeys: ['sessions', 'sessions-pending'],
+  })
 
-      const acceptedSession = await response.json()
-      setRequests((prev) => prev.filter((r) => r.id !== sessionId))
-      return acceptedSession
-    } catch (err: any) {
-      setError(err.message)
-      throw err
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const rejectRequest = async (sessionId: string) => {
-    setIsLoading(true)
-    setError(null)
-
-    try {
+  // Mutation para rechazar solicitud
+  const rejectMutation = useApiMutation<any, string>({
+    mutationFn: async (sessionId) => {
       const response = await fetch(`/api/sessions/${sessionId}/reject`, {
         method: 'POST',
       })
-
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.message || 'Failed to reject request')
+        throw new Error(errorData.message || 'Error al rechazar solicitud')
       }
-
-      setRequests((prev) => prev.filter((r) => r.id !== sessionId))
-    } catch (err: any) {
-      setError(err.message)
-      throw err
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const refresh = () => {
-    fetchPendingRequests()
-  }
+      return response.json()
+    },
+    invalidateKeys: ['sessions-pending'],
+  })
 
   return {
-    requests,
-    isLoading,
-    error,
-    createSessionRequest,
-    acceptRequest,
-    rejectRequest,
-    refresh,
+    requests: requestsQuery.data ?? [],
+    isLoading: requestsQuery.isLoading || createMutation.isPending || acceptMutation.isPending || rejectMutation.isPending,
+    error: requestsQuery.error || createMutation.error || acceptMutation.error || rejectMutation.error,
+    createSessionRequest: createMutation.mutateAsync,
+    acceptRequest: acceptMutation.mutateAsync,
+    rejectRequest: rejectMutation.mutateAsync,
+    refresh: requestsQuery.refetch,
+    isCreating: createMutation.isPending,
   }
 }

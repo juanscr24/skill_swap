@@ -10,6 +10,7 @@ import { FiLoader, FiArrowLeft, FiCalendar, FiClock } from "react-icons/fi"
 import Link from "next/link"
 import { useMentors } from "@/features/mentor/hooks/useMentors"
 import { useAvailability } from "@/features/mentor/hooks/useAvailability"
+import { useSessionRequests } from "../hooks/useSessionRequests"
 import { formatLongDate } from "@/shared/utils/date"
 
 export const ScheduleSessionView = () => {
@@ -22,9 +23,9 @@ export const ScheduleSessionView = () => {
     const [description, setDescription] = useState('')
     const [selectedAvailability, setSelectedAvailability] = useState('')
     const [duration, setDuration] = useState('30')
-    const [isSubmitting, setIsSubmitting] = useState(false)
-    const [error, setError] = useState('')
     const [successMessage, setSuccessMessage] = useState('')
+
+    const { createSessionRequest, isCreating, error: submissionError } = useSessionRequests()
 
     const { availability, isLoading: loadingAvailability } = useAvailability(selectedMentor || undefined)
 
@@ -38,67 +39,23 @@ export const ScheduleSessionView = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setError('')
         setSuccessMessage('')
 
-        // Validaciones
-        if (!selectedMentor) {
-            setError('Por favor selecciona un mentor')
-            return
-        }
-        if (!title.trim()) {
-            setError('Por favor ingresa un título')
-            return
-        }
-        if (!selectedAvailability) {
-            setError('Por favor selecciona un horario disponible')
-            return
-        }
-
         const durationNum = parseInt(duration)
-        if (durationNum < 30) {
-            setError(t('minimumDuration'))
-            return
-        }
 
-        if (durationNum % 10 !== 0) {
-            setError(t('invalidTimeFormat'))
-            return
-        }
+        const result = await createSessionRequest({
+            mentor_id: selectedMentor,
+            availability_id: selectedAvailability,
+            title,
+            description: description.trim() || undefined,
+            duration_minutes: durationNum,
+        })
 
-        setIsSubmitting(true)
-
-        try {
-            const response = await fetch('/api/sessions/request', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    mentor_id: selectedMentor,
-                    availability_id: selectedAvailability,
-                    title,
-                    description: description.trim() || undefined,
-                    duration_minutes: durationNum,
-                }),
-            })
-
-            const data = await response.json()
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Error al solicitar la sesión')
-            }
-
+        if (result.success) {
             setSuccessMessage('¡Solicitud de sesión enviada correctamente! Redirigiendo...')
             setTimeout(() => {
                 router.push('/sessions')
             }, 1500)
-
-        } catch (err) {
-            console.error('Error scheduling session:', err)
-            setError(err instanceof Error ? err.message : 'Error al solicitar la sesión. Intenta de nuevo.')
-        } finally {
-            setIsSubmitting(false)
         }
     }
 
@@ -122,13 +79,6 @@ export const ScheduleSessionView = () => {
             {successMessage && (
                 <div className="mb-6 p-4 bg-green-100 dark:bg-green-900/30 border-2 border-green-500 rounded-lg shadow-sm">
                     <p className="text-green-800 dark:text-green-200 font-semibold">{successMessage}</p>
-                </div>
-            )}
-
-            {/* Error Message */}
-            {error && (
-                <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/30 border-2 border-red-500 rounded-lg shadow-sm">
-                    <p className="text-red-800 dark:text-red-200 font-semibold">{error}</p>
                 </div>
             )}
 
@@ -255,24 +205,33 @@ export const ScheduleSessionView = () => {
                                 </>
                             )}
 
+                            {/* Error Message from Hook */}
+                            {submissionError && (
+                                <div className="p-4 bg-red-100 dark:bg-red-900/30 border-2 border-red-500 rounded-lg shadow-sm">
+                                    <p className="text-red-800 dark:text-red-200 font-semibold">
+                                        {submissionError instanceof Error ? submissionError.message : String(submissionError)}
+                                    </p>
+                                </div>
+                            )}
+
                             {/* Action Buttons */}
                             <div className="flex gap-4 max-sm:gap-3 pt-4">
                                 <Button
                                     type="button"
                                     secondary
                                     onClick={handleCancel}
-                                    disabled={isSubmitting}
+                                    disabled={isCreating}
                                     className="flex-1"
                                 >
-                                    Cancelar
+                                    {t('cancel') || 'Cancelar'}
                                 </Button>
                                 <Button
                                     type="submit"
                                     primary
-                                    disabled={!selectedMentor || !title || !selectedAvailability || isSubmitting}
+                                    disabled={!selectedMentor || !title || !selectedAvailability || isCreating}
                                     className="flex-1"
                                 >
-                                    {isSubmitting ? (
+                                    {isCreating ? (
                                         <span className="flex items-center justify-center gap-2">
                                             <FiLoader className="w-4 h-4 animate-spin" />
                                             Solicitando...

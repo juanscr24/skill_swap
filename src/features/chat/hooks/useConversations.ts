@@ -1,26 +1,28 @@
 'use client'
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
-import { ConversationWithDetails, ChatMessage } from '../types'
+import { useApiQuery, useApiMutation } from '@/shared/hooks'
+import { ConversationWithDetails } from '../types'
 
-// Hook para obtener conversaciones con auto-refetch en tiempo real
+/**
+ * Hook para obtener conversaciones con auto-refetch en tiempo real
+ * Usa useApiQuery para estandarizar el fetching y manejo de errores
+ */
 export const useConversations = () => {
   const queryClient = useQueryClient()
   const supabase = createClient()
 
-  const query = useQuery<ConversationWithDetails[]>({
-    queryKey: ['conversations'],
-    queryFn: async () => {
-      const response = await fetch('/api/conversations')
-      if (!response.ok) throw new Error('Error al obtener conversaciones')
-      return response.json()
-    },
-    staleTime: 0, // Siempre considerar datos stale para refetch
-    gcTime: 10 * 60 * 1000, // 10 minutos antes de liberar memoria
-    refetchOnWindowFocus: true, // Refetch al volver a la pestaña
-  })
+  const query = useApiQuery<ConversationWithDetails[]>(
+    'conversations',
+    '/api/conversations',
+    {
+      requireAuth: true,
+      staleTime: 0, // Siempre considerar datos stale para permitir refetch en tiempo real
+      refetchOnWindowFocus: true,
+    }
+  )
 
   // Suscribirse a cambios en mensajes para actualizar conversaciones
   useEffect(() => {
@@ -60,11 +62,11 @@ export const useConversations = () => {
   return query
 }
 
-// Hook para crear o obtener conversación con otro usuario
+/**
+ * Hook para crear o obtener conversación con otro usuario
+ */
 export const useCreateConversation = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
+  return useApiMutation<{ conversationId: string }, string>({
     mutationFn: async (otherUserId: string) => {
       const response = await fetch('/api/conversations', {
         method: 'POST',
@@ -74,40 +76,36 @@ export const useCreateConversation = () => {
       if (!response.ok) throw new Error('Error al crear conversación')
       return response.json()
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['conversations'] })
-    },
+    invalidateKeys: ['conversations'],
   })
 }
 
-// Hook para obtener una conversación específica
+/**
+ * Hook para obtener una conversación específica
+ */
 export const useConversation = (conversationId: string | null) => {
-  return useQuery({
-    queryKey: ['conversation', conversationId],
-    queryFn: async () => {
-      if (!conversationId) return null
-      const response = await fetch(`/api/conversations/${conversationId}`)
-      if (!response.ok) throw new Error('Error al obtener conversación')
-      return response.json()
-    },
-    enabled: !!conversationId,
-  })
+  return useApiQuery<ConversationWithDetails>(
+    ['conversation', conversationId],
+    conversationId ? `/api/conversations/${conversationId}` : null,
+    {
+      requireAuth: true,
+      enabled: !!conversationId,
+    }
+  )
 }
 
-// Hook para eliminar conversación
+/**
+ * Hook para eliminar conversación
+ */
 export const useDeleteConversation = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
+  return useApiMutation<void, string>({
     mutationFn: async (conversationId: string) => {
       const response = await fetch(`/api/conversations/${conversationId}`, {
         method: 'DELETE',
       })
       if (!response.ok) throw new Error('Error al eliminar conversación')
-      return response.json()
+      if (response.status !== 204) return response.json()
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['conversations'] })
-    },
+    invalidateKeys: ['conversations'],
   })
 }

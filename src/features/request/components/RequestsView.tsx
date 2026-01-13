@@ -9,6 +9,7 @@ import { Tabs } from "@/shared/components/ui/Tabs"
 import { Button, LoadingSpinner } from "@/shared/components"
 import { FiCheck, FiX, FiMessageSquare } from "react-icons/fi"
 import { useRequests } from "../hooks/useRequests"
+import { useCreateConversation } from "@/features/chat/hooks/useConversations"
 
 interface MatchRequest {
     id: string
@@ -33,6 +34,7 @@ const ReceivedRequestsList = () => {
     const t = useTranslations('requests')
     const router = useRouter()
     const { requests, isLoading, acceptRequest, rejectRequest } = useRequests('received')
+    const { mutateAsync: createConversation } = useCreateConversation()
 
     const RequestCard = ({ match }: { match: MatchRequest }) => {
         const otherUser = match.sender
@@ -58,19 +60,13 @@ const ReceivedRequestsList = () => {
         }
 
         const handleSendMessage = async () => {
-            try {
-                const response = await fetch('/api/conversations', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ otherUserId: otherUser?.id })
-                })
+            if (!otherUser?.id) return
 
-                if (!response.ok) throw new Error('Failed to create conversation')
-
-                const { conversationId } = await response.json()
-                router.push(`/chats?conversation=${conversationId}`)
-            } catch (error) {
-                console.error('Error creating conversation:', error)
+            const result = await createConversation(otherUser.id)
+            if (result.success && result.data) {
+                router.push(`/chats?conversation=${result.data.conversationId}`)
+            } else {
+                console.error('Error creating conversation:', result.error)
                 router.push('/chats')
             }
         }
@@ -151,6 +147,7 @@ const AcceptedRequestsList = () => {
     const t = useTranslations('requests')
     const router = useRouter()
     const { requests, isLoading } = useRequests('accepted')
+    const { mutateAsync: createConversation } = useCreateConversation()
 
     const RequestCard = ({ match }: { match: MatchRequest }) => {
         // Determinar quién es el otro usuario
@@ -159,19 +156,13 @@ const AcceptedRequestsList = () => {
         const otherUser = isCurrentUserSender ? match.receiver : match.sender
 
         const handleSendMessage = async () => {
-            try {
-                const response = await fetch('/api/conversations', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ otherUserId: otherUser?.id })
-                })
+            if (!otherUser?.id) return
 
-                if (!response.ok) throw new Error('Failed to create conversation')
-
-                const { conversationId } = await response.json()
-                router.push(`/chats?conversation=${conversationId}`)
-            } catch (error) {
-                console.error('Error creating conversation:', error)
+            const result = await createConversation(otherUser.id)
+            if (result.success && result.data) {
+                router.push(`/chats?conversation=${result.data.conversationId}`)
+            } else {
+                console.error('Error creating conversation:', result.error)
                 router.push('/chats')
             }
         }

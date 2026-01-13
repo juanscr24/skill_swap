@@ -1,36 +1,23 @@
 'use client'
 
-import { useState } from 'react'
 import { useAvailability } from '@/features/mentor/hooks/useAvailability'
-import { Button } from '@/shared/components/ui/Button'
-import { FiPlus, FiTrash2 } from 'react-icons/fi'
 import { useTranslations } from 'next-intl'
 import { AvailabilityManagerProps } from '../../types'
+import { AvailabilityForm } from './AvailabilityForm'
+import { AvailabilityList } from './AvailabilityList'
 
 export const AvailabilityManager = ({ mentorId }: AvailabilityManagerProps) => {
   const t = useTranslations('sessions')
   const { availability, isLoading, addAvailability, deleteAvailability } =
     useAvailability(mentorId)
 
-  const [newSlot, setNewSlot] = useState({
-    date: '',
-    startTime: '',
-    endTime: '',
-  })
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
+  const handleSubmit = async (date: string, startTime: string, endTime: string) => {
     try {
-      await addAvailability(
-        newSlot.date,
-        newSlot.startTime,
-        newSlot.endTime
-      )
+      await addAvailability(date, startTime, endTime)
       alert(t('availabilityAdded'))
-      setNewSlot({ date: '', startTime: '', endTime: '' })
     } catch (error: any) {
       alert(error.message || t('errorAddingAvailability'))
+      throw error
     }
   }
 
@@ -41,20 +28,6 @@ export const AvailabilityManager = ({ mentorId }: AvailabilityManagerProps) => {
     } catch (error: any) {
       alert(error.message || t('errorDeletingAvailability'))
     }
-  }
-
-  const formatDate = (dateString: string | Date) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      weekday: 'long',
-    })
-  }
-
-  const formatTime = (time: string) => {
-    const [hours, minutes] = time.split(':')
-    const hour = parseInt(hours)
-    const ampm = hour >= 12 ? 'PM' : 'AM'
-    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour
-    return `${displayHour.toString().padStart(2, '0')}:${minutes} ${ampm}`
   }
 
   return (
@@ -70,151 +43,14 @@ export const AvailabilityManager = ({ mentorId }: AvailabilityManagerProps) => {
       </div>
 
       {/* Add New Availability Section */}
-      <div className="bg-(--bg-2) border border-(--border-1) rounded-xl p-6">
-        <div className="flex items-center gap-2 mb-6">
-          <div className="w-10 h-10 rounded-lg bg-(--button-1) flex items-center justify-center">
-            <FiPlus className="text-(--button-1-text) text-xl" />
-          </div>
-          <h2 className="text-xl font-semibold text-(--text-1)">
-            {t('addNewAvailability')}
-          </h2>
-        </div>
-
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {/* Day Selector */}
-            <div className="space-y-2">
-              <label className="text-sm text-(--text-2)">
-                {t('dayOfWeek')}
-              </label>
-              <input
-                type="date"
-                value={newSlot.date}
-                onChange={(e) =>
-                  setNewSlot({ ...newSlot, date: e.target.value })
-                }
-                required
-                className="w-full px-4 py-3 bg-(--bg-1) border border-(--border-1) rounded-lg text-(--text-1) focus:outline-none focus:ring-2 focus:ring-(--button-1) transition-all"
-              />
-            </div>
-
-            {/* Start Time */}
-            <div className="space-y-2">
-              <label className="text-sm text-(--text-2)">
-                {t('startTime')}
-              </label>
-              <input
-                type="time"
-                value={newSlot.startTime}
-                onChange={(e) =>
-                  setNewSlot({ ...newSlot, startTime: e.target.value })
-                }
-                required
-                className="w-full px-4 py-3 bg-(--bg-1) border border-(--border-1) rounded-lg text-(--text-1) focus:outline-none focus:ring-2 focus:ring-(--button-1) transition-all"
-              />
-            </div>
-
-            {/* End Time */}
-            <div className="space-y-2">
-              <label className="text-sm text-(--text-2)">
-                {t('endTime')}
-              </label>
-              <input
-                type="time"
-                value={newSlot.endTime}
-                onChange={(e) =>
-                  setNewSlot({ ...newSlot, endTime: e.target.value })
-                }
-                required
-                className="w-full px-4 py-3 bg-(--bg-1) border border-(--border-1) rounded-lg text-(--text-1) focus:outline-none focus:ring-2 focus:ring-(--button-1) transition-all"
-              />
-            </div>
-
-            {/* Add Button */}
-            <div className="flex items-end">
-              <Button
-                type="submit"
-                className="w-full py-3 bg-(--button-1) hover:opacity-90 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2"
-              >
-                <FiPlus className="text-xl" />
-                {t('add')}
-              </Button>
-            </div>
-          </div>
-        </form>
-      </div>
+      <AvailabilityForm onSubmit={handleSubmit} />
 
       {/* Current Availabilities */}
-      <div className="bg-(--bg-2) border border-(--border-1) rounded-xl p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-(--text-1)">
-            {t('currentAvailabilities')}
-          </h2>
-          <button className="text-(--button-1) hover:underline text-sm font-medium">
-            {t('viewFullCalendar')}
-          </button>
-        </div>
-
-        {isLoading ? (
-          <div className="text-center py-12 text-(--text-2)">
-            Cargando...
-          </div>
-        ) : !availability || availability.length === 0 ? (
-          <div className="text-center py-12 text-(--text-2)">
-            Mostrando 0 ranuras de disponibilidad
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-(--border-1)">
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-(--text-2) uppercase tracking-wider">
-                    {t('day')}
-                  </th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-(--text-2) uppercase tracking-wider">
-                    {t('schedule')}
-                  </th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-(--text-2) uppercase tracking-wider">
-                    {t('state')}
-                  </th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-(--text-2) uppercase tracking-wider">
-                    {t('actions')}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {availability.map((slot) => (
-                  <tr
-                    key={slot.id}
-                    className="border-b border-(--border-1) hover:bg-(--bg-1) transition-colors"
-                  >
-                    <td className="py-4 px-4 text-(--text-1) font-medium capitalize">
-                      {formatDate(slot.date)}
-                    </td>
-                    <td className="py-4 px-4 text-(--text-1)">
-                      {formatTime(slot.start_time)} - {formatTime(slot.end_time)}
-                    </td>
-                    <td className="py-4 px-4">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-green-500/10 text-green-500">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                        {t('recurring')}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4">
-                      <button
-                        onClick={() => handleDelete(slot.id)}
-                        className="text-(--text-2) hover:text-red-500 transition-colors"
-                      >
-                        <FiTrash2 className="text-xl" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+      <AvailabilityList
+        availability={availability}
+        isLoading={isLoading}
+        onDelete={handleDelete}
+      />
     </div>
   )
 }

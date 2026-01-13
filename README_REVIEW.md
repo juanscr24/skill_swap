@@ -252,22 +252,6 @@ src/
       validations/
 ```
 
-#### 2. Consolidar Tipos Compartidos
-
-**Problema actual:** Tipos duplicados entre `src/types/` y `features/*/types/`
-
-**Solución:**
-```
-src/
-  types/
-    shared/        # Tipos compartidos entre features
-      api.ts
-      models.ts
-    features/      # Re-exportar tipos de features
-      chat.ts      # export * from '@/features/chat/types'
-      profile.ts
-```
-
 #### 3. Organizar Hooks por Categoría
 
 ```

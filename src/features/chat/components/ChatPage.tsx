@@ -11,6 +11,7 @@ import { ConversationList } from './ConversationList'
 import { ChatHeader } from './ChatHeader'
 import { MessageList } from './MessageList'
 import { MessageInput } from './MessageInput'
+import { ChatSessionInfo } from './ChatSessionInfo'
 
 export const ChatPage = () => {
     const t = useTranslations('chat')
@@ -128,18 +129,26 @@ export const ChatPage = () => {
                                 onBack={() => setSelectedConversationId(null)}
                             />
 
-                            <MessageList
-                                messages={messages}
-                                currentUserId={session?.user?.id}
-                                otherUser={selectedConversation?.otherUser}
-                                getMessageStatus={getMessageStatus}
-                                emptyText={t('noMessages')}
-                            />
+                            <div className="flex-1 flex overflow-hidden">
+                                <div className="flex-1 flex flex-col min-w-0">
+                                    <MessageList
+                                        messages={messages}
+                                        currentUserId={session?.user?.id}
+                                        otherUser={selectedConversation?.otherUser}
+                                        getMessageStatus={getMessageStatus}
+                                        emptyText={t('noMessages')}
+                                    />
 
-                            <MessageInput
-                                onSendMessage={handleSendMessage}
-                                isSubscribed={isSubscribed}
-                            />
+                                    <MessageInput
+                                        onSendMessage={handleSendMessage}
+                                        isSubscribed={isSubscribed}
+                                    />
+                                </div>
+
+                                <ChatSessionInfo
+                                    otherUserId={selectedConversation?.otherUser?.id}
+                                />
+                            </div>
                         </>
                     )}
                 </div>
