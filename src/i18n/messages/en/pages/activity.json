@@ -1,0 +1,22 @@
+{
+    "title": "All Activity",
+    "subtitle": "Complete history of your activity on the platform.",
+    "backToDashboard": "Back to Dashboard",
+    "registered": "registered activities",
+    "retry": "Retry",
+    "loadMore": "Load more activities",
+    "filters": {
+        "all": "All",
+        "messages": "Messages",
+        "matches": "Matches",
+        "reviews": "Reviews",
+        "sessions": "Sessions"
+    },
+    "empty": {
+        "all": "You have no recent activity",
+        "messages": "You have no messages",
+        "matches": "You have no matches",
+        "reviews": "You have no reviews",
+        "sessions": "You have no sessions"
+    }
+}

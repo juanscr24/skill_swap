@@ -16,6 +16,8 @@ import requests from './pages/requests.json';
 import chat from './pages/chat.json';
 import sessions from './pages/sessions.json';
 import reviews from './pages/reviews.json';
+import activity from './pages/activity.json';
+import notifications from './pages/notifications.json';
 
 export default {
     common,
@@ -35,6 +37,8 @@ export default {
     requests,
     chat,
     sessions,
-    reviews
+    reviews,
+    activity,
+    notifications
 };
 

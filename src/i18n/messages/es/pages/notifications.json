@@ -1,0 +1,10 @@
+{
+    "title": "Notificaciones",
+    "subtitle": "Historial de actividad reciente",
+    "close": "Cerrar",
+    "new": "NUEVAS",
+    "noNotifications": "¡Todo al día!",
+    "noNotificationsDescription": "No tienes notificaciones nuevas en este momento.",
+    "viewAll": "Ver todo el historial",
+    "markAllRead": "Marcar todas como leídas"
+}

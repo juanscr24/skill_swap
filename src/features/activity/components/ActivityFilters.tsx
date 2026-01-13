@@ -1,26 +1,32 @@
 'use client'
-import { Button } from '@/shared/components/ui'
+import { useTranslations } from 'next-intl'
 import { ACTIVITY_TYPES } from '@/data/activity'
-import { FiFilter } from 'react-icons/fi'
 import { ActivityFiltersProps } from '../types/activity.types'
 
-export const ActivityFilters = ({ filterType, onFilterChange }: ActivityFiltersProps) => (
-    <div className="bg-(--bg-2) border border-(--border-1) rounded-xl p-4 mb-6">
-        <div className="flex items-center gap-2 mb-3">
-            <FiFilter className="w-5 h-5 text-(--text-2)" />
-            <span className="text-sm font-semibold text-(--text-1)">Filtrar:</span>
+export const ActivityFilters = ({ filterType, onFilterChange }: ActivityFiltersProps) => {
+    const t = useTranslations('activity')
+    
+    return (
+        <div className="flex gap-2 flex-wrap">
+            {ACTIVITY_TYPES.map(({ value, label, icon: Icon }) => {
+                const isActive = filterType === value
+                return (
+                    <button
+                        key={value}
+                        onClick={() => onFilterChange(value)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                            filterType === value
+                                ? 'bg-(--button-1) text-(--button-1-text)'
+                                : 'bg-(--bg-2) text-(--text-2) hover:bg-(--bg-3) border border-(--border-1)'
+                        }`}
+                    >
+                        <Icon className="w-4 h-4" />
+                        <span className="text-sm">{label}</span>
+                    </button>
+                )
+            })}
         </div>
-        <div className="flex flex-wrap gap-2">
-            {ACTIVITY_TYPES.map(({ value, label }) => (
-                <Button
-                    key={value}
-                    primary={filterType === value}
-                    secondary={filterType !== value}
-                    onClick={() => onFilterChange(value)}
-                >
-                    {label}
-                </Button>
-            ))}
-        </div>
-    </div>
-)
+    )
+}
+
+

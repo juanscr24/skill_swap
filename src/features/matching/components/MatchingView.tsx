@@ -61,7 +61,7 @@ export const MatchingView = () => {
                 <div className="w-full max-w-2xl">
                     <Card className="relative overflow-hidden">
                         {/* Decorative gradient background */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-(--button-1)/10 via-transparent to-(--button-1)/5 pointer-events-none"></div>
+                        <div className="absolute inset-0 bg-linear-to-br from-(--button-1)/10 via-transparent to-(--button-1)/5 pointer-events-none"></div>
 
                         {/* Content */}
                         <div className="relative text-center py-16 max-md:py-12 max-sm:py-8 px-8 max-sm:px-4">
