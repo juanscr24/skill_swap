@@ -3,15 +3,12 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib'
 import { prisma } from '@/lib/prisma'
 
-/**
- * API para obtener la presencia de un usuario específico
- * GET /api/presence/[userId]
- */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  props: { params: Promise<{ userId: string }> }
 ) {
   try {
+    const params = await props.params
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {

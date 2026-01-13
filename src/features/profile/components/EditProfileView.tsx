@@ -1,0 +1,80 @@
+'use client'
+import { useTranslations } from "next-intl"
+import { Card } from "@/shared/components/ui/Card"
+import { Button, LoadingSpinner } from "@/shared/components"
+import { FiArrowLeft } from "react-icons/fi"
+import Link from "next/link"
+import { EditAboutMeSection } from "./edit/EditAboutMeSection"
+import { useProfile, useProfileMutations } from "../hooks/useProfile"
+import { useSkills } from "../hooks/useSkills"
+import { useLanguages } from "../hooks/useLanguages"
+
+export const EditProfileView = () => {
+    const t = useTranslations('profile')
+    const { profile, isLoading: isLoadingProfile } = useProfile()
+    const { isLoading: isLoadingSkills } = useSkills()
+    const { isLoading: isLoadingLanguages } = useLanguages()
+    const { updateAboutMe } = useProfileMutations()
+
+    // Función para actualizar solo About Me
+    const handleUpdateAboutMe = async (data: {
+        name?: string | null
+        bio?: string | null
+        city?: string | null
+        title?: string | null
+        image?: string | null
+        image_public_id?: string | null
+    }) => {
+        try {
+            const result = await updateAboutMe(data)
+            return { success: !!result }
+        } catch (error) {
+            console.error('Error updating profile:', error)
+            return { success: false }
+        }
+    }
+
+    if (isLoadingProfile || isLoadingSkills || isLoadingLanguages) {
+        return (
+            <div className="p-8 max-md:p-6 max-sm:p-4 max-w-7xl mx-auto">
+                <LoadingSpinner />
+            </div>
+        )
+    }
+
+    if (!profile) {
+        return (
+            <div className="p-8 max-md:p-6 max-sm:p-4 max-w-7xl mx-auto">
+                <Card className="p-6 text-center">
+                    <p className="text-red-500">Error al cargar el perfil</p>
+                </Card>
+            </div>
+        )
+    }
+
+    return (
+        <div className="px-30 max-2xl:px-14 max-lg:px-10 max-md:px-6 max-sm:px-4 py-8 max-md:py-6 max-sm:py-4 mx-auto">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-8">
+                <div>
+                    <h1 className="text-3xl font-bold text-(--text-1)">Edit Profile</h1>
+                    <p className="text-(--text-2)">Update your personal details, skills, and languages.</p>
+                </div>
+                <Link href="/profile">
+                    <Button secondary className="flex items-center gap-2">
+                        <FiArrowLeft />
+                        {t('back')}
+                    </Button>
+                </Link>
+            </div>
+
+            <div className="space-y-6">
+                {/* About Me Section */}
+                <EditAboutMeSection
+                    profile={profile}
+                    onUpdate={handleUpdateAboutMe}
+                />
+            </div>
+        </div>
+    )
+}

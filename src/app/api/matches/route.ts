@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib'
-import { matchesService } from '@/services'
+import { matchesService } from '@/features/matching/services'
 
 export async function GET() {
   try {

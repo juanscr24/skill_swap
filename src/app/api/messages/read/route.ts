@@ -1,13 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib'
-
 import { prisma } from '@/lib/prisma'
 
-/**
- * API para marcar mensajes como leídos
- * POST /api/messages/read
- */
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)

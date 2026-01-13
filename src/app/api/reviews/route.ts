@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib'
-import { reviewsService } from '@/services'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
+import { reviewsService } from '@/features/review/services'
 
 // Esquema de validación para crear review
 const createReviewSchema = z.object({

@@ -2,7 +2,7 @@ import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import GitHubProvider from 'next-auth/providers/github'
-import { getUserByEmail, verifyPassword, createUserFromOAuth } from '@/services/auth'
+import { createUserFromOAuth, getUserByEmail, verifyPassword } from '@/features/auth/services/user.service'
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -55,29 +55,29 @@ export const authOptions: NextAuthOptions = {
     // Autenticación con Google (opcional)
     ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
       ? [
-          GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            authorization: {
-              params: {
-                prompt: "consent",
-                access_type: "offline",
-                response_type: "code",
-                scope: 'openid email profile'
-              }
+        GoogleProvider({
+          clientId: process.env.GOOGLE_CLIENT_ID,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          authorization: {
+            params: {
+              prompt: "consent",
+              access_type: "offline",
+              response_type: "code",
+              scope: 'openid email profile'
             }
-          }),
-        ]
+          }
+        }),
+      ]
       : []),
 
     // Autenticación con GitHub (opcional)
     ...(process.env.GITHUB_ID && process.env.GITHUB_SECRET
       ? [
-          GitHubProvider({
-            clientId: process.env.GITHUB_ID,
-            clientSecret: process.env.GITHUB_SECRET,
-          }),
-        ]
+        GitHubProvider({
+          clientId: process.env.GITHUB_ID,
+          clientSecret: process.env.GITHUB_SECRET,
+        }),
+      ]
       : []),
   ],
   callbacks: {
@@ -96,7 +96,7 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           image: user.image,
         }
-        
+
         try {
           const dbUser = await createUserFromOAuth(profile)
           token.id = dbUser.id

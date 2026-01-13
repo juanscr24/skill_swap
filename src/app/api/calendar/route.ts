@@ -2,30 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib'
 import { prisma } from '@/lib'
-import { 
-  mapAvailabilityToEvent, 
-  mapSessionToEvent 
-} from '@/utils/calendarHelpers'
-import type { 
-  PrismaMentorAvailability, 
-  PrismaSession 
-} from '@/types/calendar'
+import {
+  mapAvailabilityToEvent,
+  mapSessionToEvent
+} from '@/shared/utils/calendarHelpers'
+import { PrismaMentorAvailability, PrismaSession } from '@/features/calendar/types'
 
-/**
- * GET /api/calendar
- * 
- * Returns calendar events (availability + sessions) for the authenticated user
- * 
- * Query params:
- * - startDate: ISO date string (required)
- * - endDate: ISO date string (required)
- * - showAvailability: boolean (default: true)
- * - showSessions: boolean (default: true)
- * 
- * Logic:
- * - Mentors see: their own availability + all their sessions (as host or guest)
- * - Students see: only sessions where they are guest_id
- */
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
@@ -39,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     const userId = session.user.id
     const { searchParams } = new URL(request.url)
-    
+
     // Parse query parameters
     const startDateStr = searchParams.get('startDate')
     const endDateStr = searchParams.get('endDate')
@@ -105,24 +87,24 @@ export async function GET(request: NextRequest) {
     if (showSessions) {
       const sessionWhere = isMentor
         ? {
-            // Mentors see sessions where they are host or guest
-            OR: [
-              { host_id: userId },
-              { guest_id: userId }
-            ],
-            start_at: {
-              gte: startDate,
-              lte: endDate
-            }
+          // Mentors see sessions where they are host or guest
+          OR: [
+            { host_id: userId },
+            { guest_id: userId }
+          ],
+          start_at: {
+            gte: startDate,
+            lte: endDate
           }
+        }
         : {
-            // Students only see sessions where they are guest
-            guest_id: userId,
-            start_at: {
-              gte: startDate,
-              lte: endDate
-            }
+          // Students only see sessions where they are guest
+          guest_id: userId,
+          start_at: {
+            gte: startDate,
+            lte: endDate
           }
+        }
 
       const sessions = await prisma.sessions.findMany({
         where: sessionWhere,

@@ -1,49 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
-import { updateUserProfile } from '@/services/users'
+import { updateUserProfile } from '@/features/profile/services'
+import { withErrorHandler, ApiError } from '@/shared/utils/api-handler'
+import { aboutMeSchema } from '@/features/profile/validations/profile.schema'
 
 /**
  * PATCH /api/users/profile/about-me
  * Actualiza solo la sección About Me del perfil
  */
 export async function PATCH(request: NextRequest) {
-  try {
+  return withErrorHandler(async () => {
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: 'No autenticado' },
-        { status: 401 }
-      )
+      throw new ApiError('No autenticado', 401)
     }
 
     const body = await request.json()
-    const { name, bio, city, image, image_public_id, title } = body
 
-    // Validar que name esté presente
-    if (!name || !name.trim()) {
-      return NextResponse.json(
-        { message: 'El nombre es requerido' },
-        { status: 400 }
-      )
-    }
+    // Validar con Zod
+    const validatedData = aboutMeSchema.parse(body)
 
-    const updatedProfile = await updateUserProfile(session.user.id, {
-      name,
-      bio,
-      city,
-      image,
-      image_public_id,
-      title,
-    })
+    const updatedProfile = await updateUserProfile(session.user.id, validatedData)
 
     return NextResponse.json(updatedProfile)
-  } catch (error: any) {
-    console.error('Error updating about me:', error)
-    return NextResponse.json(
-      { message: error.message || 'Error al actualizar About Me' },
-      { status: 500 }
-    )
-  }
+  })
 }

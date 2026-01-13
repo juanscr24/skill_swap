@@ -1,17 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
-import {
-  getUserSkills,
-  createSkill,
-  updateSkill,
-  deleteSkill,
-} from '@/services/skills'
+import { createSkill, deleteSkill, getUserSkills, updateSkill } from '@/features/profile/services'
 
-/**
- * GET /api/skills
- * Obtiene todas las skills del usuario autenticado
- */
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)
@@ -34,10 +25,6 @@ export async function GET() {
   }
 }
 
-/**
- * POST /api/skills
- * Crea una nueva skill para el usuario autenticado
- */
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)

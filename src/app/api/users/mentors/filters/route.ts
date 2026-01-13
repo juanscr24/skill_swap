@@ -1,13 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { getMentorFiltersOptions } from '@/services/users/user-profile.service'
+import { getMentorFiltersOptions } from '@/features/profile/services'
 
-/**
- * GET /api/users/mentors/filters
- * Obtiene las opciones de filtros disponibles (skills, languages, cities)
- * basadas en los mentors con match aceptado del usuario actual
- */
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)

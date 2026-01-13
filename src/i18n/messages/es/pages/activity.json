@@ -1,0 +1,22 @@
+{
+    "title": "Toda la Actividad",
+    "subtitle": "Historial completo de tu actividad en la plataforma.",
+    "backToDashboard": "Volver al Dashboard",
+    "registered": "actividades registradas",
+    "retry": "Reintentar",
+    "loadMore": "Cargar más actividades",
+    "filters": {
+        "all": "Todas",
+        "messages": "Mensajes",
+        "matches": "Matches",
+        "reviews": "Reseñas",
+        "sessions": "Sesiones"
+    },
+    "empty": {
+        "all": "No tienes actividad reciente",
+        "messages": "No tienes mensajes",
+        "matches": "No tienes matches",
+        "reviews": "No tienes reseñas",
+        "sessions": "No tienes sesiones"
+    }
+}

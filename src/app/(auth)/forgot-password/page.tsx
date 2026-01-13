@@ -1,5 +1,5 @@
-import { ForgotPasswordView } from "@/views/ForgotPasswordView"
+import { ForgotPasswordPage } from "@/features/auth";
 
-export default function ForgotPasswordPage() {
-    return <ForgotPasswordView />
+export default function ForgotPassword() {
+    return <ForgotPasswordPage />
 }

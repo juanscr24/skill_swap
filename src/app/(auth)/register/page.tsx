@@ -1,5 +1,6 @@
-import { RegisterView } from "@/views/RegisterView"
+import { RegisterPage } from "@/features/auth";
 
-export default function RegisterPage() {
-    return <RegisterView />
+
+export default function Register() {
+    return <RegisterPage />
 }

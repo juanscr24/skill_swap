@@ -2,20 +2,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { withErrorHandler, ApiError } from '@/shared/utils/api-handler'
 
 // GET - Obtener mensajes de una conversación
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  _request: NextRequest,
+  props: { params: Promise<{ id: string }> }
 ) {
-  try {
+  const params = await props.params
+  return withErrorHandler(async () => {
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'No autorizado' },
-        { status: 401 }
-      )
+      throw new ApiError('No autorizado', 401)
     }
 
     const conversationId = params.id
@@ -29,10 +28,7 @@ export async function GET(
     })
 
     if (!participant) {
-      return NextResponse.json(
-        { error: 'No tienes acceso a esta conversación' },
-        { status: 403 }
-      )
+      throw new ApiError('No tienes acceso a esta conversación', 403)
     }
 
     // Obtener mensajes
@@ -46,11 +42,5 @@ export async function GET(
     })
 
     return NextResponse.json(messages)
-  } catch (error) {
-    console.error('Error fetching messages:', error)
-    return NextResponse.json(
-      { error: 'Error al obtener mensajes' },
-      { status: 500 }
-    )
-  }
+  })
 }

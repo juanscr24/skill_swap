@@ -1,5 +1,5 @@
+import { availabilityService } from '@/features/mentor/services'
 import { NextRequest, NextResponse } from 'next/server'
-import { availabilityService } from '@/services/availability'
 
 // GET /api/availability/mentor/[mentorId] - Get mentor availability
 export async function GET(

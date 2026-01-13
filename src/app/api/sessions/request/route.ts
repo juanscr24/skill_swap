@@ -1,46 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
-import { createSessionRequest } from '@/services/sessions'
+import { createSessionRequest } from '@/features/session/services'
+import { withErrorHandler, ApiError } from '@/shared/utils/api-handler'
+import { sessionRequestSchema } from '@/features/session/validations/session.schema'
 
-/**
- * POST /api/sessions/request
- * Crea una solicitud de sesión basada en disponibilidad del mentor
- */
 export async function POST(request: NextRequest) {
-  try {
+  return withErrorHandler(async () => {
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {
-      return NextResponse.json({ message: 'No autenticado' }, { status: 401 })
+      throw new ApiError('No autenticado', 401)
     }
 
     const body = await request.json()
-    const { mentor_id, availability_id, title, description, duration_minutes } =
-      body
 
-    if (!mentor_id || !availability_id || !title || !duration_minutes) {
-      return NextResponse.json(
-        { message: 'Datos incompletos' },
-        { status: 400 }
-      )
-    }
+    // Validar con Zod
+    const validatedData = sessionRequestSchema.parse({
+      ...body,
+      duration_minutes: typeof body.duration_minutes === 'string'
+        ? parseInt(body.duration_minutes)
+        : body.duration_minutes
+    })
 
     const sessionRequest = await createSessionRequest({
-      mentor_id,
+      mentor_id: validatedData.mentor_id,
       guest_id: session.user.id,
-      availability_id,
-      title,
-      description,
-      duration_minutes: parseInt(duration_minutes),
+      availability_id: validatedData.availability_id,
+      title: validatedData.title,
+      description: validatedData.description,
+      duration_minutes: validatedData.duration_minutes,
     })
 
     return NextResponse.json(sessionRequest, { status: 201 })
-  } catch (error: any) {
-    console.error('Error creating session request:', error)
-    return NextResponse.json(
-      { message: error.message || 'Error al solicitar sesión' },
-      { status: 500 }
-    )
-  }
+  })
 }
