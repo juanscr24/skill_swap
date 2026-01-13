@@ -10,13 +10,15 @@ interface ChatHeaderProps {
     isOnline: boolean
     lastSeen: string | Date | null
     onBack: () => void
+    onToggleSessionInfo?: () => void
 }
 
 export const ChatHeader = ({
     conversation,
     isOnline,
     lastSeen,
-    onBack
+    onBack,
+    onToggleSessionInfo
 }: ChatHeaderProps) => {
     const t = useTranslations('sessions')
     return (
@@ -58,7 +60,10 @@ export const ChatHeader = ({
                     )}
                 </div>
             </div>
-            <button className="px-4 py-2 bg-(--button-1) text-(--button-1-text) rounded-lg font-medium hover:opacity-90">
+            <button
+                onClick={onToggleSessionInfo}
+                className="px-4 py-2 bg-(--button-1) text-(--button-1-text) rounded-lg font-medium hover:opacity-90"
+            >
                 {t('scheduleSessions')}
             </button>
         </div>

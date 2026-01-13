@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { useConversations } from '@/features/chat/hooks/useConversations'
 import { useRealtimeMessages } from '@/features/chat/hooks/useRealtimeMessages'
 import { useUserPresence } from '@/features/chat/hooks/useUserPresence'
-import { LoadingSpinner, ErrorBoundary } from '@/shared/components'
+import { LoadingSpinner, ErrorBoundary, Modal } from '@/shared/components'
 import { ConversationList } from './ConversationList'
 import { ChatHeader } from './ChatHeader'
 import { MessageList } from './MessageList'
@@ -19,12 +19,16 @@ export const ChatPage = () => {
     const searchParams = useSearchParams()
     const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null)
     const [searchQuery, setSearchQuery] = useState('')
+    const [isSessionInfoOpen, setIsSessionInfoOpen] = useState(false)
 
     // Hook de presencia de usuarios
     const { isUserOnline, getLastSeen } = useUserPresence({ enabled: true })
 
     // Obtener lista de conversaciones usando Prisma (a través de API)
     const { data: conversations, isLoading: conversationsLoading } = useConversations()
+
+    // Toggle para el modal de información de sesión
+    const toggleSessionInfo = () => setIsSessionInfoOpen(!isSessionInfoOpen)
 
     // Seleccionar conversación desde URL si existe
     useEffect(() => {
@@ -105,7 +109,7 @@ export const ChatPage = () => {
 
     return (
         <ErrorBoundary>
-            <div className="flex h-[calc(100vh-4rem)] bg-(--bg-1) max-md:flex-col">
+            <div className="flex h-[calc(100vh-4rem)] bg-(--bg-1)">
                 <ConversationList
                     conversations={filteredConversations}
                     selectedId={selectedConversationId}
@@ -127,6 +131,7 @@ export const ChatPage = () => {
                                 isOnline={selectedConversation?.otherUser?.id ? isUserOnline(selectedConversation.otherUser.id) : false}
                                 lastSeen={selectedConversation?.otherUser?.id ? getLastSeen(selectedConversation.otherUser.id) : null}
                                 onBack={() => setSelectedConversationId(null)}
+                                onToggleSessionInfo={toggleSessionInfo}
                             />
 
                             <div className="flex-1 flex overflow-hidden">
@@ -145,9 +150,18 @@ export const ChatPage = () => {
                                     />
                                 </div>
 
-                                <ChatSessionInfo
-                                    otherUserId={selectedConversation?.otherUser?.id}
-                                />
+                                {/* Modal for Session Info */}
+                                {isSessionInfoOpen && (
+                                    <Modal
+                                        isOpen={isSessionInfoOpen}
+                                        onClose={() => setIsSessionInfoOpen(false)}
+                                        title={t('sessionInfo') || 'Session Info'}
+                                    >
+                                        <ChatSessionInfo
+                                            otherUserId={selectedConversation?.otherUser?.id}
+                                        />
+                                    </Modal>
+                                )}
                             </div>
                         </>
                     )}

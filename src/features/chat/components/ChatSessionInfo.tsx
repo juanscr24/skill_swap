@@ -27,66 +27,73 @@ export const ChatSessionInfo = ({ otherUserId }: ChatSessionInfoProps) => {
     if (!otherUserId) return null
 
     return (
-        <div className="w-80 border-l border-(--border-1) bg-(--bg-1) flex flex-col max-lg:hidden">
-            <div className="p-6 border-b border-(--border-1)">
-                <h3 className="font-semibold text-(--text-1) mb-1">{t('sessionInfo') || 'Session Info'}</h3>
-                <p className="text-xs text-(--text-2)">{t('upcomingSessionsWithUser') || 'Upcoming sessions with this user'}</p>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex flex-col h-full w-full">
+            <div className="flex-1 overflow-y-auto space-y-4">
                 {isLoading ? (
-                    <LoadingSpinner size="md" />
+                    <div className="flex justify-center p-8">
+                        <LoadingSpinner size="md" />
+                    </div>
                 ) : relevantSessions.length === 0 ? (
-                    <div className="text-center py-8">
-                        <FiCalendar className="w-8 h-8 mx-auto mb-2 text-(--text-2) opacity-50" />
-                        <p className="text-sm text-(--text-2)">{t('noUpcomingSessions') || 'No upcoming sessions'}</p>
-                        <Link href={`/sessions/schedule?mentor=${otherUserId}`}>
-                            <Button primary className="mt-4 text-xs w-full">
-                                {t('scheduleNow') || 'Schedule Now'}
+                    <div className="text-center py-12 px-4 flex flex-col items-center">
+                        <div className="w-16 h-16 bg-(--bg-1) rounded-full flex items-center justify-center mb-4">
+                            <FiCalendar className="w-8 h-8 text-(--text-2) opacity-50" />
+                        </div>
+                        <h4 className="text-(--text-1) font-medium mb-1">{t('noUpcomingSessions')}</h4>
+                        <p className="text-sm text-(--text-2) mb-6 max-w-xs">{t('upcomingSessionsWithUser')}</p>
+
+                        <Link href={`/sessions/schedule?mentor=${otherUserId}`} className="w-full max-w-xs">
+                            <Button primary className="w-full justify-center">
+                                {t('scheduleNow')}
                             </Button>
                         </Link>
                     </div>
                 ) : (
-                    relevantSessions.map((session) => (
-                        <Card key={session.id} className="p-3 shadow-sm border-(--border-1) bg-(--bg-2)">
-                            <div className="flex justify-between items-start mb-2">
-                                <Badge variant={session.status === 'confirmed' ? 'success' : 'warning'}>
-                                    {ts(session.status || 'pending')}
-                                </Badge>
-                                <span className="text-[10px] text-(--text-2)">
-                                    {formatRelativeTime(session.start_at)}
-                                </span>
-                            </div>
-                            <h4 className="font-medium text-sm text-(--text-1) mb-2 line-clamp-1">{session.title}</h4>
-                            <div className="space-y-1">
-                                <div className="flex items-center gap-2 text-xs text-(--text-2)">
-                                    <FiCalendar className="w-3 h-3" />
-                                    {formatLongDate(session.start_at)}
+                    <>
+                        {relevantSessions.map((session) => (
+                            <Card key={session.id} className="p-4 shadow-sm border border-(--border-1) bg-(--bg-1) hover:border-(--primary-500) transition-colors">
+                                <div className="flex justify-between items-start mb-3">
+                                    <Badge variant={session.status === 'confirmed' ? 'success' : 'warning'}>
+                                        {ts(session.status || 'pending')}
+                                    </Badge>
+                                    <span className="text-xs text-(--text-2) bg-(--bg-2) px-2 py-1 rounded-full">
+                                        {formatRelativeTime(session.start_at)}
+                                    </span>
                                 </div>
-                                <div className="flex items-center gap-2 text-xs text-(--text-2)">
-                                    <FiClock className="w-3 h-3" />
-                                    {new Date(session.start_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                <h4 className="font-semibold text-(--text-1) mb-3 line-clamp-2">{session.title}</h4>
+                                <div className="space-y-2 mb-4">
+                                    <div className="flex items-center gap-2.5 text-sm text-(--text-2)">
+                                        <div className="w-8 h-8 rounded-lg bg-(--bg-2) flex items-center justify-center text-(--primary-500)">
+                                            <FiCalendar className="w-4 h-4" />
+                                        </div>
+                                        <span>{formatLongDate(session.start_at)}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2.5 text-sm text-(--text-2)">
+                                        <div className="w-8 h-8 rounded-lg bg-(--bg-2) flex items-center justify-center text-(--secondary-500)">
+                                            <FiClock className="w-4 h-4" />
+                                        </div>
+                                        <span>{new Date(session.start_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            {session.status === 'confirmed' && (
-                                <Link href={`/sessions/${session.id}`}>
-                                    <Button secondary className="mt-3 w-full py-1.5 text-xs flex items-center justify-center gap-2">
-                                        <FiVideo className="w-3 h-3" />
-                                        {ts('joinSession')}
-                                    </Button>
-                                </Link>
-                            )}
-                        </Card>
-                    ))
+                                {session.status === 'confirmed' && (
+                                    <Link href={`/sessions/${session.id}`} className="block">
+                                        <Button secondary className="w-full py-2 flex items-center justify-center gap-2">
+                                            <FiVideo className="w-4 h-4" />
+                                            {ts('joinSession')}
+                                        </Button>
+                                    </Link>
+                                )}
+                            </Card>
+                        ))}
+                    </>
                 )}
             </div>
 
             {relevantSessions.length > 0 && (
-                <div className="p-4 bg-(--bg-2) border-t border-(--border-1)">
-                    <Link href={`/sessions/schedule?mentor=${otherUserId}`}>
-                        <Button primary className="w-full text-xs">
-                            {t('scheduleAnother') || 'Schedule Another'}
+                <div className="mt-6 pt-4 border-t border-(--border-1)">
+                    <Link href={`/sessions/schedule?mentor=${otherUserId}`} className="block">
+                        <Button primary className="w-full justify-center py-2.5 text-sm font-medium">
+                            {t('scheduleAnother')}
                         </Button>
                     </Link>
                 </div>
