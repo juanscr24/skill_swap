@@ -1,5 +1,6 @@
 import { prisma } from '@/lib'
-import type { UserWithRelations, PotentialMatch } from '@/types'
+import { UserWithRelations } from '@/shared/types/api.types'
+import { PotentialMatch } from '../types'
 
 export const matchesService = {
   async getPotentialMatches(userId: string): Promise<PotentialMatch[]> {

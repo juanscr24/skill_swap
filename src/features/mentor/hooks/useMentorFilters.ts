@@ -17,13 +17,13 @@
 'use client'
 
 import { useState, useMemo, useCallback } from 'react'
-import type {
+import {
   MentorFilters,
+  INITIAL_MENTOR_FILTERS,
   ActiveFilterChip,
   MentorQueryParams,
-  UseMentorFiltersReturn,
-  INITIAL_MENTOR_FILTERS,
-} from '@/types/filters'
+  UseMentorFiltersReturn
+} from '../types'
 
 const initialFilters: MentorFilters = {
   skills: [],

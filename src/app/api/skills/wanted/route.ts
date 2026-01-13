@@ -3,11 +3,6 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
 import { createWantedSkill, deleteWantedSkill, getUserWantedSkills } from '@/features/profile/services'
 
-
-/**
- * GET /api/skills/wanted
- * Obtiene todas las wanted_skills del usuario autenticado
- */
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)
@@ -30,10 +25,6 @@ export async function GET() {
   }
 }
 
-/**
- * POST /api/skills/wanted
- * Crea una nueva wanted_skill para el usuario autenticado
- */
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)

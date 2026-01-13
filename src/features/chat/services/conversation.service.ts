@@ -1,13 +1,6 @@
 import { prisma } from '@/lib/prisma'
-import type { ConversationWithDetails } from '@/types/chat'
+import type { ConversationWithDetails } from '../types'
 
-/**
- * Servicio para manejar conversaciones usando Prisma
- * Las conversaciones se gestionan con Prisma, mientras que los mensajes
- * en tiempo real se manejan directamente con Supabase
- */
-
-// Obtener o crear una conversación entre dos usuarios
 export async function getOrCreateConversation(
   userId1: string,
   userId2: string

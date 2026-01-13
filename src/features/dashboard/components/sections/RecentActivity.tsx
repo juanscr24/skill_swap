@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { FiMessageCircle, FiUsers, FiStar, FiCheckCircle, FiArrowRight } from 'react-icons/fi'
 import { Avatar } from '@/shared/components/ui/Avatar'
 import { LoadingSpinner } from '@/shared/components/feedback'
-import { DashboardSectionProps } from '@/types'
+import { DashboardSectionProps } from '../../types'
 import { RecentActivity as ActivityType } from '@/features/activity/types/activity.types'
 
 interface RecentActivityProps extends DashboardSectionProps {
@@ -70,8 +70,8 @@ export const RecentActivity = ({ activities, isLoading, className = '' }: Recent
     <div className={`bg-(--bg-2) rounded-xl p-6 border border-(--border-1) ${className}`}>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-(--text-1)">{t('recentActivity')}</h2>
-        <Link 
-          href="/activity" 
+        <Link
+          href="/activity"
           className="text-(--button-1) hover:underline text-sm font-semibold flex items-center gap-1 group"
         >
           {t('viewAll')}
@@ -124,11 +124,10 @@ export const RecentActivity = ({ activities, isLoading, className = '' }: Recent
                       {[...Array(5)].map((_, i) => (
                         <FiStar
                           key={i}
-                          className={`w-3 h-3 ${
-                            i < activity.metadata!.rating! 
-                              ? 'fill-[#F59E0B] text-[#F59E0B]' 
+                          className={`w-3 h-3 ${i < activity.metadata!.rating!
+                              ? 'fill-[#F59E0B] text-[#F59E0B]'
                               : 'text-(--text-2)'
-                          }`}
+                            }`}
                         />
                       ))}
                     </div>

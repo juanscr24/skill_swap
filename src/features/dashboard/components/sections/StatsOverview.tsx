@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl'
 import { FiBookOpen, FiClock, FiTrendingUp, FiAward } from 'react-icons/fi'
 import { StatCard } from './StatCard'
-import type { DashboardStats, StatCardConfig, DashboardSectionProps } from '@/types/dashboard'
+import { DashboardStats, StatCardConfig, DashboardSectionProps } from '../../types'
 import { LoadingSpinner } from '@/shared/components/feedback'
 
 interface StatsOverviewProps extends DashboardSectionProps {
@@ -35,8 +35,8 @@ export const StatsOverview = ({ stats, isLoading, className = '' }: StatsOvervie
       value: stats.classesTaken,
       color: 'text-[#3B82F6]',
       change: stats.weeklyChange?.classesTaken,
-      trend: stats.weeklyChange?.classesTaken && stats.weeklyChange.classesTaken > 0 ? 'up' : 
-             stats.weeklyChange?.classesTaken && stats.weeklyChange.classesTaken < 0 ? 'down' : 'neutral'
+      trend: stats.weeklyChange?.classesTaken && stats.weeklyChange.classesTaken > 0 ? 'up' :
+        stats.weeklyChange?.classesTaken && stats.weeklyChange.classesTaken < 0 ? 'down' : 'neutral'
     },
     {
       icon: FiAward,
@@ -44,8 +44,8 @@ export const StatsOverview = ({ stats, isLoading, className = '' }: StatsOvervie
       value: stats.classesGiven,
       color: 'text-[#10B981]',
       change: stats.weeklyChange?.classesGiven,
-      trend: stats.weeklyChange?.classesGiven && stats.weeklyChange.classesGiven > 0 ? 'up' : 
-             stats.weeklyChange?.classesGiven && stats.weeklyChange.classesGiven < 0 ? 'down' : 'neutral'
+      trend: stats.weeklyChange?.classesGiven && stats.weeklyChange.classesGiven > 0 ? 'up' :
+        stats.weeklyChange?.classesGiven && stats.weeklyChange.classesGiven < 0 ? 'down' : 'neutral'
     },
     {
       icon: FiClock,
@@ -53,8 +53,8 @@ export const StatsOverview = ({ stats, isLoading, className = '' }: StatsOvervie
       value: `${stats.totalHours}h`,
       color: 'text-[#8B5CF6]',
       change: stats.weeklyChange?.totalHours,
-      trend: stats.weeklyChange?.totalHours && stats.weeklyChange.totalHours > 0 ? 'up' : 
-             stats.weeklyChange?.totalHours && stats.weeklyChange.totalHours < 0 ? 'down' : 'neutral'
+      trend: stats.weeklyChange?.totalHours && stats.weeklyChange.totalHours > 0 ? 'up' :
+        stats.weeklyChange?.totalHours && stats.weeklyChange.totalHours < 0 ? 'down' : 'neutral'
     },
     {
       icon: FiTrendingUp,

@@ -1,4 +1,5 @@
-import { type StatCardConfig } from '@/types/dashboard'
+
+import { StatCardConfig } from '../../types'
 import { FiTrendingUp, FiTrendingDown } from 'react-icons/fi'
 
 interface StatCardProps {
@@ -14,14 +15,13 @@ export const StatCard = ({ config }: StatCardProps) => {
         <div className={`p-3 rounded-lg bg-(--bg-1) ${color}`}>
           <Icon className="w-6 h-6" />
         </div>
-        
+
         {/* Cambio respecto a la semana anterior */}
         {change !== undefined && (
-          <div className={`flex items-center gap-1 text-sm font-medium ${
-            trend === 'up' ? 'text-green-500' : 
-            trend === 'down' ? 'text-red-500' : 
-            'text-(--text-2)'
-          }`}>
+          <div className={`flex items-center gap-1 text-sm font-medium ${trend === 'up' ? 'text-green-500' :
+            trend === 'down' ? 'text-red-500' :
+              'text-(--text-2)'
+            }`}>
             {trend === 'up' && <FiTrendingUp className="w-4 h-4" />}
             {trend === 'down' && <FiTrendingDown className="w-4 h-4" />}
             <span>{change > 0 ? '+' : ''}{change}</span>

@@ -1,7 +1,6 @@
 'use client'
-
 import { FiCheck } from 'react-icons/fi'
-import type { MessageStatus } from '@/types/chat'
+import { MessageStatus } from '../types'
 
 interface MessageStatusIndicatorProps {
   status: MessageStatus

@@ -3,10 +3,6 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
 import { getUserProfile } from '@/features/profile/services'
 
-/**
- * GET /api/users/[id]
- * Obtiene el perfil público de un usuario con sus reviews
- */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -35,7 +31,7 @@ export async function GET(
     return NextResponse.json(profile)
   } catch (error: any) {
     console.error('Error getting user profile:', error)
-    
+
     // Handle specific errors
     if (error.message === 'Usuario no encontrado') {
       return NextResponse.json(
@@ -43,7 +39,7 @@ export async function GET(
         { status: 404 }
       )
     }
-    
+
     return NextResponse.json(
       { message: error.message || 'Error al obtener el perfil' },
       { status: 500 }

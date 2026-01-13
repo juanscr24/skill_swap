@@ -6,7 +6,7 @@ import { CalendarCell } from './CalendarCell'
 import { LoadingSpinner } from '@/shared/components'
 import { useCalendar } from '@/features/session/hooks/useCalendar'
 import { generateCalendarDays, getDayName } from '@/shared/utils/calendarHelpers'
-import type { CalendarEvent } from '@/types/calendar'
+import { CalendarEvent, CalendarViewMode } from '@/features/calendar/types'
 
 interface SessionsCalendarProps {
   onEventClick?: (event: CalendarEvent) => void

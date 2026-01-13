@@ -1,16 +1,6 @@
 'use client'
+import { PresenceIndicatorProps } from "../types"
 
-interface PresenceIndicatorProps {
-  isOnline: boolean
-  size?: 'sm' | 'md' | 'lg'
-  showOffline?: boolean
-  className?: string
-}
-
-/**
- * Componente para mostrar si un usuario está online/offline
- * Muestra un círculo verde cuando está online
- */
 export const PresenceIndicator = ({
   isOnline,
   size = 'md',

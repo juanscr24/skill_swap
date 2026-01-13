@@ -3,10 +3,6 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
 import { rejectSessionRequest } from '@/features/session/services'
 
-/**
- * POST /api/sessions/[id]/reject
- * Rechaza una solicitud de sesión
- */
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

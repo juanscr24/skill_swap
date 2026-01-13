@@ -5,10 +5,6 @@ import { authOptions } from '@/lib/auth/auth.config'
 import { prisma } from '@/lib/prisma'
 import { cancelSession, createSession, getUpcomingSessions, getUserSessions } from '@/features/session/services'
 
-/**
- * GET /api/sessions
- * Obtiene las sesiones del usuario autenticado
- */
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)

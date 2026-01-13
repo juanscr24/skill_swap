@@ -4,7 +4,7 @@ import { FiCalendar, FiClock, FiArrowRight, FiSearch } from 'react-icons/fi'
 import { Avatar } from '@/shared/components/ui/Avatar'
 import { Badge } from '@/shared/components/ui/Badge'
 import { LoadingSpinner } from '@/shared/components'
-import type { DashboardSectionProps } from '@/types/dashboard'
+import { DashboardStats, StatCardConfig, DashboardSectionProps } from '../../types'
 
 interface Session {
   id: string
@@ -60,8 +60,8 @@ export const UpcomingSessions = ({ sessions, isLoading, className = '' }: Upcomi
     <div className={`bg-(--bg-2) rounded-xl p-6 border border-(--border-1) ${className}`}>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-(--text-1)">{t('upcomingSessions')}</h2>
-        <Link 
-          href="/sessions" 
+        <Link
+          href="/sessions"
           className="text-(--button-1) hover:underline text-sm font-semibold flex items-center gap-1 group"
         >
           {t('viewAll')}
@@ -104,7 +104,7 @@ export const UpcomingSessions = ({ sessions, isLoading, className = '' }: Upcomi
                 <div className="shrink-0 p-3 bg-(--button-1)/10 rounded-lg group-hover:bg-(--button-1)/20 transition-colors">
                   <FiCalendar className="w-6 h-6 text-(--button-1)" />
                 </div>
-                
+
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between mb-1">
                     <h4 className="font-semibold text-(--text-1) truncate">
@@ -114,20 +114,20 @@ export const UpcomingSessions = ({ sessions, isLoading, className = '' }: Upcomi
                       {session.status || 'pending'}
                     </Badge>
                   </div>
-                  
+
                   <div className="flex items-center gap-4 text-sm text-(--text-2)">
                     <span className="flex items-center gap-1">
                       <FiCalendar className="w-4 h-4" />
-                      {sessionDate.toLocaleDateString('es-ES', { 
-                        month: 'short', 
-                        day: 'numeric' 
+                      {sessionDate.toLocaleDateString('es-ES', {
+                        month: 'short',
+                        day: 'numeric'
                       })}
                     </span>
                     <span className="flex items-center gap-1">
                       <FiClock className="w-4 h-4" />
-                      {sessionDate.toLocaleTimeString('es-ES', { 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
+                      {sessionDate.toLocaleTimeString('es-ES', {
+                        hour: '2-digit',
+                        minute: '2-digit'
                       })}
                       {' • '}
                       {duration}min
@@ -137,10 +137,10 @@ export const UpcomingSessions = ({ sessions, isLoading, className = '' }: Upcomi
 
                 {otherUser && (
                   <div className="flex items-center gap-2 shrink-0">
-                    <Avatar 
-                      src={otherUser.image || ''} 
-                      alt={otherUser.name || 'User'} 
-                      size="md" 
+                    <Avatar
+                      src={otherUser.image || ''}
+                      alt={otherUser.name || 'User'}
+                      size="md"
                     />
                     <span className="text-sm text-(--text-1) font-medium hidden lg:block">
                       {otherUser.name || 'Usuario'}

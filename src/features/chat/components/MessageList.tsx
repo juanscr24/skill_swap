@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { Avatar } from '@/shared/components'
 import { MessageStatusIndicator } from '@/features/chat/components/MessageStatusIndicator'
 import { formatMessageTime } from '@/shared/utils/date'
-import { ChatMessage, ConversationWithDetails } from '@/types/chat'
+import { ChatMessage, ConversationWithDetails } from '../types'
 
 interface MessageListProps {
     messages: ChatMessage[]

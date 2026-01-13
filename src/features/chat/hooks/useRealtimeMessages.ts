@@ -3,7 +3,8 @@
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { RealtimeChannel } from '@supabase/supabase-js'
-import type { ChatMessage, MessageStatus } from '@/types/chat'
+import { ChatMessage, MessageStatus } from '../types'
+
 
 interface UseRealtimeMessagesOptions {
   conversationId: string | null
@@ -22,7 +23,7 @@ export const useRealtimeMessages = ({
   const [isSubscribed, setIsSubscribed] = useState(false)
   const supabase = useMemo(() => createClient(), [])
   const onMessageRef = useRef(onMessage)
-  
+
   useEffect(() => {
     onMessageRef.current = onMessage
   }, [onMessage])
@@ -93,7 +94,7 @@ export const useRealtimeMessages = ({
         },
         (payload) => {
           const newMessage = payload.new as ChatMessage
-          
+
           if (newMessage.conversation_id !== conversationId) {
             return
           }
@@ -101,19 +102,19 @@ export const useRealtimeMessages = ({
           setMessages((prev) => {
             const isDuplicate = prev.some((m) => {
               if (m.id === newMessage.id) return true
-              if (m.id.startsWith('temp-') && 
-                  m.sender_id === newMessage.sender_id &&
-                  m.content === newMessage.content &&
-                  Math.abs(new Date(m.created_at).getTime() - new Date(newMessage.created_at).getTime()) < 5000) {
+              if (m.id.startsWith('temp-') &&
+                m.sender_id === newMessage.sender_id &&
+                m.content === newMessage.content &&
+                Math.abs(new Date(m.created_at).getTime() - new Date(newMessage.created_at).getTime()) < 5000) {
                 return true
               }
               return false
             })
-            
+
             if (isDuplicate) return prev
-            
-            const withoutOldTemp = prev.filter(m => 
-              !m.id.startsWith('temp-') || 
+
+            const withoutOldTemp = prev.filter(m =>
+              !m.id.startsWith('temp-') ||
               m.sender_id !== newMessage.sender_id ||
               m.content !== newMessage.content
             )
@@ -153,7 +154,7 @@ export const useRealtimeMessages = ({
         },
         (payload) => {
           const deletedMessage = payload.old as ChatMessage
-          
+
           setMessages((prev) => prev.filter((m) => m.id !== deletedMessage.id))
         }
       )

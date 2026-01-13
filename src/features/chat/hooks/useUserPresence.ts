@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { createClient } from '@/lib/supabase/client'
 import type { RealtimeChannel } from '@supabase/supabase-js'
-import type { UserPresence } from '@/types/chat'
+import { UserPresence } from '../types'
 
 interface UseUserPresenceOptions {
   userId?: string

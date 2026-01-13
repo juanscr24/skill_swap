@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import type { CalendarEvent } from '@/types/calendar'
+import { CalendarEvent, CalendarFilters } from '@/features/calendar/types'
 
 interface UseCalendarReturn {
   events: CalendarEvent[]
@@ -41,14 +41,14 @@ export function useCalendar(
       }
 
       const data = await response.json()
-      
+
       // Convert date strings back to Date objects
       const eventsWithDates = data.events.map((event: any) => ({
         ...event,
         startDate: new Date(event.startDate),
         endDate: new Date(event.endDate)
       }))
-      
+
       setEvents(eventsWithDates)
       setIsMentor(data.isMentor)
     } catch (err: any) {
@@ -64,7 +64,7 @@ export function useCalendar(
     const now = new Date()
     const startDate = initialStartDate || new Date(now.getFullYear(), now.getMonth(), 1)
     const endDate = initialEndDate || new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
-    
+
     fetchEvents(startDate, endDate)
   }, [])
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
-import type { DashboardStats } from '@/types/dashboard'
+import { DashboardStats } from '../types'
 
 export function useDashboardStats() {
   const { data: session, status } = useSession()

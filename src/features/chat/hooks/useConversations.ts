@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import type { ConversationWithDetails } from '@/types/chat'
+import { ConversationWithDetails, ChatMessage } from '../types'
 
 // Hook para obtener conversaciones con auto-refetch en tiempo real
 export const useConversations = () => {

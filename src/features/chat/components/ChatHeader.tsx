@@ -3,7 +3,7 @@ import { FiVideo, FiInfo } from 'react-icons/fi'
 import { Avatar } from '@/shared/components'
 import { PresenceIndicator } from '@/features/chat/components/PresenceIndicator'
 import { formatRelativeTime } from '@/shared/utils/date'
-import { ConversationWithDetails } from '@/types/chat'
+import { ConversationWithDetails } from '../types'
 
 interface ChatHeaderProps {
     conversation: ConversationWithDetails | undefined

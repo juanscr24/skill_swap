@@ -1,10 +1,10 @@
 import { useTranslations } from 'next-intl'
 import { FiZap, FiUsers, FiStar, FiGlobe } from 'react-icons/fi'
 import { LoadingSpinner } from '@/shared/components'
-import type { UserImpact as ImpactType, DashboardSectionProps } from '@/types/dashboard'
+import { UserImpact as UserImpactType, DashboardSectionProps } from '../../types'
 
 interface UserImpactProps extends DashboardSectionProps {
-  impact: ImpactType | null
+  impact: UserImpactType | null
   isLoading: boolean
 }
 
@@ -109,11 +109,10 @@ export const UserImpact = ({ impact, isLoading, className = '' }: UserImpactProp
               {[...Array(5)].map((_, i) => (
                 <FiStar
                   key={i}
-                  className={`w-4 h-4 ${
-                    i < Math.round(impact.averageRating)
+                  className={`w-4 h-4 ${i < Math.round(impact.averageRating)
                       ? 'fill-[#F59E0B] text-[#F59E0B]'
                       : 'text-(--text-2)'
-                  }`}
+                    }`}
                 />
               ))}
             </div>

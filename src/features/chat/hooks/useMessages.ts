@@ -1,41 +1,8 @@
 'use client'
 
 import { useApiQuery, useApiMutation } from '@/shared/hooks'
+import { Conversation, Message, SendMessageData } from '../types'
 
-interface Conversation {
-  userId: string
-  userName: string | null
-  userImage: string | null
-  lastMessage: {
-    content: string
-    createdAt: Date
-  }
-  unreadCount: number
-}
-
-interface Message {
-  id: string
-  senderId: string
-  receiverId: string
-  content: string
-  read: boolean
-  createdAt: Date
-  sender: {
-    id: string
-    name: string | null
-    image: string | null
-  }
-}
-
-interface SendMessageData {
-  receiverId: string
-  content: string
-}
-
-/**
- * Hook refactorizado para manejar mensajes y conversaciones
- * Usa React Query para caching y sincronización automática
- */
 export function useMessages(otherUserId?: string) {
   // Query para conversaciones (cuando no hay otherUserId)
   const conversationsQuery = useApiQuery<Conversation[]>(
@@ -74,20 +41,20 @@ export function useMessages(otherUserId?: string) {
     invalidateKeys: [['messages', otherUserId], 'conversations'],
     optimistic: otherUserId
       ? {
-          queryKey: ['messages', otherUserId],
-          updateFn: (old: Message[] = [], newMsg: SendMessageData) => {
-            const tempMessage: Message = {
-              id: 'temp-' + Date.now(),
-              senderId: '',
-              receiverId: newMsg.receiverId,
-              content: newMsg.content,
-              read: false,
-              createdAt: new Date(),
-              sender: { id: '', name: null, image: null },
-            }
-            return [...old, tempMessage]
-          },
-        }
+        queryKey: ['messages', otherUserId],
+        updateFn: (old: Message[] = [], newMsg: SendMessageData) => {
+          const tempMessage: Message = {
+            id: 'temp-' + Date.now(),
+            senderId: '',
+            receiverId: newMsg.receiverId,
+            content: newMsg.content,
+            read: false,
+            createdAt: new Date(),
+            sender: { id: '', name: null, image: null },
+          }
+          return [...old, tempMessage]
+        },
+      }
       : undefined,
   })
 

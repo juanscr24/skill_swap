@@ -3,10 +3,6 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib'
 import { prisma } from '@/lib/prisma'
 
-/**
- * API para marcar mensajes como entregados
- * POST /api/messages/delivered
- */
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)

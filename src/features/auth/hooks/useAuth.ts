@@ -3,7 +3,7 @@
 import { useSession, signIn, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import type { LoginInput, RegisterInput } from '@/validations/auth'
+import { LoginInput, RegisterInput } from '..'
 
 export function useAuth() {
   const { data: session, status } = useSession()
@@ -149,7 +149,7 @@ export function useAuth() {
     isAuthenticated,
     isLoading: isLoadingAuth || isLoading,
     error,
-    
+
     // Acciones
     login,
     register,

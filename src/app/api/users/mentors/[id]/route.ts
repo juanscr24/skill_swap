@@ -7,10 +7,6 @@ interface RouteParams {
     }>
 }
 
-/**
- * GET /api/users/mentors/[id]
- * Fetch mentor profile by ID
- */
 export async function GET(request: NextRequest, { params }: RouteParams) {
     try {
         const { id } = await params

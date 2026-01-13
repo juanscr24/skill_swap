@@ -3,10 +3,6 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
 import { createSessionRequest } from '@/features/session/services'
 
-/**
- * POST /api/sessions/request
- * Crea una solicitud de sesión basada en disponibilidad del mentor
- */
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)

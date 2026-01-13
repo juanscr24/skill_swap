@@ -1,7 +1,9 @@
+
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { FiPlus, FiSearch, FiUsers, FiCalendar } from 'react-icons/fi'
-import type { QuickAction, DashboardSectionProps } from '@/types/dashboard'
+import { DashboardSectionProps, QuickAction } from '../../types'
+
 
 export const QuickActions = ({ className = '' }: DashboardSectionProps) => {
   const t = useTranslations('dashboard')
