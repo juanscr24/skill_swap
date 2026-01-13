@@ -1,5 +1,4 @@
 'use client'
-
 import { useTranslations } from 'next-intl'
 import { FiTrash2 } from 'react-icons/fi'
 import { MentorAvailability } from '@/shared/types/models.types'

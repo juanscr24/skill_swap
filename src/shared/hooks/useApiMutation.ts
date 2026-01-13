@@ -1,56 +1,29 @@
 'use client'
-
 import { useMutation, useQueryClient, UseMutationOptions } from '@tanstack/react-query'
 import { useCallback } from 'react'
 
-interface UseApiMutationOptions<TData, TVariables> {
+interface UseApiMutationOptions<TData, TVariables, TContext = any> {
   invalidateKeys?: (string | (string | number | null | undefined)[])[]
-  onSuccess?: (data: TData, variables: TVariables) => void
-  onError?: (error: Error, variables: TVariables) => void
+  onSuccess?: (data: TData, variables: TVariables, context?: TContext) => void
+  onError?: (error: Error, variables: TVariables, context?: TContext) => void
+  onMutate?: (variables: TVariables) => Promise<TContext> | TContext
   optimistic?: {
     queryKey: string | (string | number | null | undefined)[]
     updateFn: (old: any, variables: TVariables) => any
   }
   mutationOptions?: Omit<
-    UseMutationOptions<TData, Error, TVariables>,
+    UseMutationOptions<TData, Error, TVariables, TContext>,
     'mutationFn' | 'onSuccess' | 'onError' | 'onMutate'
   >
 }
 
 /**
  * Hook genérico para hacer mutaciones a la API con React Query
- * 
- * @param mutationFn - Función que ejecuta la mutación
- * @param options - Opciones adicionales (invalidación, optimistic updates, etc.)
- * 
- * @example
- * // Uso básico
- * const { mutate, isPending } = useApiMutation({
- *   mutationFn: async (data: SkillData) => {
- *     const res = await fetch('/api/skills', {
- *       method: 'POST',
- *       body: JSON.stringify(data),
- *     })
- *     return res.json()
- *   },
- *   invalidateKeys: ['skills', 'profile']
- * })
- * 
- * @example
- * // Con optimistic update
- * const { mutate } = useApiMutation({
- *   mutationFn: deleteSkill,
- *   invalidateKeys: ['skills'],
- *   optimistic: {
- *     queryKey: 'skills',
- *     updateFn: (old, skillId) => old.filter(s => s.id !== skillId)
- *   }
- * })
  */
-export function useApiMutation<TData = unknown, TVariables = void>(
+export function useApiMutation<TData = unknown, TVariables = void, TContext = any>(
   options: {
     mutationFn: (variables: TVariables) => Promise<TData>
-  } & UseApiMutationOptions<TData, TVariables>
+  } & UseApiMutationOptions<TData, TVariables, TContext>
 ) {
   const queryClient = useQueryClient()
 
@@ -59,15 +32,22 @@ export function useApiMutation<TData = unknown, TVariables = void>(
     invalidateKeys = [],
     onSuccess,
     onError,
+    onMutate,
     optimistic,
     mutationOptions = {},
   } = options
 
-  const mutation = useMutation<TData, Error, TVariables, { previous?: any } | undefined>({
+  const mutation = useMutation<TData, Error, TVariables, TContext>({
     mutationFn,
 
     // Optimistic update
     onMutate: async (variables) => {
+      let context: any = {}
+
+      if (onMutate) {
+        context = await onMutate(variables)
+      }
+
       if (optimistic) {
         const queryKey = Array.isArray(optimistic.queryKey)
           ? optimistic.queryKey
@@ -84,9 +64,10 @@ export function useApiMutation<TData = unknown, TVariables = void>(
           return optimistic.updateFn(old, variables)
         })
 
-        return { previous }
+        context.previous = previous
       }
-      return undefined
+
+      return context as TContext
     },
 
     // On success
@@ -98,21 +79,21 @@ export function useApiMutation<TData = unknown, TVariables = void>(
       })
 
       // Callback personalizado
-      onSuccess?.(data, variables)
+      onSuccess?.(data, variables, context)
     },
 
     // On error
     onError: (error, variables, context) => {
       // Revertir optimistic update
-      if (context?.previous && optimistic) {
+      if (context && (context as any).previous && optimistic) {
         const queryKey = Array.isArray(optimistic.queryKey)
           ? optimistic.queryKey
           : [optimistic.queryKey]
-        queryClient.setQueryData(queryKey, context.previous)
+        queryClient.setQueryData(queryKey, (context as any).previous)
       }
 
       // Callback personalizado
-      onError?.(error, variables)
+      onError?.(error, variables, context)
 
       // Log error
       console.error('Mutation error:', error)

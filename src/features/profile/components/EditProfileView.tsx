@@ -5,19 +5,16 @@ import { Button, LoadingSpinner } from "@/shared/components"
 import { FiArrowLeft } from "react-icons/fi"
 import Link from "next/link"
 import { EditAboutMeSection } from "./edit/EditAboutMeSection"
-import { useProfile } from "../hooks/useProfile"
+import { useProfile, useProfileMutations } from "../hooks/useProfile"
 import { useSkills } from "../hooks/useSkills"
 import { useLanguages } from "../hooks/useLanguages"
 
 export const EditProfileView = () => {
     const t = useTranslations('profile')
     const { profile, isLoading: isLoadingProfile } = useProfile()
-    const {
-        isLoading: isLoadingSkills,
-    } = useSkills()
-    const {
-        isLoading: isLoadingLanguages,
-    } = useLanguages()
+    const { isLoading: isLoadingSkills } = useSkills()
+    const { isLoading: isLoadingLanguages } = useLanguages()
+    const { updateAboutMe } = useProfileMutations()
 
     // Función para actualizar solo About Me
     const handleUpdateAboutMe = async (data: {
@@ -25,24 +22,12 @@ export const EditProfileView = () => {
         bio?: string | null
         city?: string | null
         title?: string | null
+        image?: string | null
+        image_public_id?: string | null
     }) => {
         try {
-            const response = await fetch('/api/users/profile/about-me', {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-
-            if (!response.ok) {
-                throw new Error('Failed to update profile')
-            }
-
-            // Refrescar profile completo
-            window.location.reload()
-
-            return { success: true }
+            const result = await updateAboutMe(data)
+            return { success: !!result }
         } catch (error) {
             console.error('Error updating profile:', error)
             return { success: false }

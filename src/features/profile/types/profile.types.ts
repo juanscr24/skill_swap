@@ -205,12 +205,12 @@ export interface UserAvailability {
 }
 
 export interface UpdateUserProfileData {
-    name?: string
-    bio?: string
-    city?: string
-    image?: string
-    image_public_id?: string
-    title?: string
-    social_links?: SocialLinksProps['links']
-    availability?: UserAvailability
+    name?: string | null
+    bio?: string | null
+    city?: string | null
+    image?: string | null
+    image_public_id?: string | null
+    title?: string | null
+    social_links?: SocialLinksProps['links'] | null
+    availability?: UserAvailability | null
 }

@@ -2,31 +2,25 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { messagesService } from '@/features/chat/services'
+import { withErrorHandler, ApiError } from '@/shared/utils/api-handler'
+import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
-  try {
+  return withErrorHandler(async () => {
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'No autenticado' },
-        { status: 401 }
-      )
+      throw new ApiError('No autenticado', 401)
     }
 
     const { conversationId, receiverId, content } = await request.json()
 
     if (!content) {
-      return NextResponse.json(
-        { error: 'Contenido requerido' },
-        { status: 400 }
-      )
+      throw new ApiError('Contenido requerido', 400)
     }
 
     // Si viene conversationId, usar la nueva estructura
     if (conversationId) {
-      const { prisma } = await import('@/lib/prisma')
-
       // Verificar que el usuario es participante
       const participant = await prisma.conversation_participants.findFirst({
         where: {
@@ -36,10 +30,7 @@ export async function POST(request: NextRequest) {
       })
 
       if (!participant) {
-        return NextResponse.json(
-          { error: 'No autorizado' },
-          { status: 403 }
-        )
+        throw new ApiError('No autorizado', 403)
       }
 
       // Crear mensaje
@@ -56,10 +47,7 @@ export async function POST(request: NextRequest) {
 
     // Fallback al sistema antiguo con receiverId
     if (!receiverId) {
-      return NextResponse.json(
-        { error: 'receiverId o conversationId requerido' },
-        { status: 400 }
-      )
+      throw new ApiError('receiverId o conversationId requerido', 400)
     }
 
     const message = await messagesService.sendMessage(
@@ -69,11 +57,5 @@ export async function POST(request: NextRequest) {
     )
 
     return NextResponse.json(message)
-  } catch (error) {
-    console.error('Error al enviar mensaje:', error)
-    return NextResponse.json(
-      { error: 'Error al enviar mensaje' },
-      { status: 500 }
-    )
-  }
+  })
 }

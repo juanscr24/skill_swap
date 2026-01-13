@@ -1,9 +1,9 @@
 'use client'
-import { FiVideo, FiInfo } from 'react-icons/fi'
 import { Avatar } from '@/shared/components'
 import { PresenceIndicator } from '@/features/chat/components/PresenceIndicator'
 import { formatRelativeTime } from '@/shared/utils/date'
 import { ConversationWithDetails } from '../types'
+import { useTranslations } from 'next-intl'
 
 interface ChatHeaderProps {
     conversation: ConversationWithDetails | undefined
@@ -18,6 +18,7 @@ export const ChatHeader = ({
     lastSeen,
     onBack
 }: ChatHeaderProps) => {
+    const t = useTranslations('sessions')
     return (
         <div className="px-6 py-4 border-b border-(--border-1) bg-(--bg-2) flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -57,18 +58,9 @@ export const ChatHeader = ({
                     )}
                 </div>
             </div>
-
-            <div className="flex items-center gap-2">
-                <button className="p-2 hover:bg-(--bg-1) rounded-lg text-(--text-2) hover:text-(--text-1)">
-                    <FiVideo className="w-5 h-5" />
-                </button>
-                <button className="p-2 hover:bg-(--bg-1) rounded-lg text-(--text-2) hover:text-(--text-1)">
-                    <FiInfo className="w-5 h-5" />
-                </button>
-                <button className="px-4 py-2 bg-(--button-1) text-(--button-1-text) rounded-lg font-medium hover:opacity-90 max-sm:hidden">
-                    Schedule Session
-                </button>
-            </div>
+            <button className="px-4 py-2 bg-(--button-1) text-(--button-1-text) rounded-lg font-medium hover:opacity-90">
+                {t('scheduleSessions')}
+            </button>
         </div>
     )
 }

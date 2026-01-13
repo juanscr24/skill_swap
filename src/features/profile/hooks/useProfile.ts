@@ -62,12 +62,12 @@ export interface UserProfile {
 }
 
 interface UpdateProfileData {
-  name?: string
-  bio?: string
-  city?: string
-  image?: string
-  image_public_id?: string
-  title?: string
+  name?: string | null
+  bio?: string | null
+  city?: string | null
+  image?: string | null
+  image_public_id?: string | null
+  title?: string | null
   social_links?: any
   availability?: any
 }
@@ -95,6 +95,7 @@ export function useProfile() {
  * Separado de useProfile para mejor organización
  */
 export function useProfileMutations() {
+  // Mutación general del perfil
   const updateProfile = useApiMutation<UserProfile, UpdateProfileData>({
     mutationFn: async (data) => {
       const response = await fetch('/api/users/profile', {
@@ -102,13 +103,38 @@ export function useProfileMutations() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       })
-      if (!response.ok) throw new Error('Error al actualizar el perfil')
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Error al actualizar el perfil')
+      }
+      return response.json()
+    },
+    invalidateKeys: ['profile'],
+  })
+
+  // Mutación específica para la sección About Me
+  const updateAboutMe = useApiMutation<UserProfile, UpdateProfileData>({
+    mutationFn: async (data) => {
+      const response = await fetch('/api/users/profile/about-me', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Error al actualizar About Me')
+      }
       return response.json()
     },
     invalidateKeys: ['profile'],
   })
 
   return {
-    updateProfile,
+    updateProfile: updateProfile.mutateAsync,
+    updateAboutMe: updateAboutMe.mutateAsync,
+    isUpdatingProfile: updateProfile.isPending,
+    isUpdatingAboutMe: updateAboutMe.isPending,
+    updateProfileError: updateProfile.error,
+    updateAboutMeError: updateAboutMe.error,
   }
 }

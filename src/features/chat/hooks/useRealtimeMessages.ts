@@ -1,10 +1,9 @@
 'use client'
-
-import { useEffect, useState, useCallback, useMemo, useRef } from 'react'
+import { useEffect, useCallback, useMemo, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import type { RealtimeChannel } from '@supabase/supabase-js'
 import { ChatMessage, MessageStatus } from '../types'
-
+import { useApiQuery, useApiMutation } from '@/shared/hooks'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface UseRealtimeMessagesOptions {
   conversationId: string | null
@@ -19,8 +18,7 @@ export const useRealtimeMessages = ({
   onMessage,
   enabled = true,
 }: UseRealtimeMessagesOptions) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [isSubscribed, setIsSubscribed] = useState(false)
+  const queryClient = useQueryClient()
   const supabase = useMemo(() => createClient(), [])
   const onMessageRef = useRef(onMessage)
 
@@ -28,37 +26,31 @@ export const useRealtimeMessages = ({
     onMessageRef.current = onMessage
   }, [onMessage])
 
+  // Query para obtener mensajes iniciales
+  const messagesQuery = useApiQuery<ChatMessage[]>(
+    ['messages', conversationId],
+    conversationId ? `/api/conversations/${conversationId}/messages` : null,
+    {
+      requireAuth: true,
+      enabled: !!conversationId && enabled,
+      staleTime: 1000 * 60, // 1 minuto
+    }
+  )
+
+  const messages = messagesQuery.data || []
+
   // Obtener el estado de un mensaje
   const getMessageStatus = useCallback(
     (message: ChatMessage): MessageStatus => {
-      // Si no es mi mensaje, no mostrar estado
       if (message.sender_id !== currentUserId) {
         return 'sent'
       }
-
       if (message.read_at) return 'read'
       if (message.delivered_at) return 'delivered'
       return 'sent'
     },
     [currentUserId]
   )
-
-  const fetchMessages = useCallback(async () => {
-    if (!conversationId) {
-      setMessages([])
-      return
-    }
-
-    try {
-      const response = await fetch(`/api/conversations/${conversationId}/messages`)
-      if (!response.ok) throw new Error('Failed to fetch messages')
-      const data = await response.json()
-      setMessages(data || [])
-    } catch (error) {
-      console.error('Error fetching messages:', error)
-      setMessages([])
-    }
-  }, [conversationId])
 
   const markAsDelivered = useCallback(async (messageId: string) => {
     try {
@@ -72,18 +64,16 @@ export const useRealtimeMessages = ({
     }
   }, [])
 
+  const [isSubscribed, setIsSubscribed] = useState(false)
+
+  // Suscripción Realtime
   useEffect(() => {
     if (!enabled || !conversationId) {
       setIsSubscribed(false)
-      setMessages([])
       return
     }
 
-    fetchMessages()
-
-    let channel: RealtimeChannel
-
-    channel = supabase
+    const channel = supabase
       .channel(`messages:${conversationId}`)
       .on(
         'postgres_changes',
@@ -91,17 +81,15 @@ export const useRealtimeMessages = ({
           event: 'INSERT',
           schema: 'public',
           table: 'messages',
+          filter: `conversation_id=eq.${conversationId}`,
         },
         (payload) => {
           const newMessage = payload.new as ChatMessage
 
-          if (newMessage.conversation_id !== conversationId) {
-            return
-          }
-
-          setMessages((prev) => {
+          queryClient.setQueryData(['messages', conversationId], (prev: ChatMessage[] = []) => {
             const isDuplicate = prev.some((m) => {
               if (m.id === newMessage.id) return true
+              // Lógica de detección de duplicados para mensajes optimistas
               if (m.id.startsWith('temp-') &&
                 m.sender_id === newMessage.sender_id &&
                 m.content === newMessage.content &&
@@ -111,14 +99,17 @@ export const useRealtimeMessages = ({
               return false
             })
 
-            if (isDuplicate) return prev
+            if (isDuplicate) {
+              // Si es un duplicado del real, reemplazamos el temporal
+              return prev.map(m => {
+                if (m.id.startsWith('temp-') && m.content === newMessage.content && m.sender_id === newMessage.sender_id) {
+                  return newMessage
+                }
+                return m
+              })
+            }
 
-            const withoutOldTemp = prev.filter(m =>
-              !m.id.startsWith('temp-') ||
-              m.sender_id !== newMessage.sender_id ||
-              m.content !== newMessage.content
-            )
-            return [...withoutOldTemp, newMessage]
+            return [...prev, newMessage]
           })
 
           if (newMessage.sender_id !== currentUserId && currentUserId) {
@@ -138,8 +129,7 @@ export const useRealtimeMessages = ({
         },
         (payload) => {
           const updatedMessage = payload.new as ChatMessage
-
-          setMessages((prev) =>
+          queryClient.setQueryData(['messages', conversationId], (prev: ChatMessage[] = []) =>
             prev.map((m) => (m.id === updatedMessage.id ? updatedMessage : m))
           )
         }
@@ -154,8 +144,9 @@ export const useRealtimeMessages = ({
         },
         (payload) => {
           const deletedMessage = payload.old as ChatMessage
-
-          setMessages((prev) => prev.filter((m) => m.id !== deletedMessage.id))
+          queryClient.setQueryData(['messages', conversationId], (prev: ChatMessage[] = []) =>
+            prev.filter((m) => m.id !== deletedMessage.id)
+          )
         }
       )
       .subscribe((status) => {
@@ -167,102 +158,87 @@ export const useRealtimeMessages = ({
       })
 
     return () => {
-      if (channel) {
-        supabase.removeChannel(channel)
-        setIsSubscribed(false)
-      }
+      supabase.removeChannel(channel)
+      setIsSubscribed(false)
     }
-  }, [conversationId, enabled, currentUserId, fetchMessages, markAsDelivered, supabase])
+  }, [conversationId, enabled, currentUserId, markAsDelivered, supabase, queryClient])
 
-  const markMessagesAsRead = useCallback(
-    async (messageIds: string[]) => {
-      if (!conversationId || messageIds.length === 0) return
-
-      try {
-        await fetch('/api/messages/read', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messageIds }),
-        })
-      } catch (error) {
-        console.error('Error marking messages as read:', error)
-      }
+  // Mutación para enviar mensaje
+  const sendMessageMutation = useApiMutation<ChatMessage, { content: string }, { previousMessages?: ChatMessage[], tempId: string }>({
+    mutationFn: async ({ content }) => {
+      const response = await fetch('/api/messages/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          conversationId,
+          content: content.trim(),
+        }),
+      })
+      if (!response.ok) throw new Error('Failed to send message')
+      return response.json()
     },
-    [conversationId]
-  )
-
-  const sendMessage = useCallback(
-    async (content: string, senderId: string) => {
-      if (!conversationId || !content.trim()) return null
+    onMutate: async ({ content }) => {
+      await queryClient.cancelQueries({ queryKey: ['messages', conversationId] })
+      const previousMessages = queryClient.getQueryData<ChatMessage[]>(['messages', conversationId])
 
       const tempId = `temp-${Date.now()}`
       const optimisticMessage: ChatMessage = {
         id: tempId,
-        conversation_id: conversationId,
-        sender_id: senderId,
+        conversation_id: conversationId!,
+        sender_id: currentUserId!,
         content: content.trim(),
         created_at: new Date().toISOString(),
       }
 
-      setMessages((prev) => [...prev, optimisticMessage])
+      queryClient.setQueryData(['messages', conversationId], (prev: ChatMessage[] = []) => [
+        ...prev,
+        optimisticMessage,
+      ])
 
-      try {
-        const response = await fetch('/api/messages/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            conversationId,
-            content: content.trim(),
-          }),
-        })
-
-        if (!response.ok) {
-          throw new Error('Failed to send message')
-        }
-
-        const data = await response.json()
-
-        setMessages((prev) => {
-          const withoutTemp = prev.filter((m) => m.id !== tempId)
-          const exists = withoutTemp.some((m) => m.id === data.id)
-          if (exists) return withoutTemp
-          return [...withoutTemp, data]
-        })
-
-        return data as ChatMessage
-      } catch (error) {
-        console.error('Error sending message:', error)
-        setMessages((prev) => prev.filter((m) => m.id !== tempId))
-        throw error
+      return { previousMessages, tempId }
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previousMessages) {
+        queryClient.setQueryData(['messages', conversationId], context.previousMessages)
       }
     },
-    [conversationId]
-  )
-
-  const markAsRead = useCallback(
-    async (userId: string) => {
-      if (!conversationId) return
-
-      try {
-        const response = await fetch(`/api/conversations/${conversationId}/read`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId })
-        })
-        if (!response.ok) throw new Error('Failed to mark as read')
-      } catch (error) {
-        console.error('Error marking as read:', error)
-      }
+    onSuccess: (data, _variables, context) => {
+      queryClient.setQueryData(['messages', conversationId], (prev: ChatMessage[] = []) => {
+        const withoutTemp = prev.filter((m) => m.id !== context?.tempId)
+        const exists = withoutTemp.some((m) => m.id === data.id)
+        if (exists) return withoutTemp
+        return [...withoutTemp, data]
+      })
+      queryClient.invalidateQueries({ queryKey: ['conversations'] })
     },
-    [conversationId]
-  )
+  })
+
+  // Mutación para marcar como leído
+  const markReadMutation = useApiMutation<void, string[]>({
+    mutationFn: async (messageIds) => {
+      if (messageIds.length === 0) return
+      const response = await fetch('/api/messages/read', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messageIds }),
+      })
+      if (!response.ok) throw new Error('Failed to mark as read')
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['conversations'] })
+    }
+  })
 
   return {
     messages,
+    isLoading: messagesQuery.isLoading,
+    isError: messagesQuery.isError,
+    error: messagesQuery.error,
     isSubscribed,
-    sendMessage,
-    markAsRead: markMessagesAsRead,
+    sendMessage: (content: string, _senderId: string) => sendMessageMutation.mutateAsync({ content }),
+    markAsRead: (messageIds: string[]) => markReadMutation.mutateAsync(messageIds),
     getMessageStatus,
-    refetch: fetchMessages,
+    refetch: messagesQuery.refetch,
+    isSending: sendMessageMutation.isPending,
   }
 }

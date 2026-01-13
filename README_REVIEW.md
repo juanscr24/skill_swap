@@ -533,8 +533,6 @@ export async function POST(request: NextRequest) {
 
 **Archivos a Refactorizar:**
 
-- [ ] `src/features/request/components/RequestsView.tsx` - Reemplazar fetch inline por hooks
-- [ ] `src/features/session/components/ScheduleSessionView.tsx` - Crear `useScheduleSession` hook
 - [ ] `src/features/profile/components/EditProfileView.tsx` - Remover `window.location.reload()`
 - [ ] `src/features/chat/hooks/useRealtimeMessages.ts` - Consolidar fetching
 
@@ -547,28 +545,16 @@ export async function POST(request: NextRequest) {
 **Tarea:** Implementar sistema de manejo de errores global
 
 **Pasos:**
-- [ ] Crear `src/lib/api/error-handler.ts`
-- [ ] Crear custom error classes (`ApiError`, `AuthError`, etc.)
-- [ ] Refactorizar ~50 API routes para usar el handler
+- [x] Crear `src/shared/utils/api-handler.ts` (Implementado `withErrorHandler`)
+- [x] Crear custom error classes (`ApiError`)
+- [/] Refactorizar API routes para usar el handler (En progreso)
 - [ ] Agregar logging estructurado
 
 **Impacto:** 🛡️ Mejor debugging, mensajes de error consistentes
 
 **Estimación:** 6-8 horas
 
-#### 3. Refactorizar ChatPage.tsx
-
-**Tarea:** Dividir componente de 200 líneas en componentes más pequeños
-
-**Estructura propuesta:**
-```
-src/features/chat/components/
-  ChatPage.tsx              (50 líneas - layout principal)
-  ConversationSidebar.tsx   (80 líneas)
-  MessageArea.tsx           (100 líneas)
-  hooks/
-    useChatState.ts         (estado compartido)
-```
+- [x] Refactorizar ChatPage.tsx (Dividido en componentes y hooks menores)
 
 **Impacto:** 📦 Mejor mantenibilidad y testing
 
@@ -583,7 +569,7 @@ src/features/chat/components/
 **Tarea:** Agregar validación de entrada en todas las API routes con Zod
 
 **Archivos prioritarios:**
-- [ ] `src/app/api/sessions/request/route.ts`
+- [x] `src/app/api/sessions/request/route.ts` (Validado con Zod)
 - [ ] `src/app/api/matches/send/route.ts`
 - [ ] `src/app/api/reviews/create/route.ts`
 - [ ] `src/app/api/users/profile/route.ts`
@@ -608,7 +594,7 @@ src/features/chat/components/
 #### 6. Refactorizar Componentes Grandes
 
 **Tareas:**
-- [ ] `ScheduleSessionView.tsx` - Crear `useScheduleForm` hook + dividir componentes
+- [x] `ScheduleSessionView.tsx` - Refactorizado con `useSessionRequests`
 - [ ] `RequestsView.tsx` - Separar tabs en componentes independientes
 - [ ] `ProfileView.tsx` - Lazy load secciones no críticas
 
