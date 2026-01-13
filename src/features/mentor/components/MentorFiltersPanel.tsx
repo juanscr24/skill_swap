@@ -9,7 +9,7 @@ import { SkillFilterSection } from './filters/SkillFilterSection'
 import { LanguageFilterSection } from './filters/LanguageFilterSection'
 import { RatingFilterSection } from './filters/RatingFilterSection'
 import { AvailabilityFilterSection } from './filters/AvailabilityFilterSection'
-import type { MentorFilters, FilterOption } from '@/types/filters'
+import { MentorFilters, FilterOption } from '../types'
 
 interface MentorFiltersPanelProps {
     isOpen: boolean

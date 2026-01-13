@@ -42,3 +42,13 @@ export interface Notification {
     read: boolean
     created_at: Date
 }
+
+export interface MentorAvailability {
+    id: string
+    mentor_id: string
+    date: Date
+    start_time: string 
+    end_time: string 
+    is_booked: boolean
+    created_at: Date
+}

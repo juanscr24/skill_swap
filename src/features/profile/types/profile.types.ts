@@ -108,7 +108,7 @@ export interface AvailabilityScheduleProps {
 
 export interface MentorAboutSectionProps {
     bio: string | null
-    languages: Array<{
+    languages?: Array<{
         name: string
         level: string | null
     }>
@@ -148,7 +148,7 @@ export interface SimilarMentor {
     image: string | null
     title?: string | null
     averageRating: number
-    skills: Array<{ name: string }>
+    skills?: Array<{ name: string }>
 }
 
 export interface MentorSimilarProfilesProps {

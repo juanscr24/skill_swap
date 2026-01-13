@@ -3,7 +3,7 @@ import { useState } from "react"
 import { Card } from "@/shared/components/ui/Card"
 import { useTranslations } from "next-intl"
 import { FiBookOpen, FiZap } from "react-icons/fi"
-import type { SkillsSectionProps } from '@/types'
+import { SkillsSectionProps } from "../../types"
 import { SkillList } from "../skills/SkillList"
 import { SkillModal } from "../skills/SkillModal"
 import { WantedSkillModal } from "../skills/WantedSkillModal"

@@ -1,5 +1,4 @@
 'use client'
-
 import { useTranslations } from "next-intl"
 import { PreferencesSection } from "./PreferencesSection"
 import { NotificationsSection } from "./NotificationsSection"

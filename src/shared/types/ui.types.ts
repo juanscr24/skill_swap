@@ -1,7 +1,7 @@
 import { ReactNode, InputHTMLAttributes } from "react";
 
 export interface AvatarProps {
-    src?: string
+    src?: string | null
     alt?: string
     size?: 'sm' | 'md' | 'lg' | 'xl'
     className?: string

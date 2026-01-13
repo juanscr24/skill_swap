@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { MentorAvailability } from '@/types/models'
+import { MentorAvailability } from '@/shared/types/models.types'
 
 export const availabilityService = {
     // Create availability slot for a mentor
@@ -116,7 +116,7 @@ export const availabilityService = {
     // Validate time format (HH:mm in multiples of 10 minutes)
     isValidTimeFormat(time: string): boolean {
         const [hours, minutes] = time.split(':').map(Number)
-        
+
         if (isNaN(hours) || isNaN(minutes)) return false
         if (hours < 0 || hours > 23) return false
         if (minutes < 0 || minutes > 59) return false

@@ -1,6 +1,5 @@
-import { ReactNode } from "react"
 import { IconType } from "react-icons"
-import type { SettingsSectionProps } from '@/types'
+import { SettingsSectionProps } from "../types"
 
 interface SettingsSectionPropsExtended extends SettingsSectionProps {
     icon?: IconType

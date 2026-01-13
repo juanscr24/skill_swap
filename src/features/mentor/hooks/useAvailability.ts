@@ -1,5 +1,5 @@
+import { MentorAvailability } from '@/shared/types'
 import { useState, useEffect } from 'react'
-import { MentorAvailability } from '@/types/models'
 
 export function useAvailability(mentorId?: string) {
   const [availability, setAvailability] = useState<MentorAvailability[]>([])

@@ -4,7 +4,7 @@ import { useRef } from "react"
 import { Avatar } from "@/shared/components/ui/Avatar"
 import { useTranslations } from "next-intl"
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi"
-import type { MentorSimilarProfilesProps, SimilarMentor } from '@/types'
+import { MentorSimilarProfilesProps } from "../../types"
 
 export const MentorSimilarProfiles = ({ mentorName, similarMentors }: MentorSimilarProfilesProps) => {
     const t = useTranslations('profile')

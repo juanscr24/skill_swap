@@ -2,9 +2,9 @@
 
 import { useTranslations } from "next-intl"
 import { FiBell } from "react-icons/fi"
-import { SettingsSection } from "./SettingsSection"
 import { Switch } from "../../../shared/components/ui/Switch"
 import { useSettingsStore } from "@/stores/settingsStore"
+import { SettingsSection } from "."
 
 export const NotificationsSection = () => {
     const t = useTranslations('settings.notifications')

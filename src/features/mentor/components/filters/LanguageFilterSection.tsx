@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { FiGlobe } from 'react-icons/fi'
 import { FilterCheckbox } from '@/shared/components/ui/FilterCheckbox'
-import type { FilterOption } from '@/types/filters'
+import { FilterOption } from '../../types'
 import { FilterAccordion } from './FilterAccordion'
 
 interface LanguageFilterSectionProps {

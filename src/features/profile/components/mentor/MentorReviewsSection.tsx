@@ -6,7 +6,7 @@ import { Rating } from "@/shared/components/feedback/Rating"
 import { useTranslations } from "next-intl"
 import { Trash2, Edit3 } from "lucide-react"
 import { useSession } from "next-auth/react"
-import type { MentorReviewsSectionProps, Review } from '@/types'
+import { MentorReviewsSectionProps } from "../../types"
 
 export const MentorReviewsSection = ({
     reviews,

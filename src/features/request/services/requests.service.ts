@@ -1,5 +1,6 @@
 import { prisma } from '@/lib'
-import type { PrismaMatch, MatchRequest } from '@/types'
+import { MatchRequest, PrismaMatch } from '@/features/matching/types'
+
 
 const mapMatchToRequest = (match: PrismaMatch): MatchRequest => ({
   id: match.id,

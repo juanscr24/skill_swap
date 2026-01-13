@@ -1,7 +1,7 @@
 import { Card } from "@/shared/components/ui/Card"
 import { useTranslations } from "next-intl"
 import { FiZap, FiBookOpen } from "react-icons/fi"
-import type { MentorSkillsSectionProps } from '@/types'
+import { MentorSkillsSectionProps } from "../../types"
 import { SkillList } from "../skills/SkillList"
 
 export const MentorSkillsSection = ({ skillsTeach, skillsLearn }: MentorSkillsSectionProps) => {

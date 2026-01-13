@@ -1,9 +1,9 @@
 'use client'
 
+import { CalendarEvent } from '@/features/calendar/types'
 import { Avatar } from '@/shared/components/ui'
 import { formatEventTime, getEventColor } from '@/shared/utils/calendarHelpers'
-import type { CalendarEvent } from '@/types/calendar'
-import { FiClock, FiUser, FiUsers } from 'react-icons/fi'
+import { FiClock, FiUsers } from 'react-icons/fi'
 
 interface SessionEventProps {
   event: CalendarEvent
@@ -17,7 +17,7 @@ interface SessionEventProps {
 export const SessionEvent = ({ event, onClick }: SessionEventProps) => {
   const colorClass = getEventColor(event)
   const timeStr = formatEventTime(event.startDate, event.endDate)
-  
+
   return (
     <button
       onClick={() => onClick(event)}
@@ -36,17 +36,17 @@ export const SessionEvent = ({ event, onClick }: SessionEventProps) => {
             {event.hostImage || event.guestImage ? (
               <div className="flex items-center gap-1">
                 {event.hostImage && (
-                  <Avatar 
-                    src={event.hostImage} 
-                    alt={event.hostName || ''} 
-                    size="sm" 
+                  <Avatar
+                    src={event.hostImage}
+                    alt={event.hostName || ''}
+                    size="sm"
                   />
                 )}
                 {event.guestImage && (
-                  <Avatar 
-                    src={event.guestImage} 
-                    alt={event.guestName || ''} 
-                    size="sm" 
+                  <Avatar
+                    src={event.guestImage}
+                    alt={event.guestName || ''}
+                    size="sm"
                   />
                 )}
               </div>

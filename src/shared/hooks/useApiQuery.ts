@@ -36,7 +36,7 @@ interface UseApiQueryOptions<T> {
  * )
  */
 export function useApiQuery<T>(
-  key: string | (string | number | null | undefined)[],
+  key: string | unknown[],
   endpoint: string | null,
   options: UseApiQueryOptions<T> = {}
 ) {

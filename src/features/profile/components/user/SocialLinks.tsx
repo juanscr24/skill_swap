@@ -2,7 +2,7 @@
 import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { Button } from "@/shared/components/ui"
-import type { SocialLinksProps } from '@/types'
+import { SocialLinksProps } from "../../types"
 import { FiPlus, FiTrash2, FiEdit2, FiX, FiCheck } from "react-icons/fi"
 import { FaLinkedin, FaGithub, FaInstagram, FaFacebook, FaWhatsapp, FaGlobe } from "react-icons/fa"
 

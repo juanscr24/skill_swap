@@ -1,12 +1,7 @@
 import { prisma } from '@/lib/prisma'
-import type { 
-  UpdateUserProfileData, 
-  UserFilters, 
-  UserWhereClause,
-  UserWithReviews,
-  MentorWithRating,
-  RatingReview 
-} from '@/types'
+import { UpdateUserProfileData } from '../types'
+import { MentorWithRating, UserWhereClause, UserWithReviews } from '@/features/mentor/types'
+
 
 /**
  * Obtiene el perfil completo de un usuario por ID
@@ -266,6 +261,7 @@ export async function getMentors(filterParams?: {
         bio: true,
         city: true,
         role: true,
+        title: true,
         skills: {
           select: {
             id: true,
@@ -354,6 +350,7 @@ export async function getMentors(filterParams?: {
       bio: true,
       city: true,
       role: true,
+      title: true,
       skills: {
         select: {
           id: true,

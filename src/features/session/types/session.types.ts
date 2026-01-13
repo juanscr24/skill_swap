@@ -1,4 +1,5 @@
 import { UserWithRelations } from '@/shared/types/api.types'
+import { MentorAvailability } from '@/shared/types'
 
 export interface SessionData {
     id: string
@@ -66,18 +67,18 @@ export interface AvailabilityManagerProps {
 }
 
 export interface AvailabilityDisplayProps {
-    availability: any
+    availability: MentorAvailability[]
+    title: string
+    emptyMessage: string
     onSlotSelect?: (slotId: string) => void
 }
 
 export interface BookSessionModalProps {
-    isOpen: boolean
-    onClose: () => void
     mentorId: string
     mentorName: string
-    slotId: string
-    startTime: string
-    endTime: string
+    availability: MentorAvailability[]
+    onClose: () => void
+    onSuccess: () => void
 }
 
 export interface MentorAvailabilityData {

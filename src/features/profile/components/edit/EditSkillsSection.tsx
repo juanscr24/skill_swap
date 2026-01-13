@@ -1,11 +1,11 @@
 'use client'
 import { useState } from "react"
 import { useTranslations } from "next-intl"
-import type { EditSkillsSectionProps } from '@/types'
 import { Card } from "@/shared/components/ui"
 import { SkillList } from "../skills/SkillList"
 import { SkillModal } from "../skills/SkillModal"
 import { WantedSkillModal } from "../skills/WantedSkillModal"
+import { EditSkillsSectionProps } from "../../types"
 
 export const EditSkillsSection = ({
   skills,

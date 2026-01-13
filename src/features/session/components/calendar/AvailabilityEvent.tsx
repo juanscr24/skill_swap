@@ -1,24 +1,19 @@
 'use client'
 
+import { CalendarEvent } from '@/features/calendar/types'
 import { Avatar } from '@/shared/components/ui'
 import { formatEventTime, getEventColor } from '@/shared/utils/calendarHelpers'
-import type { CalendarEvent } from '@/types/calendar'
-import { FiClock, FiUser } from 'react-icons/fi'
+import { FiClock } from 'react-icons/fi'
 
 interface AvailabilityEventProps {
   event: CalendarEvent
   onClick: (event: CalendarEvent) => void
 }
 
-/**
- * Renders an availability slot in the calendar
- * Shows time range and mentor info
- * Visual distinction for booked vs available slots
- */
 export const AvailabilityEvent = ({ event, onClick }: AvailabilityEventProps) => {
   const colorClass = getEventColor(event)
   const timeStr = formatEventTime(event.startDate, event.endDate)
-  
+
   return (
     <button
       onClick={() => onClick(event)}
@@ -36,10 +31,10 @@ export const AvailabilityEvent = ({ event, onClick }: AvailabilityEventProps) =>
           </p>
           {event.mentorImage && (
             <div className="flex items-center gap-1 mt-1">
-              <Avatar 
-                src={event.mentorImage} 
-                alt={event.mentorName || ''} 
-                size="sm" 
+              <Avatar
+                src={event.mentorImage}
+                alt={event.mentorName || ''}
+                size="sm"
               />
               <span className="text-[10px] opacity-80 truncate">
                 {event.mentorName}

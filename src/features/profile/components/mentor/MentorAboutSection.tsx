@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl"
 import { FiUser } from "react-icons/fi"
-import type { MentorAboutSectionProps } from '@/types'
+import { MentorAboutSectionProps } from "../../types"
 
 export const MentorAboutSection = ({ bio }: MentorAboutSectionProps) => {
     const t = useTranslations('profile')

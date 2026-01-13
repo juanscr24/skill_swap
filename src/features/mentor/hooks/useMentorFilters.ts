@@ -1,19 +1,3 @@
-/**
- * 🎣 HOOK PERSONALIZADO: useMentorFilters
- * 
- * Arquitectura:
- * - Gestión centralizada del estado de filtros
- * - Lógica de negocio separada de UI
- * - Conversión automática a query params
- * - Generación de chips activos
- * 
- * Responsabilidades:
- * - Mantener el estado de los filtros
- * - Aplicar/limpiar filtros
- * - Generar chips de filtros activos
- * - Construir query params para la API
- */
-
 'use client'
 
 import { useState, useMemo, useCallback } from 'react'

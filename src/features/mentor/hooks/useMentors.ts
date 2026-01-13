@@ -3,30 +3,7 @@
 import { useMemo } from 'react'
 import { useSession } from 'next-auth/react'
 import { useApiQuery } from '@/shared/hooks'
-import type { MentorQueryParams } from '@/types/filters'
-
-interface Mentor {
-  id: string
-  name: string | null
-  email: string
-  image: string | null
-  bio: string | null
-  city: string | null
-  role: string
-  skills: Array<{
-    id: string
-    name: string
-    description: string | null
-    level: string | null
-  }>
-  languages?: Array<{
-    id: string
-    name: string
-    level: string | null
-  }>
-  averageRating: number
-  totalReviews: number
-}
+import { MentorQueryParams, MentorWithRating } from '../types'
 
 /**
  * Hook refactorizado para obtener lista de mentores con filtros
@@ -55,7 +32,7 @@ export function useMentors(filters?: MentorQueryParams) {
     [filters]
   )
 
-  const mentorsQuery = useApiQuery<Mentor[]>(queryKey, url, {
+  const mentorsQuery = useApiQuery<MentorWithRating[]>(queryKey, url, {
     requireAuth: true,
     staleTime: 1000 * 60 * 3, // 3 minutos
   })

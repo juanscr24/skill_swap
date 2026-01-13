@@ -3,7 +3,7 @@ import { useState } from "react"
 import { Card } from "@/shared/components/ui/Card"
 import { LanguageList } from "../languages/LanguageList"
 import { LanguageModal } from "../languages/LanguageModal"
-import type { EditLanguagesSectionProps } from '@/types'
+import { EditLanguagesSectionProps } from "../../types"
 
 export const EditLanguagesSection = ({
   languages,

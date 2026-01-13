@@ -1,5 +1,4 @@
 import { IconType } from "react-icons"
-import type { StatsCardProps } from '@/types'
 
 interface StatsCardPropsExtended {
     icon: IconType

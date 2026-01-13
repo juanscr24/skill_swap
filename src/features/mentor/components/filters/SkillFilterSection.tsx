@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { FiCode, FiSearch } from 'react-icons/fi'
 import { FilterCheckbox } from '@/shared/components/ui/FilterCheckbox'
-import type { FilterOption } from '@/types/filters'
+import { FilterOption } from '../../types'
 import { FilterAccordion } from './FilterAccordion'
 
 interface SkillFilterSectionProps {

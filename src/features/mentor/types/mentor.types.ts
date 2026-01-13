@@ -1,6 +1,30 @@
 /**
  * Estado completo de los filtros de mentores
  */
+
+export interface Mentor {
+    id: string
+    name: string | null
+    email: string
+    image: string | null
+    bio: string | null
+    city: string | null
+    role: string
+    skills: Array<{
+        id: string
+        name: string
+        description: string | null
+        level: string | null
+    }>
+    languages?: Array<{
+        id: string
+        name: string
+        level: string | null
+    }>
+    averageRating: number
+    totalReviews: number
+}
+
 export interface MentorFilters {
     skills: string[]           // Multi-select: IDs de skills
     languages: string[]        // Multi-select: IDs de idiomas
@@ -149,6 +173,7 @@ export interface UserWithReviews {
     bio: string | null
     city: string | null
     role: string
+    title: string | null
     skills: Array<{
         id: string
         name: string
@@ -171,6 +196,7 @@ export interface MentorWithRating {
     bio: string | null
     city: string | null
     role: string
+    title: string | null
     skills: Array<{
         id: string
         name: string

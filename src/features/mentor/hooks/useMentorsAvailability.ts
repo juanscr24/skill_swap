@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import type { MentorAvailabilityData } from '@/types'
+import { MentorAvailabilityData } from '@/features/session/types'
 
 export function useMentorsAvailability() {
   const [mentorAvailabilities, setMentorAvailabilities] = useState<MentorAvailabilityData[]>([])

@@ -1,11 +1,11 @@
 import { prisma } from '@/lib'
-import type { ReviewData, ServiceReview } from '@/types'
+import { ReviewData, ServiceReview } from '../types'
 
 const mapReviewData = (review: ReviewData | any): ServiceReview => {
   // Manejar tanto la estructura con 'author' como con 'users_reviews_author_idTousers'
   const authorData = review.author || review.users_reviews_author_idTousers
   const targetData = review.target || review.users_reviews_target_idTousers
-  
+
   return {
     id: review.id,
     authorId: review.author_id || '',

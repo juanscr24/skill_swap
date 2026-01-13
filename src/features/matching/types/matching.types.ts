@@ -1,12 +1,28 @@
 import { UserWithRelations } from '@/shared/types/api.types'
 
+export interface MatchCardUser {
+    id: string
+    name: string
+    image?: string
+    city?: string
+    title?: string
+    bio?: string
+    rating?: number
+    teachingSkills: string[]
+    learningSkills: string[]
+    matchPercentage?: number
+    yearsExperience?: number
+    languages: string[]
+}
+
 export interface MatchCardProps {
-    match: MatchRequest
-    onAccept: (id: string) => Promise<void>
-    onReject: (id: string) => Promise<void>
+    user: MatchCardUser
+    onAccept: () => void | Promise<void>
+    onReject: () => void | Promise<void>
 }
 
 export interface MatchRequest {
+    // ... existing MatchRequest if still needed elsewhere
     id: string
     senderId: string
     receiverId: string

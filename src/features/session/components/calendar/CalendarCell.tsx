@@ -1,31 +1,21 @@
 'use client'
-
-import type { CalendarDayData, CalendarEvent } from '@/types/calendar'
 import { SessionEvent } from './SessionEvent'
 import { AvailabilityEvent } from './AvailabilityEvent'
+import { CalendarDayData, CalendarEvent } from '@/features/calendar/types'
 
 interface CalendarCellProps {
   dayData: CalendarDayData
   onEventClick: (event: CalendarEvent) => void
 }
 
-/**
- * Individual calendar cell representing a single day
- * Shows day number and all events for that day
- * 
- * Visual states:
- * - Current month days: full opacity
- * - Other month days: reduced opacity
- * - Today: highlighted with border
- */
 export const CalendarCell = ({ dayData, onEventClick }: CalendarCellProps) => {
   const { date, isCurrentMonth, isToday, events } = dayData
   const dayNumber = date.getDate()
-  
+
   // Separate events by type
   const sessionEvents = events.filter(e => e.type === 'session')
   const availabilityEvents = events.filter(e => e.type === 'availability')
-  
+
   return (
     <div
       className={`
@@ -40,15 +30,15 @@ export const CalendarCell = ({ dayData, onEventClick }: CalendarCellProps) => {
         <span
           className={`
             text-sm font-semibold
-            ${isToday 
-              ? 'bg-(--button-1) text-(--button-1-text) w-6 h-6 flex items-center justify-center rounded-full' 
+            ${isToday
+              ? 'bg-(--button-1) text-(--button-1-text) w-6 h-6 flex items-center justify-center rounded-full'
               : 'text-(--text-1)'
             }
           `}
         >
           {dayNumber}
         </span>
-        
+
         {/* Event count badge */}
         {events.length > 0 && (
           <span className="text-[10px] bg-(--bg-3) text-(--text-2) px-1.5 py-0.5 rounded-full">
@@ -56,27 +46,27 @@ export const CalendarCell = ({ dayData, onEventClick }: CalendarCellProps) => {
           </span>
         )}
       </div>
-      
+
       {/* Events list */}
       <div className="space-y-1 overflow-y-auto max-h-[80px]">
         {/* Sessions first */}
         {sessionEvents.map((event) => (
-          <SessionEvent 
-            key={event.id} 
-            event={event} 
+          <SessionEvent
+            key={event.id}
+            event={event}
             onClick={onEventClick}
           />
         ))}
-        
+
         {/* Then availability */}
         {availabilityEvents.map((event) => (
-          <AvailabilityEvent 
-            key={event.id} 
-            event={event} 
+          <AvailabilityEvent
+            key={event.id}
+            event={event}
             onClick={onEventClick}
           />
         ))}
-        
+
         {/* Show "+N more" if too many events */}
         {events.length > 3 && (
           <div className="text-[10px] text-(--text-2) text-center py-1">

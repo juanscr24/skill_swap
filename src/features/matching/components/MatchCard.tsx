@@ -4,7 +4,7 @@ import Image from "next/image"
 import { Badge } from "@/shared/components/ui/Badge"
 import { FiMapPin, FiX, FiCheck, FiStar } from "react-icons/fi"
 import { Dot, Languages } from "lucide-react"
-import type { MatchCardProps } from '@/types'
+import { MatchCardProps } from "../types"
 
 export const MatchCard = ({ user, onAccept, onReject }: MatchCardProps) => {
     const t = useTranslations('matching')

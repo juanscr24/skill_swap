@@ -1,7 +1,9 @@
 'use client'
 
-import { MentorAvailability } from '@/types/models'
-import type { AvailabilityDisplayProps } from '@/types'
+import { MentorAvailability } from "@/shared/types"
+import { AvailabilityDisplayProps } from "../../types"
+
+
 
 export const AvailabilityDisplay = ({
   availability,
@@ -55,11 +57,10 @@ export const AvailabilityDisplay = ({
               {slots.map((slot) => (
                 <div
                   key={slot.id}
-                  className={`px-3 py-2 rounded-lg text-sm text-center ${
-                    slot.is_booked
+                  className={`px-3 py-2 rounded-lg text-sm text-center ${slot.is_booked
                       ? 'bg-gray-100 text-gray-400 dark:bg-gray-800 line-through'
                       : 'bg-(--button-1)/10 text-(--button-1) border border-(--button-1)/20'
-                  }`}
+                    }`}
                 >
                   {slot.start_time} - {slot.end_time}
                 </div>

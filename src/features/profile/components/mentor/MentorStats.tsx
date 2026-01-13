@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl"
-import type { MentorStatsProps } from '@/types'
+import { MentorStatsProps } from "../../types"
 
 export const MentorStats = ({
     totalSessions,

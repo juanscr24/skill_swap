@@ -6,23 +6,12 @@ import { CalendarCell } from './CalendarCell'
 import { LoadingSpinner } from '@/shared/components'
 import { useCalendar } from '@/features/session/hooks/useCalendar'
 import { generateCalendarDays, getDayName } from '@/shared/utils/calendarHelpers'
-import { CalendarEvent, CalendarViewMode } from '@/features/calendar/types'
+import { CalendarEvent } from '@/features/calendar/types'
 
 interface SessionsCalendarProps {
   onEventClick?: (event: CalendarEvent) => void
 }
 
-/**
- * Main calendar component
- * Displays a monthly view of availability slots and scheduled sessions
- * 
- * Features:
- * - Month navigation
- * - Color-coded events (availability = blue, sessions = status-based)
- * - Click to view event details
- * - Responsive grid layout
- * - Role-based filtering (mentors see availability, students only see sessions)
- */
 export const SessionsCalendar = ({ onEventClick }: SessionsCalendarProps) => {
   const today = new Date()
   const [currentYear, setCurrentYear] = useState(today.getFullYear())

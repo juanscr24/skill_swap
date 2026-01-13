@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
+import { SessionViewData } from '../types'
 
 export function useSessionRequests() {
-  const [requests, setRequests] = useState<any[]>([])
+  const [requests, setRequests] = useState<SessionViewData[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 

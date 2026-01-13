@@ -6,7 +6,7 @@ import { Button, Input } from "@/shared/components"
 import { Textarea } from "@/shared/components/ui/Textarea"
 import { Avatar } from "@/shared/components/ui/Avatar"
 import { FiLoader, FiSave, FiUpload } from "react-icons/fi"
-import type { EditAboutMeSectionProps } from '@/types'
+import { EditAboutMeSectionProps } from "../../types"
 
 export const EditAboutMeSection = ({ profile, onUpdate }: EditAboutMeSectionProps) => {
   const t = useTranslations('profile')

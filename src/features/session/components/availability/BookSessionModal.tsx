@@ -1,13 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { MentorAvailability } from '@/types/models'
 import { Button } from '@/shared/components/ui/Button'
 import { Input } from '@/shared/components/ui/Input'
 import { Textarea } from '@/shared/components/ui/Textarea'
 import { useSessionRequests } from '@/features/session/hooks/useSessionRequests'
 import { useTranslations } from 'next-intl'
-import { BookSessionModalProps } from '@/types'
+import { BookSessionModalProps } from '../../types'
 
 export const BookSessionModal = ({
   mentorId,

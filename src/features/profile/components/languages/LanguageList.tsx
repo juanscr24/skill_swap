@@ -1,5 +1,5 @@
 'use client'
-import { Language } from "@/types/models"
+import { Language } from "@/shared/types"
 import { LanguageItem } from "./LanguageItem"
 import { FiPlus } from "react-icons/fi"
 

@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { FiStar } from 'react-icons/fi'
-import type { RatingOption } from '@/types/filters'
+import { RatingOption } from '../../types'
 import { FilterAccordion } from './FilterAccordion'
 
 interface RatingFilterSectionProps {

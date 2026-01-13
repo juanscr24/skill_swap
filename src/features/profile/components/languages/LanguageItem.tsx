@@ -1,6 +1,6 @@
 'use client'
+import { Language } from "@/shared/types"
 import { FiX } from "react-icons/fi"
-import { Language } from "@/types/models"
 
 interface LanguageItemProps {
     language: Language

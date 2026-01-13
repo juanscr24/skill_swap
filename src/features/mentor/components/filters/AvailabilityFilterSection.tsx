@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import { FiClock } from 'react-icons/fi'
 import { FilterCheckbox } from '@/shared/components/ui/FilterCheckbox'
 import { FilterAccordion } from './FilterAccordion'
-import type { AvailabilityFilter } from '@/types/filters'
+import { AvailabilityFilter } from '../../types'
 
 interface AvailabilityFilterSectionProps {
     isOpen: boolean

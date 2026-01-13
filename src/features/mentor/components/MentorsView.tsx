@@ -14,7 +14,7 @@ import { Button } from '@/shared/components/ui/Button'
 import { LoadingSpinner } from '@/shared/components'
 import { FilterChip } from '@/shared/components/ui/FilterChip'
 import { MentorFiltersPanel } from './MentorFiltersPanel'
-import type { FilterOption } from '@/types/filters'
+import { FilterOption } from '../types'
 
 export const MentorsView = () => {
   const t = useTranslations('mentors')

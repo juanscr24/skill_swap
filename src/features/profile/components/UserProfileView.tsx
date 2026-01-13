@@ -13,7 +13,7 @@ import { MentorAvailability } from './mentor/MentorAvailability'
 import { MentorSimilarProfiles } from './mentor/MentorSimilarProfiles'
 import { MentorStats } from './mentor/MentorStats'
 import { useMentors } from '@/features/mentor/hooks/useMentors'
-import type { UserProfileViewProps } from '@/types'
+import { UserProfileViewProps } from '../types'
 
 export const UserProfileView = ({ userId }: UserProfileViewProps) => {
   const { profile, isLoading, error, refetch, updateReviews } = useUserProfile(userId)
@@ -75,7 +75,7 @@ export const UserProfileView = ({ userId }: UserProfileViewProps) => {
       id: m.id,
       name: m.name,
       image: m.image,
-      title: (m as any).title || null,
+      title: m.title || null,
       averageRating: m.averageRating,
     }))
 
@@ -90,7 +90,7 @@ export const UserProfileView = ({ userId }: UserProfileViewProps) => {
           image={profile.image}
           rating={profile.averageRating}
           totalReviews={profile.totalReviews}
-          socialLinks={profile.social_links}
+          socialLinks={profile.social_links || undefined}
         />
       </div>
 

@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import type { CreateLanguageInput } from '@/types'
+import { CreateLanguageInput } from '@/features/language/types'
 
 /**
  * Get all languages for a user
