@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react'
 import { NextIntlClientProvider } from 'next-intl'
 import { useLocaleStore } from '@/stores/localeStore'
-import type { LocaleProviderProps } from '@/types'
+import type { PropsWithChildren } from 'react'
 
-export function LocaleProvider({ children }: LocaleProviderProps) {
+export function LocaleProvider({ children }: PropsWithChildren) {
     const { locale, messages } = useLocaleStore()
     const [mounted, setMounted] = useState(false)
 

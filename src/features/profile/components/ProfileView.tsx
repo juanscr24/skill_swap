@@ -66,7 +66,7 @@ export const ProfileView = () => {
                     <SocialLinks
                         links={profile.social_links || {}}
                         onUpdate={async (data) => {
-                            await updateProfile.mutateAsync(data)
+                            await updateProfile(data)
                         }}
                     />
 

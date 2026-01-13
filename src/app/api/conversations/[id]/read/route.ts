@@ -6,9 +6,10 @@ import { prisma } from '@/lib/prisma'
 // POST - Marcar conversación como leída
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await props.params
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {

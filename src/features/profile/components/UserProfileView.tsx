@@ -26,7 +26,7 @@ export const UserProfileView = ({ userId }: UserProfileViewProps) => {
       setIsSubmitting(true)
       const newReview = await createReview(userId, rating, comment)
       // Actualizar reviews en el estado local sin recargar todo el perfil
-      updateReviews?.(newReview)
+      updateReviews?.()
     } catch (err) {
       throw err
     } finally {
@@ -39,7 +39,7 @@ export const UserProfileView = ({ userId }: UserProfileViewProps) => {
       setIsSubmitting(true)
       await deleteReview(reviewId)
       // Actualizar reviews en el estado local sin recargar todo el perfil
-      updateReviews?.(reviewId, true)
+      updateReviews?.()
     } catch (err) {
       throw err
     } finally {

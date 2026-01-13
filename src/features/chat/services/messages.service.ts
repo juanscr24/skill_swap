@@ -1,5 +1,5 @@
 import { prisma } from '@/lib'
-import type { MessageConversation, MessageDetail } from '../types'
+import type { Conversation as MessageConversation, Message as MessageDetail } from '../types'
 import { MessageData } from '@/shared/types'
 
 export const messagesService = {

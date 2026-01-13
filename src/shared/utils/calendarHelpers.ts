@@ -1,9 +1,9 @@
-import type { 
-  CalendarEvent, 
-  PrismaMentorAvailability, 
+import type {
+  CalendarEvent,
+  PrismaMentorAvailability,
   PrismaSession,
-  CalendarDayData 
-} from '@/types/calendar'
+  CalendarDayData
+} from '@/features/calendar/types/calendar.types'
 
 /**
  * Maps mentor_availability to CalendarEvent
@@ -13,11 +13,11 @@ export function mapAvailabilityToEvent(
   availability: PrismaMentorAvailability
 ): CalendarEvent {
   const { date, start_time, end_time, users, is_booked, id, mentor_id } = availability
-  
+
   // Parse time strings "HH:mm" and combine with date
   const startDate = combineDateAndTime(date, start_time)
   const endDate = combineDateAndTime(date, end_time)
-  
+
   return {
     id,
     type: 'availability',
@@ -49,7 +49,7 @@ export function mapSessionToEvent(session: PrismaSession): CalendarEvent {
     users_sessions_host_idTousers,
     users_sessions_guest_idTousers
   } = session
-  
+
   return {
     id,
     type: 'session',
@@ -92,11 +92,11 @@ export function generateCalendarDays(
   const lastDay = new Date(year, month + 1, 0)
   const startDay = firstDay.getDay() // 0 = Sunday
   const daysInMonth = lastDay.getDate()
-  
+
   const days: CalendarDayData[] = []
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  
+
   // Add padding days from previous month
   const prevMonthLastDay = new Date(year, month, 0).getDate()
   for (let i = startDay - 1; i >= 0; i--) {
@@ -108,7 +108,7 @@ export function generateCalendarDays(
       events: getEventsForDate(date, events)
     })
   }
-  
+
   // Add current month days
   for (let day = 1; day <= daysInMonth; day++) {
     const date = new Date(year, month, day)
@@ -119,7 +119,7 @@ export function generateCalendarDays(
       events: getEventsForDate(date, events)
     })
   }
-  
+
   // Add padding days from next month
   const remainingDays = 42 - days.length // Always show 6 weeks
   for (let day = 1; day <= remainingDays; day++) {
@@ -131,7 +131,7 @@ export function generateCalendarDays(
       events: getEventsForDate(date, events)
     })
   }
-  
+
   return days
 }
 
@@ -141,7 +141,7 @@ export function generateCalendarDays(
 export function getEventsForDate(date: Date, events: CalendarEvent[]): CalendarEvent[] {
   const targetDate = new Date(date)
   targetDate.setHours(0, 0, 0, 0)
-  
+
   return events.filter(event => {
     const eventDate = new Date(event.startDate)
     eventDate.setHours(0, 0, 0, 0)
@@ -154,11 +154,11 @@ export function getEventsForDate(date: Date, events: CalendarEvent[]): CalendarE
  */
 export function getEventColor(event: CalendarEvent): string {
   if (event.type === 'availability') {
-    return event.isBooked 
+    return event.isBooked
       ? 'bg-gray-400 text-gray-900' // Booked availability
       : 'bg-blue-500 text-white'     // Available slot
   }
-  
+
   // Session colors based on status
   switch (event.status) {
     case 'scheduled':
@@ -179,15 +179,15 @@ export function getEventColor(event: CalendarEvent): string {
  * Formats event time for display
  */
 export function formatEventTime(startDate: Date, endDate: Date): string {
-  const start = startDate.toLocaleTimeString('en-US', { 
-    hour: 'numeric', 
+  const start = startDate.toLocaleTimeString('en-US', {
+    hour: 'numeric',
     minute: '2-digit',
-    hour12: true 
+    hour12: true
   })
-  const end = endDate.toLocaleTimeString('en-US', { 
-    hour: 'numeric', 
+  const end = endDate.toLocaleTimeString('en-US', {
+    hour: 'numeric',
     minute: '2-digit',
-    hour12: true 
+    hour12: true
   })
   return `${start} - ${end}`
 }

@@ -1,8 +1,8 @@
 'use client'
 
-import type { DynamicIntlProviderProps } from '@/types'
+import type { PropsWithChildren } from 'react'
 
-export function DynamicIntlProvider({ children }: DynamicIntlProviderProps) {
+export function DynamicIntlProvider({ children }: PropsWithChildren) {
     // LocaleProvider ya incluye NextIntlClientProvider, solo retornamos children
     return <>{children}</>
 }

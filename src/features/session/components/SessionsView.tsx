@@ -13,7 +13,7 @@ import { SessionCard } from "./SessionCard"
 import { MentorsAvailabilityCalendar } from "./MentorsAvailabilityCalendar"
 import { SessionsCalendar, EventDetailModal } from "./calendar"
 import { SESSION_STATUS, SESSION_TAB_IDS } from "@/shared/constants"
-import type { CalendarEvent } from "@/types/calendar"
+import type { CalendarEvent } from "@/features/calendar/types/calendar.types"
 
 interface SessionUser {
     id: string

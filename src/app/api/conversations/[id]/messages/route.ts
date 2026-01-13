@@ -7,8 +7,9 @@ import { withErrorHandler, ApiError } from '@/shared/utils/api-handler'
 // GET - Obtener mensajes de una conversación
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
+  const params = await props.params
   return withErrorHandler(async () => {
     const session = await getServerSession(authOptions)
 

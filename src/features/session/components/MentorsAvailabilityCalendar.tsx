@@ -5,8 +5,8 @@ import { useTranslations } from 'next-intl'
 import { Card, Avatar, Button } from '@/shared/components/ui'
 import { LoadingSpinner } from '@/shared/components'
 import { BookSessionModal } from './availability/BookSessionModal'
-import { FiCalendar, FiClock, FiUser } from 'react-icons/fi'
-import type { MentorsAvailabilityCalendarProps, MentorAvailabilityData } from '@/types'
+import { FiCalendar, FiClock } from 'react-icons/fi'
+import type { MentorsAvailabilityCalendarProps, MentorAvailabilityData } from '../types/session.types'
 
 export const MentorsAvailabilityCalendar = ({
   mentorAvailabilities,
