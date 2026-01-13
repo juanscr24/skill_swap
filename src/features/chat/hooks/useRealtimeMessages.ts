@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import { ChatMessage, MessageStatus } from '../types'
 import { useApiQuery, useApiMutation } from '@/shared/hooks'
 import { useQueryClient } from '@tanstack/react-query'
+import { markMessagesAsDelivered, markMessagesAsRead, sendMessage as sendMessageService } from '../services/messages.api'
 
 interface UseRealtimeMessagesOptions {
   conversationId: string | null
@@ -54,11 +55,7 @@ export const useRealtimeMessages = ({
 
   const markAsDelivered = useCallback(async (messageId: string) => {
     try {
-      await fetch('/api/messages/delivered', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messageId }),
-      })
+      await markMessagesAsDelivered([messageId])
     } catch (error) {
       console.error('Error marking as delivered:', error)
     }
@@ -166,16 +163,7 @@ export const useRealtimeMessages = ({
   // Mutación para enviar mensaje
   const sendMessageMutation = useApiMutation<ChatMessage, { content: string }, { previousMessages?: ChatMessage[], tempId: string }>({
     mutationFn: async ({ content }) => {
-      const response = await fetch('/api/messages/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          conversationId,
-          content: content.trim(),
-        }),
-      })
-      if (!response.ok) throw new Error('Failed to send message')
-      return response.json()
+      return sendMessageService(conversationId!, currentUserId!, content)
     },
     onMutate: async ({ content }) => {
       await queryClient.cancelQueries({ queryKey: ['messages', conversationId] })
@@ -211,18 +199,14 @@ export const useRealtimeMessages = ({
       })
       queryClient.invalidateQueries({ queryKey: ['conversations'] })
     },
+    // No invalidar automáticamente para evitar parpadeos, confiamos en realtime
   })
 
   // Mutación para marcar como leído
   const markReadMutation = useApiMutation<void, string[]>({
     mutationFn: async (messageIds) => {
       if (messageIds.length === 0) return
-      const response = await fetch('/api/messages/read', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messageIds }),
-      })
-      if (!response.ok) throw new Error('Failed to mark as read')
+      await markMessagesAsRead(messageIds)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['conversations'] })

@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 import { useApiQuery, useApiMutation } from '@/shared/hooks'
+import { acceptRequest, rejectRequest, cancelRequest } from '../services/requests.api'
 
 interface MatchRequest {
   id: string
@@ -51,13 +52,7 @@ export function useRequests(type: 'received' | 'sent' | 'accepted' = 'received')
 
   // Mutation para aceptar request
   const acceptMutation = useApiMutation<any, string>({
-    mutationFn: async (requestId) => {
-      const response = await fetch(`/api/matches/${requestId}/accept`, {
-        method: 'POST',
-      })
-      if (!response.ok) throw new Error('Error al aceptar solicitud')
-      return response.json()
-    },
+    mutationFn: acceptRequest,
     invalidateKeys: [['requests', 'received'], ['requests', 'accepted'], 'sessions'],
     optimistic: {
       queryKey: ['requests', type],
@@ -68,13 +63,7 @@ export function useRequests(type: 'received' | 'sent' | 'accepted' = 'received')
 
   // Mutation para rechazar request
   const rejectMutation = useApiMutation<any, string>({
-    mutationFn: async (requestId) => {
-      const response = await fetch(`/api/matches/${requestId}/reject`, {
-        method: 'POST',
-      })
-      if (!response.ok) throw new Error('Error al rechazar solicitud')
-      return response.json()
-    },
+    mutationFn: rejectRequest,
     invalidateKeys: [['requests', 'received']],
     optimistic: {
       queryKey: ['requests', type],
@@ -85,13 +74,7 @@ export function useRequests(type: 'received' | 'sent' | 'accepted' = 'received')
 
   // Mutation para cancelar request
   const cancelMutation = useApiMutation<any, string>({
-    mutationFn: async (requestId) => {
-      const response = await fetch(`/api/matches/${requestId}/cancel`, {
-        method: 'DELETE',
-      })
-      if (!response.ok) throw new Error('Error al cancelar solicitud')
-      return response.json()
-    },
+    mutationFn: cancelRequest,
     invalidateKeys: [['requests', 'sent']],
     optimistic: {
       queryKey: ['requests', type],

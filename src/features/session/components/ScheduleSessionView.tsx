@@ -1,7 +1,5 @@
 'use client'
-import { useState, useEffect } from "react"
 import { useTranslations } from "next-intl"
-import { useRouter } from "next/navigation"
 import { Card } from "@/shared/components/ui/Card"
 import { Button, Input, LoadingSpinner } from "@/shared/components"
 import { Textarea } from "@/shared/components/ui/Textarea"
@@ -10,22 +8,30 @@ import { FiLoader, FiArrowLeft, FiCalendar, FiClock } from "react-icons/fi"
 import Link from "next/link"
 import { useMentors } from "@/features/mentor/hooks/useMentors"
 import { useAvailability } from "@/features/mentor/hooks/useAvailability"
-import { useSessionRequests } from "../hooks/useSessionRequests"
 import { formatLongDate } from "@/shared/utils/date"
+import { useScheduleForm } from "../hooks/useScheduleForm"
 
 export const ScheduleSessionView = () => {
     const t = useTranslations('sessions')
-    const router = useRouter()
     const { mentors, isLoading: loadingMentors } = useMentors({})
 
-    const [selectedMentor, setSelectedMentor] = useState('')
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('')
-    const [selectedAvailability, setSelectedAvailability] = useState('')
-    const [duration, setDuration] = useState('30')
-    const [successMessage, setSuccessMessage] = useState('')
-
-    const { createSessionRequest, isCreating, error: submissionError } = useSessionRequests()
+    const {
+        selectedMentor,
+        title,
+        description,
+        selectedAvailability,
+        duration,
+        successMessage,
+        isCreating,
+        error: submissionError,
+        setSelectedMentor,
+        setTitle,
+        setDescription,
+        setSelectedAvailability,
+        setDuration,
+        handleSubmit,
+        isFormValid
+    } = useScheduleForm()
 
     const { availability, isLoading: loadingAvailability } = useAvailability(selectedMentor || undefined)
 
@@ -35,33 +41,6 @@ export const ScheduleSessionView = () => {
     }))
 
     const availableSlots = availability.filter(slot => !slot.is_booked)
-
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setSuccessMessage('')
-
-        const durationNum = parseInt(duration)
-
-        const result = await createSessionRequest({
-            mentor_id: selectedMentor,
-            availability_id: selectedAvailability,
-            title,
-            description: description.trim() || undefined,
-            duration_minutes: durationNum,
-        })
-
-        if (result.success) {
-            setSuccessMessage('¡Solicitud de sesión enviada correctamente! Redirigiendo...')
-            setTimeout(() => {
-                router.push('/sessions')
-            }, 1500)
-        }
-    }
-
-    const handleCancel = () => {
-        router.push('/sessions')
-    }
 
     return (
         <div className="p-8 max-md:p-6 max-sm:p-4 max-w-4xl mx-auto">
@@ -101,10 +80,7 @@ export const ScheduleSessionView = () => {
                                         ...mentorOptions
                                     ]}
                                     value={selectedMentor}
-                                    onChange={(e) => {
-                                        setSelectedMentor(e.target.value)
-                                        setSelectedAvailability('') // Reset availability when mentor changes
-                                    }}
+                                    onChange={(e) => setSelectedMentor(e.target.value)}
                                     required
                                 />
                                 {mentors.length > 0 && (
@@ -216,19 +192,20 @@ export const ScheduleSessionView = () => {
 
                             {/* Action Buttons */}
                             <div className="flex gap-4 max-sm:gap-3 pt-4">
-                                <Button
-                                    type="button"
-                                    secondary
-                                    onClick={handleCancel}
-                                    disabled={isCreating}
-                                    className="flex-1"
-                                >
-                                    {t('cancel') || 'Cancelar'}
-                                </Button>
+                                <Link href="/sessions" className="flex-1">
+                                    <Button
+                                        type="button"
+                                        secondary
+                                        className="w-full"
+                                        disabled={isCreating}
+                                    >
+                                        {t('cancel') || 'Cancelar'}
+                                    </Button>
+                                </Link>
                                 <Button
                                     type="submit"
                                     primary
-                                    disabled={!selectedMentor || !title || !selectedAvailability || isCreating}
+                                    disabled={!isFormValid || isCreating}
                                     className="flex-1"
                                 >
                                     {isCreating ? (

@@ -1,3 +1,4 @@
+'use client'
 import { MentorAvailability } from '@/shared/types'
 import { useState, useEffect } from 'react'
 

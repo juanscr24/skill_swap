@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib'
 import { matchesService } from '@/features/matching/services'
 
+import { sendMatchRequestSchema } from '@/features/matching/schemas/matching.schema'
+
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
@@ -14,14 +16,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { receiverId, skill } = await request.json()
+    const body = await request.json()
+    const validation = sendMatchRequestSchema.safeParse(body)
 
-    if (!receiverId || !skill) {
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'Datos incompletos' },
+        { error: 'Datos inválidos', details: validation.error.format() },
         { status: 400 }
       )
     }
+
+    const { receiverId, skill } = validation.data
+
 
     const match = await matchesService.sendMatchRequest(
       session.user.id,

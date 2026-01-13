@@ -1,5 +1,6 @@
 import { prisma } from '@/lib'
-import type { MessageData, MessageConversation, MessageDetail } from '@/types'
+import type { MessageConversation, MessageDetail } from '../types'
+import { MessageData } from '@/shared/types'
 
 export const messagesService = {
   async getConversations(userId: string): Promise<MessageConversation[]> {
@@ -38,23 +39,23 @@ export const messagesService = {
 
     // Transformar a formato esperado por el frontend y deduplicar por userId
     const conversationsMap = new Map<string, MessageConversation>()
-    
+
     for (const conv of conversations) {
       const otherParticipant = conv.participants.find(p => p.user_id !== userId)
-      
+
       // Saltar si no hay otro participante válido
       if (!otherParticipant?.user_id) continue
-      
+
       // Si ya procesamos una conversación con este usuario, mantener la más reciente
       const existingConv = conversationsMap.get(otherParticipant.user_id)
       if (existingConv) {
         const existingDate = new Date(existingConv.lastMessage.createdAt).getTime()
         const currentDate = conv.messages[0]?.created_at.getTime() || 0
-        
+
         // Mantener la conversación con el mensaje más reciente
         if (currentDate <= existingDate) continue
       }
-      
+
       const lastMessage = conv.messages[0]
 
       conversationsMap.set(otherParticipant.user_id, {
@@ -102,14 +103,14 @@ export const messagesService = {
 
     // Crear un Set con los IDs de usuarios que ya tienen conversación
     const existingUserIds = new Set(conversationsData.map(c => c.userId))
-    
+
     // Set para evitar agregar el mismo usuario dos veces desde matches
     const addedMatchUserIds = new Set<string>()
 
     // Agregar matches sin conversación (evitando duplicados)
     for (const match of acceptedMatches) {
       const otherUserId = match.sender_id === userId ? match.receiver_id : match.sender_id
-      const otherUser = match.sender_id === userId 
+      const otherUser = match.sender_id === userId
         ? match.users_matches_receiver_idTousers
         : match.users_matches_sender_idTousers
 
@@ -137,7 +138,7 @@ export const messagesService = {
       new Map(conversationsData.map(conv => [conv.userId, conv])).values()
     )
 
-    return uniqueConversations.sort((a, b) => 
+    return uniqueConversations.sort((a, b) =>
       b.lastMessage.createdAt.getTime() - a.lastMessage.createdAt.getTime()
     )
   },

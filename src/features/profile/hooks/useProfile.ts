@@ -1,6 +1,7 @@
 'use client'
 
 import { useApiQuery, useApiMutation } from '@/shared/hooks'
+import { updateProfile, updateAboutMe } from '../services/profile.api'
 
 interface Skill {
   id: string
@@ -96,45 +97,23 @@ export function useProfile() {
  */
 export function useProfileMutations() {
   // Mutación general del perfil
-  const updateProfile = useApiMutation<UserProfile, UpdateProfileData>({
-    mutationFn: async (data) => {
-      const response = await fetch('/api/users/profile', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.message || 'Error al actualizar el perfil')
-      }
-      return response.json()
-    },
+  const updateProfileMutation = useApiMutation<UserProfile, UpdateProfileData>({
+    mutationFn: updateProfile,
     invalidateKeys: ['profile'],
   })
 
   // Mutación específica para la sección About Me
-  const updateAboutMe = useApiMutation<UserProfile, UpdateProfileData>({
-    mutationFn: async (data) => {
-      const response = await fetch('/api/users/profile/about-me', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.message || 'Error al actualizar About Me')
-      }
-      return response.json()
-    },
+  const updateAboutMeMutation = useApiMutation<UserProfile, UpdateProfileData>({
+    mutationFn: updateAboutMe,
     invalidateKeys: ['profile'],
   })
 
   return {
-    updateProfile: updateProfile.mutateAsync,
-    updateAboutMe: updateAboutMe.mutateAsync,
-    isUpdatingProfile: updateProfile.isPending,
-    isUpdatingAboutMe: updateAboutMe.isPending,
-    updateProfileError: updateProfile.error,
-    updateAboutMeError: updateAboutMe.error,
+    updateProfile: updateProfileMutation.mutateAsync,
+    updateAboutMe: updateAboutMeMutation.mutateAsync,
+    isUpdatingProfile: updateProfileMutation.isPending,
+    isUpdatingAboutMe: updateAboutMeMutation.isPending,
+    updateProfileError: updateProfileMutation.error,
+    updateAboutMeError: updateAboutMeMutation.error,
   }
 }
