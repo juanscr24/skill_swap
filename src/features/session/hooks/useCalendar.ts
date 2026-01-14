@@ -60,6 +60,9 @@ export function useCalendar(
   }
 
   useEffect(() => {
+    // Only fetch on client side
+    if (typeof window === 'undefined') return
+
     // Default to current month if no dates provided
     const now = new Date()
     const startDate = initialStartDate || new Date(now.getFullYear(), now.getMonth(), 1)
