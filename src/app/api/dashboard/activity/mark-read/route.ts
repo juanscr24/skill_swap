@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib'
 import { prisma } from '@/lib/prisma'
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
 
@@ -16,8 +16,8 @@ export async function GET(request: NextRequest) {
 
     const userId = session.user.id
 
-    // Solo contar mensajes no leídos (son las únicas notificaciones que podemos marcar como leídas)
-    const unreadMessages = await prisma.messages.count({
+    // Marcar todos los mensajes no leídos como leídos
+    await prisma.messages.updateMany({
       where: {
         conversation: {
           participants: {
@@ -30,14 +30,17 @@ export async function GET(request: NextRequest) {
           sender_id: userId
         },
         read_at: null
+      },
+      data: {
+        read_at: new Date()
       }
     })
 
-    return NextResponse.json({ count: unreadMessages })
+    return NextResponse.json({ success: true, message: 'Todas las notificaciones fueron marcadas como leídas' })
   } catch (error) {
-    console.error('Error en GET /api/dashboard/activity/unread-count:', error)
+    console.error('Error en POST /api/dashboard/activity/mark-read:', error)
     return NextResponse.json(
-      { error: 'Error al obtener el conteo de notificaciones no leídas' },
+      { error: 'Error al marcar las notificaciones como leídas' },
       { status: 500 }
     )
   }

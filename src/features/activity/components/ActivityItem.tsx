@@ -3,6 +3,7 @@ import { ACTIVITY_TYPES } from '@/data/activity'
 import { getActivityColor } from '@/shared/utils/activity'
 import { FiMessageCircle, FiEye, FiMoreVertical } from 'react-icons/fi'
 import { ActivityItemProps } from '../types/activity.types'
+import { Avatar } from '@/shared/components'
 
 export const ActivityItem = ({ activity }: ActivityItemProps) => {
     const Icon = ACTIVITY_TYPES.find(t => t.value === activity.type)?.icon || FiMessageCircle
@@ -121,11 +122,10 @@ export const ActivityItem = ({ activity }: ActivityItemProps) => {
                                     {[...Array(5)].map((_, i) => (
                                         <span
                                             key={i}
-                                            className={`text-base ${
-                                                i < activity.metadata!.rating!
-                                                    ? 'text-yellow-400'
-                                                    : 'text-(--text-3)'
-                                            }`}
+                                            className={`text-base ${i < activity.metadata!.rating!
+                                                ? 'text-yellow-400'
+                                                : 'text-(--text-3)'
+                                                }`}
                                         >
                                             ★
                                         </span>
@@ -137,16 +137,13 @@ export const ActivityItem = ({ activity }: ActivityItemProps) => {
                         {/* Avatar */}
                         {activity.user && (
                             <div className="flex items-center gap-2">
-                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
-                                    {activity.user.name?.charAt(0).toUpperCase() || 'U'}
-                                </div>
+                                <Avatar size='md' src={activity.user?.image || ''} />
                                 <button className="p-1 hover:bg-(--bg-1) rounded transition-colors">
                                     <FiMoreVertical className="w-5 h-5 text-(--text-2)" />
                                 </button>
                             </div>
                         )}
                     </div>
-
                     {/* Actions */}
                     <div className="mt-3 flex items-center justify-end">
                         {renderActions()}

@@ -151,6 +151,9 @@ export async function GET(request: NextRequest) {
     })
 
     // Consolidar todas las actividades
+    const oneDayAgo = new Date()
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1)
+
     const activities = [
       ...recentMessages.map(msg => ({
         id: `message-${msg.id}`,
@@ -158,6 +161,7 @@ export async function GET(request: NextRequest) {
         title: 'Nuevo mensaje',
         description: msg.content.substring(0, 100),
         timestamp: msg.created_at,
+        isRead: msg.read_at !== null || msg.created_at < oneDayAgo,
         user: msg.sender
       })),
       ...recentMatches.map(match => {
@@ -170,6 +174,7 @@ export async function GET(request: NextRequest) {
           title: 'Nuevo match',
           description: `Tienes un nuevo match para ${match.skill}`,
           timestamp: match.updated_at,
+          isRead: match.updated_at < oneDayAgo,
           user: otherUser
         }
       }),
@@ -179,6 +184,7 @@ export async function GET(request: NextRequest) {
         title: 'Nueva reseña',
         description: review.comment || 'Recibiste una nueva reseña',
         timestamp: review.created_at,
+        isRead: review.created_at < oneDayAgo,
         user: review.users_reviews_author_idTousers,
         metadata: {
           rating: review.rating
@@ -194,6 +200,7 @@ export async function GET(request: NextRequest) {
           title: 'Sesión completada',
           description: session.title,
           timestamp: session.end_at,
+          isRead: session.end_at < oneDayAgo,
           user: otherUser,
           metadata: {
             status: session.status

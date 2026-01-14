@@ -4,10 +4,11 @@ import { FiMenu, FiX, FiBell } from "react-icons/fi"
 import { SkillSwapLogo } from "../ui/SkillSwapLogo"
 import { DashboardNavbarProps } from "@/shared/types"
 import { NotificationPanel } from "@/features/activity/components/NotificationPanel"
+import { useUnreadCount } from "@/features/activity"
 
 export const DashboardNavbar = ({ isOpen, setIsOpen }: DashboardNavbarProps) => {
     const [notificationsOpen, setNotificationsOpen] = useState(false)
-    const unreadCount = 3 // Esto debería venir de una API real
+    const { unreadCount, refetch } = useUnreadCount()
 
     return (
         <>
@@ -49,6 +50,7 @@ export const DashboardNavbar = ({ isOpen, setIsOpen }: DashboardNavbarProps) => 
             <NotificationPanel
                 isOpen={notificationsOpen}
                 onClose={() => setNotificationsOpen(false)}
+                onMarkAllRead={refetch}
             />
         </>
     )

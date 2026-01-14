@@ -4,7 +4,7 @@ import { getActivityColor, formatTimestamp } from '@/shared/utils/activity'
 import { ACTIVITY_TYPES } from '@/data/activity'
 import { FiMessageCircle } from 'react-icons/fi'
 import { RecentActivity } from '../types/activity.types'
-import { Button } from '@/shared/components'
+import { Avatar, Button } from '@/shared/components'
 
 interface NotificationItemProps {
     activity: RecentActivity
@@ -37,12 +37,13 @@ export const NotificationItem = ({ activity, onClick }: NotificationItemProps) =
     return (
         <Link
             href={getActivityLink()}
-            className="block p-4 hover:bg-(--bg-1) transition-colors cursor-pointer relative"
+            className={`block p-4 hover:bg-(--bg-1) transition-colors cursor-pointer relative ${activity.isRead === false ? 'bg-(--bg-2)' : 'bg-transparent opacity-70'
+                }`}
             onClick={onClick}
         >
             {/* Indicador de nuevo */}
-            {isNew && (
-                <div className="absolute top-4 left-2 w-2 h-2 rounded-full bg-(--button-1)"></div>
+            {activity.isRead === false && (
+                <div className="absolute top-4 left-2 w-2 h-2 rounded-full bg-(--button-1) animate-pulse"></div>
             )}
 
             <div className="flex items-start gap-3">
@@ -53,15 +54,18 @@ export const NotificationItem = ({ activity, onClick }: NotificationItemProps) =
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2 mb-1">
-                        <p className="font-semibold text-(--text-1) text-sm line-clamp-1">
+                    <div className="flex items-start justify-between">
+                        <p className={`font-semibold text-sm line-clamp-1 ${activity.isRead === false ? 'text-(--text-1)' : 'text-(--text-2)'
+                            }`}>
                             {activity.title}
                         </p>
-                        {activity.user && (
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
-                                {activity.user.name?.charAt(0).toUpperCase() || 'U'}
-                            </div>
-                        )}
+                        {
+                            activity.user && (
+                                <div className="flex items-center gap-2">
+                                    <Avatar size='sm' src={activity.user?.image || ''} />
+                                </div>
+                            )
+                        }
                     </div>
 
                     <p className="text-sm text-(--text-2) line-clamp-2 mb-2">

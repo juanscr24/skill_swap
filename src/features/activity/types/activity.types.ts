@@ -17,6 +17,7 @@ export interface RecentActivity {
     title: string
     description: string
     timestamp: Date
+    isRead?: boolean
     user?: {
         id: string
         name: string | null

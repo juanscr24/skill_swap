@@ -12,15 +12,35 @@ import { NotificationItem } from './NotificationItem'
 interface NotificationPanelProps {
     isOpen: boolean
     onClose: () => void
+    onMarkAllRead?: () => void
 }
 
-export const NotificationPanel = ({ isOpen, onClose }: NotificationPanelProps) => {
+export const NotificationPanel = ({ isOpen, onClose, onMarkAllRead }: NotificationPanelProps) => {
     const t = useTranslations('notifications')
-    const { activities, isLoading } = useAllActivity()
+    const { activities, isLoading, refetch } = useAllActivity()
     const { unreadCount } = useUnreadCount()
 
     // Tomar solo las últimas 5 notificaciones
     const recentNotifications = activities.slice(0, 5)
+
+    // Función para marcar todas como leídas
+    const handleMarkAllRead = async () => {
+        try {
+            const response = await fetch('/api/dashboard/activity/mark-read', {
+                method: 'POST'
+            })
+
+            if (response.ok) {
+                // Refrescar las actividades y el contador
+                await refetch()
+                if (onMarkAllRead) {
+                    onMarkAllRead()
+                }
+            }
+        } catch (error) {
+            console.error('Error al marcar como leídas:', error)
+        }
+    }
 
     // Bloquear scroll cuando el panel está abierto
     useEffect(() => {
@@ -114,7 +134,9 @@ export const NotificationPanel = ({ isOpen, onClose }: NotificationPanelProps) =
                             {t('viewAll')}
                         </Link>
                         <button
-                            className="block w-full text-center py-2 text-sm text-(--text-2) hover:text-(--text-1) transition-colors mt-2"
+                            onClick={handleMarkAllRead}
+                            disabled={unreadCount === 0}
+                            className="block w-full text-center py-2 text-sm text-(--text-2) hover:text-(--text-1) transition-colors mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <FiCheckCircle className="inline-block w-4 h-4 mr-1" />
                             {t('markAllRead')}
