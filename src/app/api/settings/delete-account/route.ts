@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     // Si tiene contraseña, verificarla
     if (user.password) {
-      const bcrypt = require('bcryptjs')
+      const bcrypt = require('bcrypt')
       const isValid = await bcrypt.compare(confirmPassword, user.password)
 
       if (!isValid) {
