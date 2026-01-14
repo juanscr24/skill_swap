@@ -84,7 +84,7 @@ export const ActivityPage = () => {
                       {date}
                     </h2>
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {dateActivities.map(activity => (
                       <ActivityItem key={activity.id} activity={activity} />
                     ))}

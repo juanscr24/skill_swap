@@ -31,7 +31,7 @@ export const DashboardNavbar = ({ isOpen, setIsOpen }: DashboardNavbarProps) => 
                     {/* Notifications Button */}
                     <button
                         onClick={() => setNotificationsOpen(true)}
-                        className="relative p-2 hover:bg-(--bg-1) rounded-lg transition-colors text-(--text-1)"
+                        className="relative p-2 hover:bg-(--bg-1) rounded-lg transition-colors text-(--text-1) cursor-pointer"
                         aria-label="Notificaciones"
                     >
                         <FiBell className="w-6 h-6 max-sm:w-5 max-sm:h-5" />

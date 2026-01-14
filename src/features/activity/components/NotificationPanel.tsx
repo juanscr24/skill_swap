@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { FiX, FiCheckCircle } from 'react-icons/fi'
 
 import { useAllActivity } from '../hooks/useAllActivity'
+import { useUnreadCount } from '../hooks/useUnreadCount'
 import { LoadingSpinner } from '@/shared/components'
 import Link from 'next/link'
 import { NotificationItem } from './NotificationItem'
@@ -16,10 +17,10 @@ interface NotificationPanelProps {
 export const NotificationPanel = ({ isOpen, onClose }: NotificationPanelProps) => {
     const t = useTranslations('notifications')
     const { activities, isLoading } = useAllActivity()
+    const { unreadCount } = useUnreadCount()
 
     // Tomar solo las últimas 5 notificaciones
     const recentNotifications = activities.slice(0, 5)
-    const unreadCount = 3 // Esto debería venir de una API real
 
     // Bloquear scroll cuando el panel está abierto
     useEffect(() => {
@@ -44,7 +45,7 @@ export const NotificationPanel = ({ isOpen, onClose }: NotificationPanelProps) =
 
             {/* Panel */}
             <div
-                className={`fixed top-0 right-0 h-full w-full max-w-md bg-(--bg-2) shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'
+                className={`fixed bottom-0 right-0 h-[calc(100dvh-4rem)] max-md:h-[calc(100dvh-3.5rem)] w-full max-w-md bg-(--bg-2) shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'
                     } flex flex-col max-sm:max-w-full`}
             >
                 {/* Header */}

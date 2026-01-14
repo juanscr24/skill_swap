@@ -8,6 +8,7 @@ export { NotificationPanel } from './components/NotificationPanel'
 export { NotificationItem } from './components/NotificationItem'
 // Hooks
 export { useAllActivity } from './hooks/useAllActivity'
+export { useUnreadCount } from './hooks/useUnreadCount'
 
 export type * from './types/activity.types'
 
