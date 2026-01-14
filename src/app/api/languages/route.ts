@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
-import { getUserLanguages, createLanguage, deleteLanguage } from '@/services/languages'
+import { createLanguage, deleteLanguage, getUserLanguages } from '@/features/profile/services'
 
-/**
- * GET /api/languages
- * Get all languages for the authenticated user
- */
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)
@@ -30,10 +26,6 @@ export async function GET() {
   }
 }
 
-/**
- * POST /api/languages
- * Create a new language for the authenticated user
- */
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)

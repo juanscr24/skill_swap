@@ -9,10 +9,6 @@ interface RouteParams {
     }>
 }
 
-/**
- * DELETE /api/reviews/[id]
- * Delete a review by ID
- */
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
     try {
         const session = await getServerSession(authOptions)

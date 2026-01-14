@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
-import { acceptSessionRequest, rejectSessionRequest } from '@/services/sessions'
+import { acceptSessionRequest } from '@/features/session/services'
 
-/**
- * POST /api/sessions/[id]/accept
- * Acepta una solicitud de sesión
- */
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

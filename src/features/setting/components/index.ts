@@ -1,0 +1,6 @@
+export { DeleteAccountSection } from './DeleteAccountSection'
+export { NotificationsSection } from './NotificationsSection'
+export { PreferencesSection } from './PreferencesSection'
+export { PrivacySection } from './PrivacySection'
+export { SecuritySection } from './SecuritySection'
+export { SettingsSection } from './SettingsSection'

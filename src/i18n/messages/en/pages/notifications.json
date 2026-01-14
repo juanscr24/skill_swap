@@ -1,0 +1,10 @@
+{
+    "title": "Notifications",
+    "subtitle": "Recent activity history",
+    "close": "Close",
+    "new": "NEW",
+    "noNotifications": "All caught up!",
+    "noNotificationsDescription": "You have no new notifications at this time.",
+    "viewAll": "View all history",
+    "markAllRead": "Mark all as read"
+}

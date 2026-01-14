@@ -1,3 +1,8 @@
 {
-    "welcome": "Hello world"
+    "welcome": "Hello world",
+    "pageNotFoundTitle": "Page not found",
+    "pageNotFoundDescription": "Sorry, the page you are looking for does not exist or has been moved.",
+    "backToLogin": "Back to home",
+    "needHelp": "Need help?",
+    "contactSupport": "Contact support"
 }

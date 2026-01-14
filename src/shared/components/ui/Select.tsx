@@ -1,0 +1,46 @@
+import { SelectProps } from "@/shared/types/ui.types"
+
+export const Select = ({
+    id,
+    label,
+    value,
+    onChange,
+    options,
+    placeholder,
+    className = '',
+    error,
+    required,
+    disabled
+}: SelectProps) => {
+    return (
+        <div className="w-full">
+            {label && (
+                <label className="font-semibold text-(--text-1) mb-2 max-sm:mb-1 max-sm:text-sm block" htmlFor={id}>
+                    {label}
+                </label>
+            )}
+            <select
+                id={id}
+                value={value}
+                onChange={onChange}
+                required={required}
+                disabled={disabled}
+                className={`bg-(--bg-2) border border-(--border-1) text-(--text-1) w-full outline-none px-4 max-sm:px-3 py-3 max-sm:py-2 max-sm:text-sm rounded-md focus:border-(--button-1) transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed
+                    ${error ? 'border-red-500' : ''}
+                    ${className}`}
+            >
+                {placeholder && (
+                    <option value="" disabled>
+                        {placeholder}
+                    </option>
+                )}
+                {options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                        {option.label}
+                    </option>
+                ))}
+            </select>
+            {error && <p className="text-red-500 text-sm max-sm:text-xs mt-1">{error}</p>}
+        </div>
+    )
+}

@@ -1,10 +1,12 @@
 {
     "chats": "Mensajes",
+    "conversations": "Conversaciones",
     "noChats": "No tienes conversaciones",
     "typeMessage": "Escribe un mensaje...",
     "send": "Enviar",
     "online": "En línea",
     "offline": "Desconectado",
+    "connecting": "Conectando...",
     "typing": "Escribiendo...",
     "today": "Hoy",
     "yesterday": "Ayer",
@@ -12,5 +14,10 @@
     "loading": "Cargando...",
     "noConversations": "No tienes conversaciones",
     "selectConversation": "Selecciona una conversación para comenzar",
-    "noMessages": "Sin mensajes aún"
+    "noMessages": "Sin mensajes aún",
+    "sessionInfo": "Detalles de Sesiones",
+    "upcomingSessionsWithUser": "Próximas sesiones con este usuario",
+    "noUpcomingSessions": "No hay próximas sesiones",
+    "scheduleNow": "Agendar ahora",
+    "scheduleAnother": "Agendar otra"
 }

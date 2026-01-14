@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model account_sessions {
@@ -48,18 +49,46 @@ model matches {
   @@index([sender_id], map: "idx_matches_sender")
 }
 
-model messages {
-  id                                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  sender_id                         String?  @db.Uuid
-  receiver_id                       String?  @db.Uuid
-  content                           String
-  read                              Boolean  @default(false)
-  created_at                        DateTime @default(now())
-  users_messages_receiver_idTousers users?   @relation("messages_receiver_idTousers", fields: [receiver_id], references: [id], onDelete: Cascade)
-  users_messages_sender_idTousers   users?   @relation("messages_sender_idTousers", fields: [sender_id], references: [id], onDelete: Cascade)
+// Tabla de conversaciones - usada por Prisma para crear/listar conversaciones
+model conversations {
+  id                  String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at          DateTime                   @default(now())
+  updated_at          DateTime                   @default(now()) @updatedAt
+  last_message_at     DateTime?
+  participants        conversation_participants[]
+  messages            messages[]
 
-  @@index([created_at], map: "idx_messages_created")
-  @@index([receiver_id], map: "idx_messages_receiver")
+  @@index([updated_at], map: "idx_conversations_updated")
+}
+
+// Tabla de participantes - usada por Prisma
+model conversation_participants {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  conversation_id String        @db.Uuid
+  user_id         String        @db.Uuid
+  joined_at       DateTime      @default(now())
+  last_read_at    DateTime?
+  conversation    conversations @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
+  user            users         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([conversation_id, user_id])
+  @@index([user_id], map: "idx_participants_user")
+  @@index([conversation_id], map: "idx_participants_conversation")
+}
+
+// Tabla de mensajes - Supabase Realtime la usará directamente
+model messages {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  conversation_id String        @db.Uuid
+  sender_id       String        @db.Uuid
+  content         String
+  created_at      DateTime      @default(now())
+  delivered_at    DateTime?     // Cuando el mensaje fue entregado al destinatario
+  read_at         DateTime?     // Cuando el mensaje fue leído
+  conversation    conversations @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
+  sender          users         @relation("messages_sender", fields: [sender_id], references: [id], onDelete: Cascade)
+
+  @@index([conversation_id, created_at], map: "idx_messages_conversation_created")
   @@index([sender_id], map: "idx_messages_sender")
 }
 
@@ -148,8 +177,8 @@ model users {
   accounts                             accounts[]
   matches_matches_receiver_idTousers   matches[]             @relation("matches_receiver_idTousers")
   matches_matches_sender_idTousers     matches[]             @relation("matches_sender_idTousers")
-  messages_messages_receiver_idTousers messages[]            @relation("messages_receiver_idTousers")
-  messages_messages_sender_idTousers   messages[]            @relation("messages_sender_idTousers")
+  messages_sender                      messages[]            @relation("messages_sender")
+  conversation_participants            conversation_participants[]
   notifications                        notifications[]
   reviews_reviews_author_idTousers     reviews[]             @relation("reviews_author_idTousers")
   reviews_reviews_target_idTousers     reviews[]             @relation("reviews_target_idTousers")
@@ -159,6 +188,8 @@ model users {
   wanted_skills                        wanted_skills[]
   languages                            languages[]
   mentor_availability                  mentor_availability[]
+  user_presence                        user_presence?
+  user_settings                        user_settings?
 
   @@index([email], map: "idx_users_email")
 }
@@ -205,6 +236,39 @@ model mentor_availability {
 
   @@index([mentor_id, date], map: "idx_availability_mentor_date")
   @@index([mentor_id, is_booked], map: "idx_availability_mentor_booked")
+}
+
+// Tabla de presencia de usuarios - para saber si están online
+model user_presence {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id      String    @unique @db.Uuid
+  is_online    Boolean   @default(false)
+  last_seen    DateTime  @default(now())
+  updated_at   DateTime  @default(now()) @updatedAt
+  users        users     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, is_online], map: "idx_presence_user_online")
+  @@index([updated_at], map: "idx_presence_updated")
+}
+
+model user_settings {
+  id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id               String   @unique @db.Uuid
+  // Notifications
+  email_notifications   Boolean  @default(true)
+  push_notifications    Boolean  @default(true)
+  news_notifications    Boolean  @default(false)
+  security_notifications Boolean @default(true)
+  mentors_notifications Boolean  @default(true)
+  messages_notifications Boolean @default(true)
+  // Privacy
+  profile_visibility    String   @default("public") // public, mentors, private
+  messages_privacy      String   @default("everyone") // everyone, matches, mentors
+  created_at            DateTime @default(now())
+  updated_at            DateTime @default(now()) @updatedAt
+  users                 users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id], map: "idx_user_settings_user")
 }
 
 enum role_enum {

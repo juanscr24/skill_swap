@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth.config'
-import { getMentors } from '@/services/users'
+import { getMentors } from '@/features/profile/services'
 
-/**
- * GET /api/users/mentors
- * Obtiene la lista de mentores/usuarios disponibles
- */
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
@@ -21,12 +17,22 @@ export async function GET(request: NextRequest) {
     // Obtener parámetros de búsqueda
     const { searchParams } = new URL(request.url)
     const skill = searchParams.get('skill') || undefined
+    const skills = searchParams.get('skills') || undefined
     const city = searchParams.get('city') || undefined
+    const languages = searchParams.get('languages') || undefined
+    const minRating = searchParams.get('minRating')
+      ? Number(searchParams.get('minRating'))
+      : undefined
+    const availability = searchParams.get('availability') as 'available' | 'all' | undefined
     const role = searchParams.get('role') as 'MENTOR' | 'STUDENT' | 'USER' | undefined
 
-    const mentors = await getMentors({ 
-      skill, 
-      city, 
+    const mentors = await getMentors({
+      skill,
+      skills,
+      city,
+      languages,
+      minRating,
+      availability,
       role,
       userId: session.user.id // Filtrar solo matches aceptados
     })

@@ -5,7 +5,7 @@
     "swipeRight": "Swipe right to accept",
     "noMoreUsers": "No more users available",
     "viewMatches": "View matches",
-    "startMatching": "Start matching",
+    "seeMentors": "See mentors",
     "noMatches": "You don't have matches yet",
     "matched": "Match!",
     "sendMessage": "Send message",
@@ -19,5 +19,8 @@
     "about": "About Me",
     "rating": "Reviews",
     "swipeInstructions": "Swipe left to pass, right to connect",
-    "unknown": "Not set"
+    "unknown": "Not set",
+    "incompleteProfile": "Complete your profile to get started",
+    "incompleteProfileDescription": "To discover mentors and connect with other users, you first need to add the skills you want to teach and the ones you want to learn in your profile.",
+    "goToProfile": "Go to my profile"
 }

@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib'
 import { prisma } from '@/lib/prisma'
 
 interface RouteParams {
@@ -9,10 +7,6 @@ interface RouteParams {
     }>
 }
 
-/**
- * GET /api/users/mentors/[id]
- * Fetch mentor profile by ID
- */
 export async function GET(request: NextRequest, { params }: RouteParams) {
     try {
         const { id } = await params

@@ -5,7 +5,7 @@
     "swipeRight": "Desliza derecha para aceptar",
     "noMoreUsers": "No hay más usuarios disponibles",
     "viewMatches": "Ver coincidencias",
-    "startMatching": "Comenzar matching",
+    "seeMentors": "Ver mentores",
     "noMatches": "Aún no tienes coincidencias",
     "matched": "¡Match!",
     "sendMessage": "Enviar mensaje",
@@ -19,5 +19,8 @@
     "about": "Sobre Mí",
     "rating": "Reseñas",
     "swipeInstructions": "Desliza izquierda para pasar, derecha para conectar",
-    "unknown": "No definida"
+    "unknown": "No definida",
+    "incompleteProfile": "Completa tu perfil para comenzar",
+    "incompleteProfileDescription": "Para descubrir mentores y conectar con otros usuarios, primero necesitas agregar las habilidades que quieres enseñar y las que deseas aprender en tu perfil.",
+    "goToProfile": "Ir a mi perfil"
 }
