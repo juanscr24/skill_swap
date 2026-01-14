@@ -105,6 +105,7 @@ export interface SelectProps {
     className?: string
     error?: string
     required?: boolean
+    disabled?: boolean
 }
 
 export interface SkillSelectorProps {

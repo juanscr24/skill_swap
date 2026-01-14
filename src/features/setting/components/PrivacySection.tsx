@@ -4,11 +4,34 @@ import { useTranslations } from "next-intl"
 import { FiEye } from "react-icons/fi"
 import { SettingsSection } from "./SettingsSection"
 import { Select } from "../../../shared/components/ui/Select"
-import { useSettingsStore } from "@/stores/settingsStore"
+import { useSettings } from "../hooks/useSettings"
+import { useState } from "react"
 
 export const PrivacySection = () => {
     const t = useTranslations('settings.privacy')
-    const { privacy, setPrivacy } = useSettingsStore()
+    const { settings, updateSettings, isLoading } = useSettings()
+    const [saving, setSaving] = useState(false)
+
+    const handleChange = async (key: 'visibility' | 'messagesPrivacy', value: string) => {
+        if (!settings || saving) return
+
+        setSaving(true)
+        const updatedPrivacy = {
+            ...settings.privacy,
+            [key]: value
+        }
+
+        await updateSettings({ privacy: updatedPrivacy })
+        setSaving(false)
+    }
+
+    if (isLoading || !settings) {
+        return (
+            <SettingsSection title={t('title')} icon={FiEye}>
+                <div className="text-center py-4 text-(--text-2)">Cargando...</div>
+            </SettingsSection>
+        )
+    }
 
     const VisibilityOptions = [
         { value: 'public', label: t('public') },
@@ -37,8 +60,9 @@ export const PrivacySection = () => {
                     <div className="w-48 max-sm:w-full">
                         <Select
                             options={VisibilityOptions}
-                            value={privacy.visibility}
-                            onChange={(e) => setPrivacy('visibility', e.target.value)}
+                            value={settings.privacy.visibility}
+                            onChange={(e) => handleChange('visibility', e.target.value)}
+                            disabled={saving}
                         />
                     </div>
                 </div>
@@ -54,8 +78,9 @@ export const PrivacySection = () => {
                     <div className="w-48 max-sm:w-full">
                         <Select
                             options={MessagesOptions}
-                            value={privacy.messagesPrivacy}
-                            onChange={(e) => setPrivacy('messagesPrivacy', e.target.value)}
+                            value={settings.privacy.messagesPrivacy}
+                            onChange={(e) => handleChange('messagesPrivacy', e.target.value)}
+                            disabled={saving}
                         />
                     </div>
                 </div>

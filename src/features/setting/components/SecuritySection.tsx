@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useTranslations } from "next-intl"
 import { FiLock, FiLogOut } from "react-icons/fi"
 import { SettingsSection } from "./SettingsSection"
@@ -7,10 +8,77 @@ import { Button } from "../../../shared/components/ui/Button"
 
 export const SecuritySection = () => {
     const t = useTranslations('settings.security')
+    const [isChangingPassword, setIsChangingPassword] = useState(false)
+    const [passwordForm, setPasswordForm] = useState({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    })
+    const [error, setError] = useState('')
+    const [success, setSuccess] = useState('')
+    const [isClosing, setIsClosing] = useState(false)
 
-    const handleCloseSessions = () => {
-        // Here we would implement the API call to invalidate sessions
-        alert(t('sessionsClosed'))
+    const handleChangePassword = async () => {
+        setError('')
+        setSuccess('')
+
+        if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+            setError('Las contraseñas no coinciden')
+            return
+        }
+
+        if (passwordForm.newPassword.length < 8) {
+            setError('La nueva contraseña debe tener al menos 8 caracteres')
+            return
+        }
+
+        try {
+            const response = await fetch('/api/settings/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    currentPassword: passwordForm.currentPassword,
+                    newPassword: passwordForm.newPassword
+                })
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Error al cambiar la contraseña')
+            }
+
+            setSuccess('Contraseña actualizada correctamente')
+            setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
+            setIsChangingPassword(false)
+        } catch (err: any) {
+            setError(err.message || 'Error al cambiar la contraseña')
+        }
+    }
+
+    const handleCloseSessions = async () => {
+        if (!confirm(t('confirmCloseSessions') || '¿Estás seguro de que quieres cerrar todas las sesiones?')) {
+            return
+        }
+
+        setIsClosing(true)
+        try {
+            const response = await fetch('/api/settings/close-sessions', {
+                method: 'POST'
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Error al cerrar las sesiones')
+            }
+
+            alert(data.message || 'Sesiones cerradas correctamente')
+        } catch (err: any) {
+            alert(err.message || 'Error al cerrar las sesiones')
+        } finally {
+            setIsClosing(false)
+        }
     }
 
     return (
@@ -20,14 +88,55 @@ export const SecuritySection = () => {
         >
             <div className="space-y-6">
                 {/* Change Password */}
-                <div className="flex items-center justify-between max-sm:flex-col max-sm:items-start max-sm:gap-3">
-                    <div>
-                        <h3 className="text-sm font-medium text-(--text-1)">{t('password')}</h3>
-                        <p className="text-xs text-(--text-2)">{t('passwordDescription')}</p>
+                <div className="space-y-3">
+                    <div className="flex items-center justify-between max-sm:flex-col max-sm:items-start max-sm:gap-3">
+                        <div>
+                            <h3 className="text-sm font-medium text-(--text-1)">{t('password')}</h3>
+                            <p className="text-xs text-(--text-2)">{t('passwordDescription')}</p>
+                        </div>
+                        <Button 
+                            secondary 
+                            className="w-auto"
+                            onClick={() => setIsChangingPassword(!isChangingPassword)}
+                        >
+                            {isChangingPassword ? 'Cancelar' : t('changePassword')}
+                        </Button>
                     </div>
-                    <Button secondary className="w-auto">
-                        {t('changePassword')}
-                    </Button>
+
+                    {isChangingPassword && (
+                        <div className="space-y-3 mt-4 p-4 bg-(--bg-1) rounded-lg">
+                            <input
+                                type="password"
+                                placeholder="Contraseña actual"
+                                className="w-full px-3 py-2 bg-(--bg-2) border border-(--border-1) rounded-lg text-(--text-1) text-sm"
+                                value={passwordForm.currentPassword}
+                                onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+                            />
+                            <input
+                                type="password"
+                                placeholder="Nueva contraseña"
+                                className="w-full px-3 py-2 bg-(--bg-2) border border-(--border-1) rounded-lg text-(--text-1) text-sm"
+                                value={passwordForm.newPassword}
+                                onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                            />
+                            <input
+                                type="password"
+                                placeholder="Confirmar nueva contraseña"
+                                className="w-full px-3 py-2 bg-(--bg-2) border border-(--border-1) rounded-lg text-(--text-1) text-sm"
+                                value={passwordForm.confirmPassword}
+                                onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                            />
+                            {error && <p className="text-xs text-red-500">{error}</p>}
+                            {success && <p className="text-xs text-green-500">{success}</p>}
+                            <Button 
+                                primary 
+                                onClick={handleChangePassword}
+                                className="w-full"
+                            >
+                                Guardar nueva contraseña
+                            </Button>
+                        </div>
+                    )}
                 </div>
 
                 <div className="h-px bg-(--border-1)" />
@@ -40,10 +149,11 @@ export const SecuritySection = () => {
                     </div>
                     <Button
                         onClick={handleCloseSessions}
-                        className="text-red-500 hover:text-red-600 hover:bg-red-500/10 w-auto bg-transparent border-transparent"
+                        disabled={isClosing}
+                        className="text-red-500 hover:text-red-600 hover:bg-red-500/10 w-auto bg-transparent border-transparent disabled:opacity-50"
                     >
                         <FiLogOut className="mr-2 inline-block" />
-                        {t('closeSessions')}
+                        {isClosing ? 'Cerrando...' : t('closeSessions')}
                     </Button>
                 </div>
             </div>

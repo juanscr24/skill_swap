@@ -3,15 +3,34 @@
 import { useTranslations } from "next-intl"
 import { FiBell } from "react-icons/fi"
 import { Switch } from "../../../shared/components/ui/Switch"
-import { useSettingsStore } from "@/stores/settingsStore"
+import { useSettings } from "../hooks/useSettings"
 import { SettingsSection } from "."
+import { useState } from "react"
 
 export const NotificationsSection = () => {
     const t = useTranslations('settings.notifications')
-    const { notifications, setNotification } = useSettingsStore()
+    const { settings, updateSettings, isLoading } = useSettings()
+    const [saving, setSaving] = useState(false)
 
-    const handleToggle = (key: keyof typeof notifications) => {
-        setNotification(key, !notifications[key])
+    const handleToggle = async (key: string) => {
+        if (!settings || saving) return
+
+        setSaving(true)
+        const updatedNotifications = {
+            ...settings.notifications,
+            [key]: !settings.notifications[key as keyof typeof settings.notifications]
+        }
+
+        await updateSettings({ notifications: updatedNotifications })
+        setSaving(false)
+    }
+
+    if (isLoading || !settings) {
+        return (
+            <SettingsSection title={t('title')} icon={FiBell}>
+                <div className="text-center py-4 text-(--text-2)">Cargando...</div>
+            </SettingsSection>
+        )
     }
 
     return (
@@ -27,8 +46,9 @@ export const NotificationsSection = () => {
                         <p className="text-xs text-(--text-2)">{t('emailDescription')}</p>
                     </div>
                     <Switch
-                        checked={notifications.email}
+                        checked={settings.notifications.email}
                         onChange={() => handleToggle('email')}
+                        disabled={saving}
                     />
                 </div>
 
@@ -39,8 +59,9 @@ export const NotificationsSection = () => {
                         <p className="text-xs text-(--text-2)">{t('pushDescription')}</p>
                     </div>
                     <Switch
-                        checked={notifications.push}
+                        checked={settings.notifications.push}
                         onChange={() => handleToggle('push')}
+                        disabled={saving}
                     />
                 </div>
 
@@ -51,29 +72,33 @@ export const NotificationsSection = () => {
                     <div className="flex items-center justify-between">
                         <span className="text-sm text-(--text-1)">{t('messages')}</span>
                         <Switch
-                            checked={notifications.messages}
+                            checked={settings.notifications.messages}
                             onChange={() => handleToggle('messages')}
+                            disabled={saving}
                         />
                     </div>
                     <div className="flex items-center justify-between">
                         <span className="text-sm text-(--text-1)">{t('mentors')}</span>
                         <Switch
-                            checked={notifications.mentors}
+                            checked={settings.notifications.mentors}
                             onChange={() => handleToggle('mentors')}
+                            disabled={saving}
                         />
                     </div>
                     <div className="flex items-center justify-between">
                         <span className="text-sm text-(--text-1)">{t('security')}</span>
                         <Switch
-                            checked={notifications.security}
+                            checked={settings.notifications.security}
                             onChange={() => handleToggle('security')}
+                            disabled={saving}
                         />
                     </div>
                     <div className="flex items-center justify-between">
                         <span className="text-sm text-(--text-1)">{t('news')}</span>
                         <Switch
-                            checked={notifications.news}
+                            checked={settings.notifications.news}
                             onChange={() => handleToggle('news')}
+                            disabled={saving}
                         />
                     </div>
                 </div>

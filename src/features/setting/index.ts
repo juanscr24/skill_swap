@@ -10,3 +10,6 @@ export {
     SecuritySection,
     SettingsSection
 } from './components'
+
+// Hooks
+export { useSettings } from './hooks/useSettings'

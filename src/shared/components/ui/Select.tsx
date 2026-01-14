@@ -9,7 +9,8 @@ export const Select = ({
     placeholder,
     className = '',
     error,
-    required
+    required,
+    disabled
 }: SelectProps) => {
     return (
         <div className="w-full">
@@ -23,7 +24,8 @@ export const Select = ({
                 value={value}
                 onChange={onChange}
                 required={required}
-                className={`bg-(--bg-2) border border-(--border-1) text-(--text-1) w-full outline-none px-4 max-sm:px-3 py-3 max-sm:py-2 max-sm:text-sm rounded-md focus:border-(--button-1) transition-colors cursor-pointer
+                disabled={disabled}
+                className={`bg-(--bg-2) border border-(--border-1) text-(--text-1) w-full outline-none px-4 max-sm:px-3 py-3 max-sm:py-2 max-sm:text-sm rounded-md focus:border-(--button-1) transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed
                     ${error ? 'border-red-500' : ''}
                     ${className}`}
             >

@@ -189,6 +189,7 @@ model users {
   languages                            languages[]
   mentor_availability                  mentor_availability[]
   user_presence                        user_presence?
+  user_settings                        user_settings?
 
   @@index([email], map: "idx_users_email")
 }
@@ -248,6 +249,26 @@ model user_presence {
 
   @@index([user_id, is_online], map: "idx_presence_user_online")
   @@index([updated_at], map: "idx_presence_updated")
+}
+
+model user_settings {
+  id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id               String   @unique @db.Uuid
+  // Notifications
+  email_notifications   Boolean  @default(true)
+  push_notifications    Boolean  @default(true)
+  news_notifications    Boolean  @default(false)
+  security_notifications Boolean @default(true)
+  mentors_notifications Boolean  @default(true)
+  messages_notifications Boolean @default(true)
+  // Privacy
+  profile_visibility    String   @default("public") // public, mentors, private
+  messages_privacy      String   @default("everyone") // everyone, matches, mentors
+  created_at            DateTime @default(now())
+  updated_at            DateTime @default(now()) @updatedAt
+  users                 users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id], map: "idx_user_settings_user")
 }
 
 enum role_enum {
