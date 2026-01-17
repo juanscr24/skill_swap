@@ -18,5 +18,23 @@
         "matches": "No tienes matches",
         "reviews": "No tienes reseñas",
         "sessions": "No tienes sesiones"
+    },
+    "types": {
+        "message": "MENSAJE",
+        "session": "SESIÓN",
+        "match": "MATCH",
+        "review": "RESEÑA"
+    },
+    "actions": {
+        "join": "Unirse",
+        "viewReview": "Ver reseña"
+    },
+    "dates": {
+        "today": "HOY",
+        "yesterday": "AYER"
+    },
+    "emptyState": {
+        "title": "No hay actividades de tipo",
+        "description": "Ajusta los filtros o espera nuevas notificaciones"
     }
 }

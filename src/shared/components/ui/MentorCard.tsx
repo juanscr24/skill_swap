@@ -23,6 +23,7 @@ export const MentorCard = ({
     isAvailable = true
 }: MentorCardPropsExtended) => {
     const t = useTranslations('mentors')
+    const tc = useTranslations('common')
 
     return (
         <div className="bg-(--bg-2) border border-(--border-1) rounded-2xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
@@ -61,7 +62,7 @@ export const MentorCard = ({
                 {/* Location */}
                 <div className="flex items-center justify-center gap-1 text-(--text-2) mb-4">
                     <FiMapPin className="w-4 h-4" />
-                    <span className="text-sm">{city || 'Sin ubicación'}</span>
+                    <span className="text-sm">{city || tc('location.noLocation')}</span>
                 </div>
 
                 {/* Rating */}
@@ -71,7 +72,7 @@ export const MentorCard = ({
                         {averageRating.toFixed(1)}
                     </span>
                     <span className="text-(--text-2) text-xs">
-                        ({totalReviews} {totalReviews === 1 ? 'review' : 'reviews'})
+                        ({totalReviews} {totalReviews === 1 ? tc('reviews.review') : tc('reviews.reviews')})
                     </span>
                 </div>
 

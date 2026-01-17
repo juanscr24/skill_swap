@@ -1,4 +1,5 @@
 'use client'
+import { useTranslations } from 'next-intl'
 import { FiSearch } from 'react-icons/fi'
 import { Avatar } from '@/shared/components'
 import { PresenceIndicator } from '@/features/chat/components/PresenceIndicator'
@@ -22,11 +23,13 @@ export const ConversationList = ({
     onSearchChange,
     isUserOnline
 }: ConversationListProps) => {
+    const t = useTranslations('chat')
+    
     return (
         <div className={`w-80 max-md:w-full border-r border-(--border-1) bg-(--bg-2) flex flex-col ${selectedId ? 'max-md:hidden' : ''}`}>
             <div className="p-4 border-b border-(--border-1)">
                 <h2 className="text-xl font-bold text-(--text-1) mb-3">
-                    Messages
+                    {t('chats')}
                 </h2>
 
                 <div className="relative">
@@ -35,7 +38,7 @@ export const ConversationList = ({
                         type="text"
                         value={searchQuery}
                         onChange={(e) => onSearchChange(e.target.value)}
-                        placeholder="Search conversations..."
+                        placeholder={t('typeMessage')}
                         className="w-full pl-10 pr-4 py-2 bg-(--bg-1) border border-(--border-1) rounded-lg focus:outline-none focus:ring-2 focus:ring-(--button-1) text-(--text-1) placeholder:text-(--text-2) text-sm"
                     />
                 </div>
@@ -43,17 +46,14 @@ export const ConversationList = ({
 
             <div className="flex border-b border-(--border-1) px-2">
                 <button className="px-4 py-2 text-sm font-medium text-(--text-1) border-b-2 border-(--button-1)">
-                    All Chats
-                </button>
-                <button className="px-4 py-2 text-sm font-medium text-(--text-2) hover:text-(--text-1)">
-                    Unread
+                    {t('conversations')}
                 </button>
             </div>
 
             <div className="flex-1 overflow-y-auto">
                 {conversations.length === 0 ? (
                     <div className="p-4 text-center text-(--text-2)">
-                        {searchQuery ? 'No messages found' : 'No conversations yet'}
+                        {searchQuery ? t('noMessages') : t('noConversations')}
                     </div>
                 ) : (
                     conversations.map((conversation) => (

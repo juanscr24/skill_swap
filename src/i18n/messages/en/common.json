@@ -4,5 +4,22 @@
     "pageNotFoundDescription": "Sorry, the page you are looking for does not exist or has been moved.",
     "backToLogin": "Back to home",
     "needHelp": "Need help?",
-    "contactSupport": "Contact support"
+    "contactSupport": "Contact support",
+    "skills": {
+        "search": "Search skill...",
+        "searchOrAdd": "Search or add skill...",
+        "customSkillName": "Skill name",
+        "add": "Add",
+        "cancel": "Cancel",
+        "addCustomSkill": "Add custom skill",
+        "recommendations": "Recommendations",
+        "noResults": "No recommendations found"
+    },
+    "reviews": {
+        "review": "review",
+        "reviews": "reviews"
+    },
+    "location": {
+        "noLocation": "No location"
+    }
 }

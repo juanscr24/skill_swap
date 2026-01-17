@@ -1,14 +1,16 @@
 'use client'
+import { useTranslations } from 'next-intl'
 import { SkillSelectorPropsExtended } from '@/shared/types/ui.types'
 import { useState, useRef, useEffect } from 'react'
 import { FiPlus, FiSearch } from 'react-icons/fi'
 
 export const SkillSelector = ({
     onAdd,
-    placeholder = 'Buscar o agregar habilidad...',
+    placeholder,
     recommendations = [],
     label
 }: SkillSelectorPropsExtended) => {
+    const t = useTranslations('common.skills')
     const [isOpen, setIsOpen] = useState(false)
     const [search, setSearch] = useState('')
     const [customSkill, setCustomSkill] = useState('')
@@ -66,7 +68,7 @@ export const SkillSelector = ({
                     className="w-full flex items-center gap-2 px-4 py-3 bg-(--bg-2) border border-(--border-1) rounded-lg text-(--text-1) hover:border-(--button-1) transition-colors"
                 >
                     <FiPlus className="w-4 h-4" />
-                    <span>{placeholder}</span>
+                    <span>{placeholder || t('searchOrAdd')}</span>
                 </button>
 
                 {isOpen && (
@@ -79,7 +81,7 @@ export const SkillSelector = ({
                                     type="text"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
-                                    placeholder="Buscar habilidad..."
+                                    placeholder={t('search')}
                                     className="w-full pl-10 pr-4 py-2 bg-(--bg-1) border border-(--border-1) rounded-lg text-(--text-1) placeholder:text-(--text-2) focus:outline-none focus:border-(--button-1)"
                                     autoFocus
                                 />
@@ -94,7 +96,7 @@ export const SkillSelector = ({
                                         type="text"
                                         value={customSkill}
                                         onChange={(e) => setCustomSkill(e.target.value)}
-                                        placeholder="Nombre de la habilidad"
+                                        placeholder={t('customSkillName')}
                                         className="flex-1 px-3 py-2 bg-(--bg-2) border border-(--border-1) rounded-lg text-(--text-1) placeholder:text-(--text-2) focus:outline-none focus:border-(--button-1)"
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
@@ -108,7 +110,7 @@ export const SkillSelector = ({
                                         onClick={handleAddCustomSkill}
                                         className="px-4 py-2 bg-(--button-1) text-(--button-1-text) rounded-lg hover:opacity-90 transition-opacity font-medium"
                                     >
-                                        Agregar
+                                        {t('add')}
                                     </button>
                                 </div>
                             </div>
@@ -119,7 +121,7 @@ export const SkillSelector = ({
                             {filteredRecommendations.length > 0 ? (
                                 <>
                                     <div className="px-2 py-1 text-xs font-medium text-(--text-2) uppercase">
-                                        Recomendaciones
+                                        {t('recommendations')}
                                     </div>
                                     {filteredRecommendations.map((skill, index) => (
                                         <button
@@ -134,7 +136,7 @@ export const SkillSelector = ({
                                 </>
                             ) : search && (
                                 <div className="px-3 py-4 text-center text-(--text-2) text-sm">
-                                    No se encontraron recomendaciones
+                                    {t('noResults')}
                                 </div>
                             )}
 
@@ -145,7 +147,7 @@ export const SkillSelector = ({
                                 className="w-full mt-2 px-3 py-2 text-left rounded-lg hover:bg-(--bg-1) text-(--button-1) font-medium flex items-center gap-2 transition-colors"
                             >
                                 <FiPlus className="w-4 h-4" />
-                                {showCustomInput ? 'Cancelar' : 'Agregar habilidad personalizada'}
+                                {showCustomInput ? t('cancel') : t('addCustomSkill')}
                             </button>
                         </div>
                     </div>

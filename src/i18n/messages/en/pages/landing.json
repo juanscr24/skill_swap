@@ -1,5 +1,31 @@
 {
     "howItWorks": "How it works",
     "popularSkills": "Popular Skills",
-    "userReviews": "User Reviews"
+    "userReviews": "User Reviews",
+    "reviews": {
+        "review_1": {
+            "username": "Juan Pérez",
+            "text": "SkillSwap allowed me to expand my horizons. I learned to code in exchange for teaching English. The community is incredible and the opportunities are limitless."
+        },
+        "review_2": {
+            "username": "Ana Giménez",
+            "text": "I joined SkillSwap looking to improve my graphic design skills. I ended up meeting many experts and learned much more than I expected!"
+        },
+        "review_3": {
+            "username": "Pedro Cardona",
+            "text": "A unique experience. I learned to play piano while helping others with their photography projects. It's like an unparalleled skill exchange!"
+        },
+        "review_4": {
+            "username": "María Rodríguez",
+            "text": "I never imagined learning to cook would be so easy. I found a chef who taught me delicious recipes in exchange for marketing classes. Highly recommended!"
+        },
+        "review_5": {
+            "username": "Luis Fernández",
+            "text": "SkillSwap allowed me to expand my horizons. I learned to code in exchange for teaching English. The community is incredible and the opportunities are limitless."
+        },
+        "review_6": {
+            "username": "Sofía Martínez",
+            "text": "I joined SkillSwap looking to improve my graphic design skills. I ended up meeting many experts and learned much more than I expected!"
+        }
+    }
 }

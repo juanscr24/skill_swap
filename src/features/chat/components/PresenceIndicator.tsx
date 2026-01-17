@@ -1,4 +1,5 @@
 'use client'
+import { useTranslations } from 'next-intl'
 import { PresenceIndicatorProps } from "../types"
 
 export const PresenceIndicator = ({
@@ -7,6 +8,8 @@ export const PresenceIndicator = ({
   showOffline = false,
   className = '',
 }: PresenceIndicatorProps) => {
+  const t = useTranslations('chat')
+  
   if (!isOnline && !showOffline) return null
 
   const sizeClasses = {
@@ -20,7 +23,7 @@ export const PresenceIndicator = ({
   return (
     <div
       className={`${sizeClasses[size]} ${bgColor} rounded-full border-2 border-white dark:border-gray-800 ${className}`}
-      title={isOnline ? 'Online' : 'Offline'}
+      title={isOnline ? t('online') : t('offline')}
     />
   )
 }

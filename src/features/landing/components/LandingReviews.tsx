@@ -5,7 +5,8 @@ import { CardReview } from "@/shared/components/ui/CardReview"
 
 export const LandingReviews = () => {
     const t = useTranslations('landing')
-    const toccupation = useTranslations('occupation')
+    const tReviews = useTranslations('landing.reviews')
+    const tOccupation = useTranslations('occupation')
     return (
         <>
         {/* Sección: Opiniones */}
@@ -37,9 +38,9 @@ export const LandingReviews = () => {
                         {[...userReviews, ...userReviews].map((review, index) => (
                             <CardReview
                                 key={index}
-                                username={review.username}
-                                occupation={toccupation(review.occupation)}
-                                review={review.review}
+                                username={tReviews(`${review.reviewKey}.username`)}
+                                occupation={tOccupation(review.occupation)}
+                                review={tReviews(`${review.reviewKey}.text`)}
                             />
                         ))}
                     </div>

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { FiMessageCircle, FiUsers, FiStar, FiCheckCircle, FiArrowRight } from 'react-icons/fi'
 import { Avatar } from '@/shared/components/ui/Avatar'
 import { LoadingSpinner } from '@/shared/components/feedback'
+import { formatTimestamp } from '@/shared/utils/activity'
 import { DashboardSectionProps } from '../../types'
 import { RecentActivity as ActivityType } from '@/features/activity/types/activity.types'
 
@@ -39,20 +40,6 @@ const getActivityColor = (type: ActivityType['type']) => {
     default:
       return 'text-(--text-2) bg-(--bg-1)'
   }
-}
-
-const formatTimestamp = (date: Date): string => {
-  const now = new Date()
-  const diff = now.getTime() - new Date(date).getTime()
-  const minutes = Math.floor(diff / 60000)
-  const hours = Math.floor(minutes / 60)
-  const days = Math.floor(hours / 24)
-
-  if (minutes < 1) return 'Ahora'
-  if (minutes < 60) return `Hace ${minutes}m`
-  if (hours < 24) return `Hace ${hours}h`
-  if (days < 7) return `Hace ${days}d`
-  return new Date(date).toLocaleDateString('es-ES', { month: 'short', day: 'numeric' })
 }
 
 export const RecentActivity = ({ activities, isLoading, className = '' }: RecentActivityProps) => {
