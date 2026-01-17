@@ -30,8 +30,19 @@
         "sessions": "Sesiones Activas",
         "sessionsDescription": "Cierra sesión en todos los otros dispositivos",
         "changePassword": "Cambiar contraseña",
+        "cancel": "Cancelar",
         "closeSessions": "Cerrar todas las sesiones",
-        "sessionsClosed": "Se han cerrado todas las sesiones activas excepto la actual"
+        "confirmCloseSessions": "¿Estás seguro de que quieres cerrar todas las sesiones?",
+        "sessionsClosed": "Sesiones cerradas correctamente",
+        "currentPassword": "Contraseña actual",
+        "newPassword": "Nueva contraseña",
+        "confirmPassword": "Confirmar nueva contraseña",
+        "savePassword": "Guardar nueva contraseña",
+        "passwordMismatch": "Las contraseñas no coinciden",
+        "passwordTooShort": "La nueva contraseña debe tener al menos 8 caracteres",
+        "passwordChangeError": "Error al cambiar la contraseña",
+        "passwordUpdated": "Contraseña actualizada correctamente",
+        "closeSessionsError": "Error al cerrar las sesiones"
     },
     "privacy": {
         "title": "Privacidad",
@@ -50,7 +61,16 @@
         "deleteAccount": "Eliminar Cuenta",
         "deleteDescription": "Esta acción es irreversible. Perderás todos tus datos.",
         "deleteButton": "Eliminar mi cuenta",
-        "confirmDelete": "¿Estás seguro? Esta acción no se puede deshacer."
+        "cancel": "Cancelar",
+        "confirmDelete": "¿Estás seguro? Esta acción no se puede deshacer.",
+        "passwordRequired": "Por favor ingresa tu contraseña para confirmar",
+        "deleteError": "Error al eliminar la cuenta",
+        "accountDeleted": "Tu cuenta ha sido eliminada correctamente",
+        "warningMessage": "⚠️ Esta acción es permanente y no se puede deshacer",
+        "dataLossMessage": "Se eliminarán todos tus datos, mensajes, sesiones y actividad",
+        "enterPassword": "Ingresa tu contraseña para confirmar",
+        "deleting": "Eliminando...",
+        "confirmDeleteButton": "Confirmar eliminación de cuenta"
     },
     "save": "Guardar cambios",
     "saved": "Cambios guardados correctamente"

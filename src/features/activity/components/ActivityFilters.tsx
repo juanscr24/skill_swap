@@ -6,6 +6,17 @@ import { ActivityFiltersProps } from '../types/activity.types'
 export const ActivityFilters = ({ filterType, onFilterChange }: ActivityFiltersProps) => {
     const t = useTranslations('activity')
     
+    const getFilterLabel = (value: string) => {
+        const labels: { [key: string]: string } = {
+            'all': t('filters.all'),
+            'message': t('filters.messages'),
+            'match': t('filters.matches'),
+            'review': t('filters.reviews'),
+            'session': t('filters.sessions')
+        }
+        return labels[value] || value
+    }
+    
     return (
         <div className="flex gap-2 flex-wrap">
             {ACTIVITY_TYPES.map(({ value, label, icon: Icon }) => {
@@ -21,7 +32,7 @@ export const ActivityFilters = ({ filterType, onFilterChange }: ActivityFiltersP
                         }`}
                     >
                         <Icon className="w-4 h-4" />
-                        <span className="text-sm">{label}</span>
+                        <span className="text-sm">{getFilterLabel(value)}</span>
                     </button>
                 )
             })}

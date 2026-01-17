@@ -199,7 +199,7 @@ export const ScheduleSessionView = () => {
                                         className="w-full"
                                         disabled={isCreating}
                                     >
-                                        {t('cancel') || 'Cancelar'}
+                                        {t('cancel')}
                                     </Button>
                                 </Link>
                                 <Button
@@ -211,7 +211,7 @@ export const ScheduleSessionView = () => {
                                     {isCreating ? (
                                         <span className="flex items-center justify-center gap-2">
                                             <FiLoader className="w-4 h-4 animate-spin" />
-                                            Solicitando...
+                                            {t('requesting')}
                                         </span>
                                     ) : (
                                         t('requestSession')

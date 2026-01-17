@@ -76,7 +76,7 @@ export const ActivityPage = () => {
           ) : (
             <div className="space-y-8">
               {/* Group by date */}
-              {groupActivitiesByDate(filteredActivities).map(({ date, activities: dateActivities }) => (
+              {groupActivitiesByDate(filteredActivities, t).map(({ date, activities: dateActivities }) => (
                 <div key={date}>
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-2 h-2 rounded-full bg-(--button-1)"></div>
@@ -111,7 +111,7 @@ export const ActivityPage = () => {
 }
 
 // Helper function to group activities by date
-function groupActivitiesByDate(activities: any[]) {
+function groupActivitiesByDate(activities: any[], t: any) {
   const groups: { [key: string]: any[] } = {}
   const today = new Date()
   const yesterday = new Date(today)
@@ -122,9 +122,9 @@ function groupActivitiesByDate(activities: any[]) {
     let dateKey: string
 
     if (isSameDay(activityDate, today)) {
-      dateKey = 'HOY'
+      dateKey = t('dates.today')
     } else if (isSameDay(activityDate, yesterday)) {
-      dateKey = 'AYER'
+      dateKey = t('dates.yesterday')
     } else {
       dateKey = activityDate.toLocaleDateString('es-ES', {
         day: 'numeric',

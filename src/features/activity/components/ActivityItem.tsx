@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { ACTIVITY_TYPES } from '@/data/activity'
 import { getActivityColor } from '@/shared/utils/activity'
 import { FiMessageCircle, FiEye, FiMoreVertical } from 'react-icons/fi'
@@ -6,16 +7,17 @@ import { ActivityItemProps } from '../types/activity.types'
 import { Avatar } from '@/shared/components'
 
 export const ActivityItem = ({ activity }: ActivityItemProps) => {
+    const t = useTranslations('activity')
     const Icon = ACTIVITY_TYPES.find(t => t.value === activity.type)?.icon || FiMessageCircle
     const colorClasses = getActivityColor(activity.type)
 
     // Obtener el tipo en formato legible
     const getTypeLabel = (type: string) => {
         const labels: { [key: string]: string } = {
-            'message': 'MENSAJE',
-            'session': 'SESIÓN',
-            'match': 'MATCH',
-            'review': 'RESEÑA'
+            'message': t('types.message'),
+            'session': t('types.session'),
+            'match': t('types.match'),
+            'review': t('types.review')
         }
         return labels[type] || type.toUpperCase()
     }
@@ -62,7 +64,7 @@ export const ActivityItem = ({ activity }: ActivityItemProps) => {
                     href="/sessions"
                     className="px-4 py-2 rounded-lg bg-(--button-1) text-(--button-1-text) font-medium hover:opacity-90 transition-opacity inline-block"
                 >
-                    Unirse
+                    {t('actions.join')}
                 </Link>
             )
         }
@@ -84,7 +86,7 @@ export const ActivityItem = ({ activity }: ActivityItemProps) => {
                     href="/reviews"
                     className="px-4 py-2 rounded-lg bg-(--bg-1) hover:bg-(--bg-3) text-(--text-1) font-medium transition-colors inline-block"
                 >
-                    Ver reseña
+                    {t('actions.viewReview')}
                 </Link>
             )
         }

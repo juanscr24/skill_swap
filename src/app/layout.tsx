@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "SkillSwap",
-  description: "SkillSwap es una plataforma de intercambio de habilidades que te permite aprender y enseñar tus habilidades de manera eficiente.",
+  description: "SkillSwap is a skill exchange platform that allows you to learn and teach your skills efficiently.",
 };
 
 export default function RootLayout({

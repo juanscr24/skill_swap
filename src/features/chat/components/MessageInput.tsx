@@ -1,5 +1,6 @@
 'use client'
 import { useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { FiSend } from 'react-icons/fi'
 
 interface MessageInputProps {
@@ -11,8 +12,9 @@ interface MessageInputProps {
 export const MessageInput = ({
     onSendMessage,
     isSubscribed,
-    placeholder = "Type a message..."
+    placeholder
 }: MessageInputProps) => {
+    const t = useTranslations('chat')
     const [messageInput, setMessageInput] = useState('')
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -52,7 +54,7 @@ export const MessageInput = ({
                     type="text"
                     value={messageInput}
                     onChange={(e) => setMessageInput(e.target.value)}
-                    placeholder={placeholder}
+                    placeholder={placeholder || t('typeMessage')}
                     className="flex-1 px-4 py-3 bg-(--bg-1) border border-(--border-1) rounded-xl focus:outline-none focus:ring-2 focus:ring-(--button-1) text-(--text-1) placeholder:text-(--text-2)"
                     disabled={!isSubscribed}
                 />

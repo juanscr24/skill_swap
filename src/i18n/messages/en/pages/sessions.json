@@ -56,6 +56,7 @@
     "invalidTimeFormat": "Time must be in multiples of 10 minutes",
     "sessionRequested": "Session requested successfully",
     "errorRequestingSession": "Error requesting session",
+    "requesting": "Requesting...",
     "pendingRequests": "Pending Requests",
     "acceptRequest": "Accept",
     "rejectRequest": "Reject",

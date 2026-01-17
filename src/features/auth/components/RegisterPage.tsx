@@ -61,7 +61,7 @@ export const RegisterPage = () => {
                         {...form.register('name')}
                         type="text"
                         label={t('name')}
-                        placeholder="Juan Pérez"
+                        placeholder={t('placeholders.name')}
                         error={errors.name?.message}
                     />
 
@@ -69,7 +69,7 @@ export const RegisterPage = () => {
                         {...form.register('email')}
                         type="email"
                         label={t('email')}
-                        placeholder="tu@email.com"
+                        placeholder={t('placeholders.email')}
                         error={errors.email?.message}
                     />
 
