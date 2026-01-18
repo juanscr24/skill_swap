@@ -43,7 +43,7 @@ export const ProfileView = () => {
         return (
             <div className="p-8 max-md:p-6 max-sm:p-4 max-w-7xl mx-auto">
                 <Card className="p-6 text-center">
-                    <p className="text-red-500">{error?.message || 'Error al cargar el perfil'}</p>
+                    <p className="text-red-500">{error?.message || t('errorLoadingProfile')}</p>
                 </Card>
             </div>
         )
@@ -99,7 +99,7 @@ export const ProfileView = () => {
                             </Link>
                         </div>
                         <p className="text-(--text-2) leading-relaxed whitespace-pre-line">
-                            {profile.bio || 'No bio provided yet.'}
+                            {profile.bio || t('noBioProvided')}
                         </p>
                     </div>
 

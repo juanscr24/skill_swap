@@ -2,6 +2,7 @@
 import { Language } from "@/shared/types"
 import { LanguageItem } from "./LanguageItem"
 import { FiPlus } from "react-icons/fi"
+import { useTranslations } from "next-intl"
 
 interface LanguageListProps {
     languages: Language[]
@@ -16,16 +17,18 @@ export const LanguageList = ({
     onAddClick,
     showAddButton = false
 }: LanguageListProps) => {
+    const t = useTranslations('profile')
+    
     if (languages.length === 0) {
         return (
             <div className="space-y-3">
-                <p className="text-(--text-2) text-sm italic text-center py-4">No languages added yet.</p>
+                <p className="text-(--text-2) text-sm italic text-center py-4">{t('noLanguagesAdded')}</p>
                 {showAddButton && (
                     <button
                         onClick={onAddClick}
                         className="w-full px-4 py-3 rounded-xl border border-dashed border-(--border-1) text-(--text-2) hover:text-(--button-1) hover:border-(--button-1) transition-all flex items-center justify-center gap-2"
                     >
-                        <FiPlus size={16} /> Add Language
+                        <FiPlus size={16} /> {t('addNew')}
                     </button>
                 )}
             </div>
@@ -47,7 +50,7 @@ export const LanguageList = ({
                     onClick={onAddClick}
                     className="w-full px-4 py-3 rounded-xl border border-dashed border-(--border-1) text-(--text-2) hover:text-(--button-1) hover:border-(--button-1) transition-all flex items-center justify-center gap-2"
                 >
-                    <FiPlus size={16} /> Add Language
+                    <FiPlus size={16} /> {t('addNew')}
                 </button>
             )}
         </div>

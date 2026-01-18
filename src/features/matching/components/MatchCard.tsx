@@ -39,14 +39,14 @@ export const MatchCard = ({ user, onAccept, onReject }: MatchCardProps) => {
                     {user.matchPercentage && user.matchPercentage >= 90 && (
                         <div className="absolute top-4 right-4">
                             <Badge variant="default" className="bg-(--button-1) text-(--button-1-text) font-semibold text-sm px-4 py-1.5">
-                                TOP MATCH
+                                {t('topMatch')}
                             </Badge>
                         </div>
                     )}
 
                     {user.matchPercentage && (
                         <div className="inline-block bg-(--button-1) text-(--button-1-text) px-3 py-1 rounded-full text-sm font-bold shadow-xl mb-2">
-                            {user.matchPercentage}% Match
+                            {user.matchPercentage}% {t('matchPercentage')}
                         </div>
                     )}
 

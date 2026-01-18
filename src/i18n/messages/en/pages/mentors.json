@@ -30,5 +30,7 @@
     "weekdays": "Weekdays",
     "city": "City",
     "allCitiesOption": "All cities",
-    "applyFilters": "Apply Filters"
+    "applyFilters": "Apply Filters",
+    "activeFilters": "Active filters:",
+    "noName": "No name"
 }

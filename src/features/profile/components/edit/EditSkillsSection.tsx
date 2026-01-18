@@ -29,15 +29,15 @@ export const EditSkillsSection = ({
     const result = await onAddSkill({ name, level })
 
     if (result.success) {
-      setSuccessMessage('Skill added successfully')
+      setSuccessMessage(t('skillAddedSuccess'))
       setTimeout(() => setSuccessMessage(''), 3000)
     } else {
-      setErrorMessage('Error adding skill')
+      setErrorMessage(t('errorAddingSkill'))
     }
   }
 
   const handleDeleteSkill = async (skillId: string) => {
-    if (!confirm('Are you sure you want to remove this skill?')) return
+    if (!confirm(t('confirmRemoveSkill'))) return
 
     setSuccessMessage('')
     setErrorMessage('')
@@ -45,10 +45,10 @@ export const EditSkillsSection = ({
     const result = await onDeleteSkill(skillId)
 
     if (result.success) {
-      setSuccessMessage('Skill removed successfully')
+      setSuccessMessage(t('skillRemovedSuccess'))
       setTimeout(() => setSuccessMessage(''), 3000)
     } else {
-      setErrorMessage('Error removing skill')
+      setErrorMessage(t('errorRemovingSkill'))
     }
   }
 
@@ -59,15 +59,15 @@ export const EditSkillsSection = ({
     const result = await onAddWantedSkill(skillName)
 
     if (result.success) {
-      setSuccessMessage('Wanted skill added successfully')
+      setSuccessMessage(t('wantedSkillAddedSuccess'))
       setTimeout(() => setSuccessMessage(''), 3000)
     } else {
-      setErrorMessage('Error adding wanted skill')
+      setErrorMessage(t('errorAddingWantedSkill'))
     }
   }
 
   const handleDeleteWantedSkill = async (skillId: string) => {
-    if (!confirm('Are you sure you want to remove this wanted skill?')) return
+    if (!confirm(t('confirmRemoveWantedSkill'))) return
 
     setSuccessMessage('')
     setErrorMessage('')
@@ -75,16 +75,16 @@ export const EditSkillsSection = ({
     const result = await onDeleteWantedSkill(skillId)
 
     if (result.success) {
-      setSuccessMessage('Wanted skill removed successfully')
+      setSuccessMessage(t('wantedSkillRemovedSuccess'))
       setTimeout(() => setSuccessMessage(''), 3000)
     } else {
-      setErrorMessage('Error removing wanted skill')
+      setErrorMessage(t('errorRemovingWantedSkill'))
     }
   }
 
   return (
     <Card>
-      <h2 className="text-xl font-bold text-(--text-1) mb-6">Skills & Expertise</h2>
+      <h2 className="text-xl font-bold text-(--text-1) mb-6">{t('skillsAndExpertise')}</h2>
 
       {successMessage && (
         <div className="mb-4 p-3 bg-green-100 dark:bg-green-900/30 border border-green-500 rounded-xl text-sm text-green-800 dark:text-green-200">
@@ -108,7 +108,7 @@ export const EditSkillsSection = ({
           onDelete={handleDeleteSkill}
           onAddClick={() => setIsAddingTeach(true)}
           variant="teach"
-          emptyText="No skills added yet."
+          emptyText={t('noSkillsAddedYet')}
           showAddButton={true}
         />
 
@@ -130,7 +130,7 @@ export const EditSkillsSection = ({
           onDelete={handleDeleteWantedSkill}
           onAddClick={() => setIsAddingLearn(true)}
           variant="learn"
-          emptyText="No wanted skills added yet."
+          emptyText={t('noSkillsAddedYet')}
           showAddButton={true}
         />
 
