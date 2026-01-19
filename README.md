@@ -441,15 +441,6 @@ This project is under the ISC License. See the `LICENSE` file for more details.
 - GitHub: [@juanscr24](https://github.com/juanscr24)
 - Repository: [skill_swap](https://github.com/juanscr24/skill_swap)
 
-## 🙏 Acknowledgments
-
-- [Next.js](https://nextjs.org/) for the amazing framework
-- [Vercel](https://vercel.com/) for hosting and deployment
-- [Supabase](https://supabase.com/) for Realtime and database
-- [Prisma](https://www.prisma.io/) for the type-safe ORM
-- [Cloudinary](https://cloudinary.com/) for image management
-- The open source community for all the libraries used
-
 ---
 
 ⭐ If you like this project, give it a star on GitHub!
