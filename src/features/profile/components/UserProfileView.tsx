@@ -3,6 +3,7 @@
 import { useUserProfile } from '@/features/profile/hooks/useUserProfile'
 import { useReviews } from '@/features/review/hooks/useReviews'
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { LoadingSpinner } from '@/shared/components'
 import { Card } from '@/shared/components/ui/Card'
 import { MentorProfileHeader } from './mentor/MentorProfileHeader'
@@ -16,6 +17,7 @@ import { useMentors } from '@/features/mentor/hooks/useMentors'
 import { UserProfileViewProps } from '../types'
 
 export const UserProfileView = ({ userId }: UserProfileViewProps) => {
+  const t = useTranslations('profile')
   const { profile, isLoading, error, refetch, updateReviews } = useUserProfile(userId)
   const { createReview, deleteReview } = useReviews(userId)
   const { mentors } = useMentors({})
@@ -61,7 +63,7 @@ export const UserProfileView = ({ userId }: UserProfileViewProps) => {
     return (
       <div className="px-30 max-2xl:px-14 max-lg:px-10 max-md:px-6 max-sm:px-4 py-8 max-md:py-6 max-sm:py-4 mx-auto">
         <Card className="p-6 text-center">
-          <p className="text-red-500">{error || 'Error al cargar el perfil'}</p>
+          <p className="text-red-500">{error || t('errorLoadingProfile')}</p>
         </Card>
       </div>
     )

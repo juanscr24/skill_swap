@@ -49,7 +49,7 @@ export const PendingRequestsList = () => {
   if (isLoading) {
     return (
       <div className="bg-(--bg-2) border border-(--border-1) rounded-xl p-6">
-        <div className="text-center py-8 text-(--text-2)">Cargando...</div>
+        <div className="text-center py-8 text-(--text-2)">{t('loading')}</div>
       </div>
     )
   }
@@ -81,15 +81,15 @@ export const PendingRequestsList = () => {
               <div className="flex items-center gap-4 mb-4">
                 <Avatar
                   src={guest?.image}
-                  alt={guest?.name || 'User'}
+                  alt={guest?.name || t('user')}
                   size="lg"
                 />
                 <div className="flex-1">
                   <h3 className="text-xl font-bold text-(--text-1)">
-                    {guest?.name || 'Usuario'}
+                    {guest?.name || t('user')}
                   </h3>
                   <p className="text-base text-(--text-2)">
-                    {request.title || 'Sin tema'}
+                    {request.title || t('noTopic')}
                   </p>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { CalendarEvent } from '@/features/calendar/types'
 import { Avatar, Button } from '@/shared/components/ui'
 import { formatEventTime } from '@/shared/utils/calendarHelpers'
@@ -22,6 +23,8 @@ export const EventDetailModal = ({
   onClose,
   isMentor
 }: EventDetailModalProps) => {
+  const t = useTranslations('sessions')
+  
   if (!isOpen || !event) return null
 
   const timeStr = formatEventTime(event.startDate, event.endDate)
@@ -71,7 +74,7 @@ export const EventDetailModal = ({
             <div className="flex items-start gap-3">
               <FiCalendar className="w-5 h-5 text-(--button-1) mt-0.5" />
               <div>
-                <p className="font-semibold text-(--text-1)">Date</p>
+                <p className="font-semibold text-(--text-1)">{t('dateLabel')}</p>
                 <p className="text-(--text-2)">{dateStr}</p>
               </div>
             </div>
@@ -79,7 +82,7 @@ export const EventDetailModal = ({
             <div className="flex items-start gap-3">
               <FiClock className="w-5 h-5 text-(--button-1) mt-0.5" />
               <div>
-                <p className="font-semibold text-(--text-1)">Time</p>
+                <p className="font-semibold text-(--text-1)">{t('timeLabel')}</p>
                 <p className="text-(--text-2)">{timeStr}</p>
               </div>
             </div>
@@ -93,7 +96,7 @@ export const EventDetailModal = ({
                 <div className="flex items-start gap-3">
                   <FiFileText className="w-5 h-5 text-(--button-1) mt-0.5" />
                   <div>
-                    <p className="font-semibold text-(--text-1)">Description</p>
+                    <p className="font-semibold text-(--text-1)">{t('descriptionLabel')}</p>
                     <p className="text-(--text-2) whitespace-pre-wrap">{event.description}</p>
                   </div>
                 </div>
@@ -103,19 +106,19 @@ export const EventDetailModal = ({
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <FiUsers className="w-5 h-5 text-(--button-1)" />
-                  <p className="font-semibold text-(--text-1)">Participants</p>
+                  <p className="font-semibold text-(--text-1)">{t('participants')}</p>
                 </div>
 
                 {/* Host */}
                 <div className="flex items-center gap-3 p-3 bg-(--bg-3) rounded-lg">
                   <Avatar
                     src={event.hostImage || ''}
-                    alt={event.hostName || 'Host'}
+                    alt={event.hostName || t('host')}
                     size="md"
                   />
                   <div>
                     <p className="font-medium text-(--text-1)">{event.hostName}</p>
-                    <p className="text-sm text-(--text-2)">Host / Mentor</p>
+                    <p className="text-sm text-(--text-2)">{t('hostMentor')}</p>
                   </div>
                 </div>
 
@@ -123,12 +126,12 @@ export const EventDetailModal = ({
                 <div className="flex items-center gap-3 p-3 bg-(--bg-3) rounded-lg">
                   <Avatar
                     src={event.guestImage || ''}
-                    alt={event.guestName || 'Guest'}
+                    alt={event.guestName || t('guest')}
                     size="md"
                   />
                   <div>
                     <p className="font-medium text-(--text-1)">{event.guestName}</p>
-                    <p className="text-sm text-(--text-2)">Guest / Student</p>
+                    <p className="text-sm text-(--text-2)">{t('guestStudent')}</p>
                   </div>
                 </div>
               </div>
@@ -141,12 +144,12 @@ export const EventDetailModal = ({
               <div className="flex items-center gap-3 p-3 bg-(--bg-3) rounded-lg">
                 <Avatar
                   src={event.mentorImage || ''}
-                  alt={event.mentorName || 'Mentor'}
+                  alt={event.mentorName || t('mentor')}
                   size="md"
                 />
                 <div>
                   <p className="font-medium text-(--text-1)">{event.mentorName}</p>
-                  <p className="text-sm text-(--text-2)">Mentor</p>
+                  <p className="text-sm text-(--text-2)">{t('mentor')}</p>
                 </div>
               </div>
 

@@ -67,8 +67,8 @@ export const ScheduleSessionView = () => {
                         <LoadingSpinner />
                     ) : mentors.length === 0 ? (
                         <div className="text-center py-8 px-4 bg-(--bg-1) rounded-lg border-2 border-dashed border-(--border-1)">
-                            <p className="text-(--text-2) font-medium mb-2">No hay mentores disponibles</p>
-                            <p className="text-(--text-2) text-sm">Intenta de nuevo más tarde</p>
+                            <p className="text-(--text-2) font-medium mb-2">{t('noMentorsAvailable')}</p>
+                            <p className="text-(--text-2) text-sm">{t('tryAgainLater')}</p>
                         </div>
                     ) : (
                         <>
@@ -85,7 +85,7 @@ export const ScheduleSessionView = () => {
                                 />
                                 {mentors.length > 0 && (
                                     <p className="mt-2 text-xs text-(--text-2)">
-                                        {mentors.length} {mentors.length === 1 ? 'mentor disponible' : 'mentores disponibles'}
+                                        {mentors.length} {mentors.length === 1 ? t('mentorAvailable') : t('mentorsAvailableCount')}
                                     </p>
                                 )}
                             </div>

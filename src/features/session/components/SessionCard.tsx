@@ -53,7 +53,7 @@ export const SessionCard = ({
   ] || 'warning'
 
   const handleCancel = async () => {
-    if (!confirm(t('confirmCancel') || '¿Estás seguro de cancelar esta sesión?')) return
+    if (!confirm(t('confirmCancel'))) return
 
     const result = await onCancel(sessionData.id)
     if (!result.success) {
@@ -64,23 +64,23 @@ export const SessionCard = ({
   const handleApprove = async () => {
     const result = await onApprove(sessionData.id)
     if (!result.success) {
-      alert(t('errorApproving') || 'Error al aprobar la sesión')
+      alert(t('errorApproving'))
     }
   }
 
   const handleReject = async () => {
-    if (!confirm(t('confirmReject') || '¿Estás seguro de rechazar esta sesión?')) return
+    if (!confirm(t('confirmReject'))) return
 
     const result = await onReject(sessionData.id)
     if (!result.success) {
-      alert(t('errorRejecting') || 'Error al rechazar la sesión')
+      alert(t('errorRejecting'))
     }
   }
 
   const handleComplete = async () => {
     const result = await onComplete(sessionData.id)
     if (!result.success) {
-      alert(t('errorCompleting') || 'Error al marcar como completada')
+      alert(t('errorCompleting'))
     }
   }
 
@@ -127,12 +127,12 @@ export const SessionCard = ({
             <div className="flex items-center gap-2">
               <Avatar
                 src={otherUser?.image || ''}
-                alt={otherUser?.name || 'User'}
+                alt={otherUser?.name || t('user')}
                 size="sm"
               />
               <div>
                 <p className="text-sm max-sm:text-xs font-medium text-(--text-1)">
-                  {otherUser?.name || 'Unknown'}
+                  {otherUser?.name || t('unknown')}
                 </p>
                 <p className="text-xs max-sm:text-[10px] text-(--text-2)">
                   {isHost ? t('guest') : t('host')}

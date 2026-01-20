@@ -142,7 +142,7 @@ export const MatchingView = () => {
 
                             {/* Description */}
                             <p className="text-base max-sm:text-sm text-(--text-2) mb-8 max-sm:mb-6 max-w-md mx-auto">
-                                Has visto todos los perfiles disponibles por ahora. Vuelve más tarde para descubrir nuevos mentores.
+                                {t('noMoreUsersDescription')}
                             </p>
 
                             {/* Button */}
@@ -170,7 +170,7 @@ export const MatchingView = () => {
     // Preparar datos del usuario para el MatchCard
     const userData = {
         id: currentProfile.id,
-        name: currentProfile.name || 'Unknown User',
+        name: currentProfile.name || t('unknownUser'),
         image: currentProfile.image || undefined,
         city: currentProfile.city || undefined,
         title: currentProfile.title || undefined,

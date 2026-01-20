@@ -140,7 +140,7 @@ export const MentorsView = () => {
           <div className="mt-4 pt-4 border-t border-(--border-1)">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm text-(--text-2) font-medium">
-                Filtros activos:
+                {t('activeFilters')}
               </span>
               {mappedActiveChips.map((chip) => (
                 <FilterChip
@@ -190,7 +190,7 @@ export const MentorsView = () => {
               <MentorCard
                 key={mentor.id}
                 id={mentor.id}
-                name={mentor.name || 'Sin nombre'}
+                name={mentor.name || t('noName')}
                 image={mentor.image}
                 city={mentor.city}
                 bio={mentor.bio}

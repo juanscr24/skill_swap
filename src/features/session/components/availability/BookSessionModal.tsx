@@ -37,7 +37,7 @@ export const BookSessionModal = ({
     setError(null)
 
     if (!selectedAvailability || !title || !duration) {
-      setError('Por favor completa todos los campos')
+      setError(t('completeAllFields'))
       return
     }
 
@@ -85,7 +85,7 @@ export const BookSessionModal = ({
           <h2 className="text-2xl font-bold text-(--text-1)">
             {t('bookSession')}
           </h2>
-          <p className="text-(--text-2) mt-1">con {mentorName}</p>
+          <p className="text-(--text-2) mt-1">{t('with')} {mentorName}</p>
         </div>
 
         {error && (
@@ -100,7 +100,7 @@ export const BookSessionModal = ({
               {t('noAvailableSlots')}
             </p>
             <Button secondary onClick={onClose} className="w-full">
-              Cerrar
+              {t('close')}
             </Button>
           </div>
         ) : (
@@ -185,7 +185,7 @@ export const BookSessionModal = ({
                 disabled={isSubmitting}
                 className="flex-1"
               >
-                Cancelar
+                {t('cancel')}
               </Button>
               <Button
                 type="submit"
@@ -195,7 +195,7 @@ export const BookSessionModal = ({
                 }
                 className="flex-1"
               >
-                {isSubmitting ? 'Solicitando...' : t('requestSession')}
+                {isSubmitting ? t('requestingSession') : t('requestSession')}
               </Button>
             </div>
           </form>

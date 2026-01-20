@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { CalendarHeader } from './CalendarHeader'
 import { CalendarCell } from './CalendarCell'
 import { LoadingSpinner } from '@/shared/components'
@@ -13,6 +14,7 @@ interface SessionsCalendarProps {
 }
 
 export const SessionsCalendar = ({ onEventClick }: SessionsCalendarProps) => {
+  const t = useTranslations('sessions')
   const today = new Date()
   const [currentYear, setCurrentYear] = useState(today.getFullYear())
   const [currentMonth, setCurrentMonth] = useState(today.getMonth())
@@ -93,23 +95,23 @@ export const SessionsCalendar = ({ onEventClick }: SessionsCalendarProps) => {
       <div className="flex flex-wrap items-center gap-4 text-xs">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-blue-500" />
-          <span className="text-(--text-2)">Available</span>
+          <span className="text-(--text-2)">{t('available')}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-green-500" />
-          <span className="text-(--text-2)">Scheduled</span>
+          <span className="text-(--text-2)">{t('scheduled')}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-yellow-500" />
-          <span className="text-(--text-2)">Pending</span>
+          <span className="text-(--text-2)">{t('pending')}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-gray-500" />
-          <span className="text-(--text-2)">Completed</span>
+          <span className="text-(--text-2)">{t('completed')}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-red-500" />
-          <span className="text-(--text-2)">Cancelled</span>
+          <span className="text-(--text-2)">{t('cancelled')}</span>
         </div>
       </div>
 
@@ -143,8 +145,8 @@ export const SessionsCalendar = ({ onEventClick }: SessionsCalendarProps) => {
       {events.length === 0 && (
         <div className="text-center py-8 text-(--text-2)">
           {isMentor
-            ? 'No availability or sessions scheduled for this month'
-            : 'No sessions scheduled for this month'
+            ? t('noAvailabilityOrSessionsThisMonth')
+            : t('noSessionsThisMonth')
           }
         </div>
       )}

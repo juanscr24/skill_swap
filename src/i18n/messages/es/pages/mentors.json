@@ -30,5 +30,7 @@
     "weekdays": "Días laborables",
     "city": "Ciudad",
     "allCitiesOption": "Todas las ciudades",
-    "applyFilters": "Aplicar Filtros"
+    "applyFilters": "Aplicar Filtros",
+    "activeFilters": "Filtros activos:",
+    "noName": "Sin nombre"
 }

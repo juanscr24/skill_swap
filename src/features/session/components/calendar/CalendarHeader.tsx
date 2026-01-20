@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { Button } from '@/shared/components/ui'
 import { getMonthName } from '@/shared/utils/calendarHelpers'
@@ -23,6 +24,8 @@ export const CalendarHeader = ({
   onNextMonth,
   onToday
 }: CalendarHeaderProps) => {
+  const t = useTranslations('sessions')
+  
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
       <div>
@@ -30,7 +33,7 @@ export const CalendarHeader = ({
           {getMonthName(currentMonth)} {currentYear}
         </h2>
         <p className="text-sm text-(--text-2) mt-1">
-          View your availability and scheduled sessions
+          {t('viewAvailabilityAndSessions')}
         </p>
       </div>
       
@@ -40,14 +43,14 @@ export const CalendarHeader = ({
           onClick={onToday}
           className="px-4 py-2 text-sm"
         >
-          Today
+          {t('today')}
         </Button>
         
         <div className="flex items-center gap-1 border border-(--border-1) rounded-lg">
           <button
             onClick={onPrevMonth}
             className="p-2 hover:bg-(--bg-3) transition-colors rounded-l-lg"
-            aria-label="Previous month"
+            aria-label={t('previousMonth')}
           >
             <FiChevronLeft className="w-5 h-5 text-(--text-1)" />
           </button>
@@ -57,7 +60,7 @@ export const CalendarHeader = ({
           <button
             onClick={onNextMonth}
             className="p-2 hover:bg-(--bg-3) transition-colors rounded-r-lg"
-            aria-label="Next month"
+            aria-label={t('nextMonth')}
           >
             <FiChevronRight className="w-5 h-5 text-(--text-1)" />
           </button>
