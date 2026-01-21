@@ -19,7 +19,7 @@ export const CalendarCell = ({ dayData, onEventClick }: CalendarCellProps) => {
   return (
     <div
       className={`
-        min-h-[120px] p-2 border border-(--border-1)
+        min-h-30 p-2 border border-(--border-1)
         ${!isCurrentMonth ? 'opacity-40 bg-(--bg-3)' : 'bg-(--bg-2)'}
         ${isToday ? 'ring-2 ring-(--button-1)' : ''}
         hover:bg-(--bg-1) transition-colors
@@ -48,7 +48,7 @@ export const CalendarCell = ({ dayData, onEventClick }: CalendarCellProps) => {
       </div>
 
       {/* Events list */}
-      <div className="space-y-1 overflow-y-auto max-h-[80px]">
+      <div className="space-y-1 overflow-y-auto max-h-20">
         {/* Sessions first */}
         {sessionEvents.map((event) => (
           <SessionEvent

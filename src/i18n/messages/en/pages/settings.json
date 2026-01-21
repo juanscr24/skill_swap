@@ -30,8 +30,19 @@
         "sessions": "Active Sessions",
         "sessionsDescription": "Log out from all other devices",
         "changePassword": "Change password",
+        "cancel": "Cancel",
         "closeSessions": "Close all sessions",
-        "sessionsClosed": "All active sessions except current one have been closed"
+        "confirmCloseSessions": "Are you sure you want to close all sessions?",
+        "sessionsClosed": "Sessions closed successfully",
+        "currentPassword": "Current password",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm new password",
+        "savePassword": "Save new password",
+        "passwordMismatch": "Passwords do not match",
+        "passwordTooShort": "New password must be at least 8 characters",
+        "passwordChangeError": "Error changing password",
+        "passwordUpdated": "Password updated successfully",
+        "closeSessionsError": "Error closing sessions"
     },
     "privacy": {
         "title": "Privacy",
@@ -50,7 +61,16 @@
         "deleteAccount": "Delete Account",
         "deleteDescription": "This action is irreversible. You will lose all your data.",
         "deleteButton": "Delete my account",
-        "confirmDelete": "Are you sure? This action cannot be undone."
+        "cancel": "Cancel",
+        "confirmDelete": "Are you sure? This action cannot be undone.",
+        "passwordRequired": "Please enter your password to confirm",
+        "deleteError": "Error deleting account",
+        "accountDeleted": "Your account has been successfully deleted",
+        "warningMessage": "⚠️ This action is permanent and cannot be undone",
+        "dataLossMessage": "All your data, messages, sessions and activity will be deleted",
+        "enterPassword": "Enter your password to confirm",
+        "deleting": "Deleting...",
+        "confirmDeleteButton": "Confirm account deletion"
     },
     "save": "Save changes",
     "saved": "Changes saved successfully"

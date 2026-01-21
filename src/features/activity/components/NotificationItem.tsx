@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { getActivityColor, formatTimestamp } from '@/shared/utils/activity'
 import { ACTIVITY_TYPES } from '@/data/activity'
 import { FiMessageCircle } from 'react-icons/fi'
@@ -12,7 +13,8 @@ interface NotificationItemProps {
 }
 
 export const NotificationItem = ({ activity, onClick }: NotificationItemProps) => {
-    const Icon = ACTIVITY_TYPES.find(t => t.value === activity.type)?.icon || FiMessageCircle
+    const t = useTranslations('activity')
+    const Icon = ACTIVITY_TYPES.find(type => type.value === activity.type)?.icon || FiMessageCircle
     const colorClasses = getActivityColor(activity.type)
 
     // Determinar si la notificación es nueva (menos de 1 hora)
@@ -115,7 +117,7 @@ export const NotificationItem = ({ activity, onClick }: NotificationItemProps) =
             {activity.type === 'session' && activity.metadata?.status === 'pending' && (
                 <div className="mt-3 flex gap-2">
                     <button className="flex-1 px-3 py-1.5 bg-(--button-1) text-(--button-1-text) rounded text-sm font-medium hover:opacity-90 transition-opacity">
-                        Unirse
+                        {t('actions.join')}
                     </button>
                 </div>
             )}

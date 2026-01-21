@@ -15,7 +15,7 @@ export const DeleteAccountSection = () => {
 
     const handleDelete = async () => {
         if (!password) {
-            setError('Por favor ingresa tu contraseña para confirmar')
+            setError(t('passwordRequired'))
             return
         }
 
@@ -32,14 +32,14 @@ export const DeleteAccountSection = () => {
             const data = await response.json()
 
             if (!response.ok) {
-                throw new Error(data.error || 'Error al eliminar la cuenta')
+                throw new Error(data.error || t('deleteError'))
             }
 
             // Cerrar sesión y redirigir
-            alert('Tu cuenta ha sido eliminada correctamente')
+            alert(t('accountDeleted'))
             await signOut({ callbackUrl: '/login' })
         } catch (err: any) {
-            setError(err.message || 'Error al eliminar la cuenta')
+            setError(err.message || t('deleteError'))
         } finally {
             setIsDeleting(false)
         }
@@ -63,21 +63,21 @@ export const DeleteAccountSection = () => {
                         onClick={() => setShowConfirm(!showConfirm)}
                         className="max-sm:w-full bg-red-500 hover:bg-red-600 text-white"
                     >
-                        {showConfirm ? 'Cancelar' : t('deleteButton')}
+                        {showConfirm ? t('cancel') : t('deleteButton')}
                     </Button>
                 </div>
 
                 {showConfirm && (
                     <div className="mt-4 p-4 bg-(--bg-1) rounded-lg space-y-3 border border-red-500/20">
                         <p className="text-sm text-(--text-1) font-semibold">
-                            ⚠️ Esta acción es permanente y no se puede deshacer
+                            {t('warningMessage')}
                         </p>
                         <p className="text-xs text-(--text-2)">
-                            Se eliminarán todos tus datos, mensajes, sesiones y actividad
+                            {t('dataLossMessage')}
                         </p>
                         <input
                             type="password"
-                            placeholder="Ingresa tu contraseña para confirmar"
+                            placeholder={t('enterPassword')}
                             className="w-full px-3 py-2 bg-(--bg-2) border border-(--border-1) rounded-lg text-(--text-1) text-sm"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -88,7 +88,7 @@ export const DeleteAccountSection = () => {
                             disabled={isDeleting}
                             className="w-full bg-red-600 hover:bg-red-700 text-white disabled:opacity-50"
                         >
-                            {isDeleting ? 'Eliminando...' : 'Confirmar eliminación de cuenta'}
+                            {isDeleting ? t('deleting') : t('confirmDeleteButton')}
                         </Button>
                     </div>
                 )}

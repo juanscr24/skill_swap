@@ -5,15 +5,22 @@ import { ACTIVITY_TYPES } from '@/data/activity'
 import { EmptyActivityStateProps } from '../types/activity.types'
 
 export const EmptyActivityState = ({ filterType }: EmptyActivityStateProps) => {
-  const t = useTranslations('dashboard')
+  const t = useTranslations('activity')
+  const tDashboard = useTranslations('dashboard')
 
   const getEmptyMessage = () => {
     if (filterType === 'all') {
-      return t('noActivity')
+      return tDashboard('noActivity')
     }
 
-    const typeLabel = ACTIVITY_TYPES.find(t => t.value === filterType)?.label || filterType
-    return `No hay actividades de tipo "${typeLabel}"`
+    const filterLabels: { [key: string]: string } = {
+      'message': t('filters.messages'),
+      'match': t('filters.matches'),
+      'review': t('filters.reviews'),
+      'session': t('filters.sessions')
+    }
+    const typeLabel = filterLabels[filterType] || filterType
+    return `${t('emptyState.title')} "${typeLabel}"`
   }
 
   return (
@@ -25,7 +32,7 @@ export const EmptyActivityState = ({ filterType }: EmptyActivityStateProps) => {
         {getEmptyMessage()}
       </h3>
       <p className="text-(--text-2) max-w-md mx-auto">
-        {filterType === 'all' ? t('startConnecting') : 'Ajusta los filtros o espera nuevas notificaciones'}
+        {filterType === 'all' ? tDashboard('startConnecting') : t('emptyState.description')}
       </p>
     </div>
   )

@@ -46,7 +46,7 @@ export const EditProfileView = () => {
         return (
             <div className="p-8 max-md:p-6 max-sm:p-4 max-w-7xl mx-auto">
                 <Card className="p-6 text-center">
-                    <p className="text-red-500">Error al cargar el perfil</p>
+                    <p className="text-red-500">{t('errorLoadingProfile')}</p>
                 </Card>
             </div>
         )
@@ -57,8 +57,8 @@ export const EditProfileView = () => {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-(--text-1)">Edit Profile</h1>
-                    <p className="text-(--text-2)">Update your personal details, skills, and languages.</p>
+                    <h1 className="text-3xl font-bold text-(--text-1)">{t('editProfileTitle')}</h1>
+                    <p className="text-(--text-2)">{t('editProfileDescription')}</p>
                 </div>
                 <Link href="/profile">
                     <Button secondary className="flex items-center gap-2">

@@ -23,12 +23,12 @@ export const SecuritySection = () => {
         setSuccess('')
 
         if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-            setError('Las contraseñas no coinciden')
+            setError(t('passwordMismatch'))
             return
         }
 
         if (passwordForm.newPassword.length < 8) {
-            setError('La nueva contraseña debe tener al menos 8 caracteres')
+            setError(t('passwordTooShort'))
             return
         }
 
@@ -45,19 +45,19 @@ export const SecuritySection = () => {
             const data = await response.json()
 
             if (!response.ok) {
-                throw new Error(data.error || 'Error al cambiar la contraseña')
+                throw new Error(data.error || t('passwordChangeError'))
             }
 
-            setSuccess('Contraseña actualizada correctamente')
+            setSuccess(t('passwordUpdated'))
             setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
             setIsChangingPassword(false)
         } catch (err: any) {
-            setError(err.message || 'Error al cambiar la contraseña')
+            setError(err.message || t('passwordChangeError'))
         }
     }
 
     const handleCloseSessions = async () => {
-        if (!confirm(t('confirmCloseSessions') || '¿Estás seguro de que quieres cerrar todas las sesiones?')) {
+        if (!confirm(t('confirmCloseSessions'))) {
             return
         }
 
@@ -70,12 +70,12 @@ export const SecuritySection = () => {
             const data = await response.json()
 
             if (!response.ok) {
-                throw new Error(data.error || 'Error al cerrar las sesiones')
+                throw new Error(data.error || t('closeSessionsError'))
             }
 
-            alert(data.message || 'Sesiones cerradas correctamente')
+            alert(data.message || t('sessionsClosed'))
         } catch (err: any) {
-            alert(err.message || 'Error al cerrar las sesiones')
+            alert(err.message || t('closeSessionsError'))
         } finally {
             setIsClosing(false)
         }
@@ -99,7 +99,7 @@ export const SecuritySection = () => {
                             className="w-auto"
                             onClick={() => setIsChangingPassword(!isChangingPassword)}
                         >
-                            {isChangingPassword ? 'Cancelar' : t('changePassword')}
+                            {isChangingPassword ? t('cancel') : t('changePassword')}
                         </Button>
                     </div>
 
@@ -107,21 +107,21 @@ export const SecuritySection = () => {
                         <div className="space-y-3 mt-4 p-4 bg-(--bg-1) rounded-lg">
                             <input
                                 type="password"
-                                placeholder="Contraseña actual"
+                                placeholder={t('currentPassword')}
                                 className="w-full px-3 py-2 bg-(--bg-2) border border-(--border-1) rounded-lg text-(--text-1) text-sm"
                                 value={passwordForm.currentPassword}
                                 onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
                             />
                             <input
                                 type="password"
-                                placeholder="Nueva contraseña"
+                                placeholder={t('newPassword')}
                                 className="w-full px-3 py-2 bg-(--bg-2) border border-(--border-1) rounded-lg text-(--text-1) text-sm"
                                 value={passwordForm.newPassword}
                                 onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
                             />
                             <input
                                 type="password"
-                                placeholder="Confirmar nueva contraseña"
+                                placeholder={t('confirmPassword')}
                                 className="w-full px-3 py-2 bg-(--bg-2) border border-(--border-1) rounded-lg text-(--text-1) text-sm"
                                 value={passwordForm.confirmPassword}
                                 onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
@@ -133,7 +133,7 @@ export const SecuritySection = () => {
                                 onClick={handleChangePassword}
                                 className="w-full"
                             >
-                                Guardar nueva contraseña
+                                {t('savePassword')}
                             </Button>
                         </div>
                     )}

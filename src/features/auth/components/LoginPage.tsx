@@ -56,7 +56,7 @@ export const LoginPage = () => {
                         {...form.register('email')}
                         type="email"
                         label={t('email')}
-                        placeholder="tu@email.com"
+                        placeholder={t('placeholders.email')}
                         error={errors.email?.message}
                     />
 

@@ -4,5 +4,22 @@
     "pageNotFoundDescription": "Lo sentimos, la página que buscas no existe o ha sido movida.",
     "backToLogin": "Volver al inicio",
     "needHelp": "¿Necesitas ayuda?",
-    "contactSupport": "Contacta con soporte"
+    "contactSupport": "Contacta con soporte",
+    "skills": {
+        "search": "Buscar habilidad...",
+        "searchOrAdd": "Buscar o agregar habilidad...",
+        "customSkillName": "Nombre de la habilidad",
+        "add": "Agregar",
+        "cancel": "Cancelar",
+        "addCustomSkill": "Agregar habilidad personalizada",
+        "recommendations": "Recomendaciones",
+        "noResults": "No se encontraron recomendaciones"
+    },
+    "reviews": {
+        "review": "reseña",
+        "reviews": "reseñas"
+    },
+    "location": {
+        "noLocation": "Sin ubicación"
+    }
 }

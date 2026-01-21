@@ -22,5 +22,9 @@
     "unknown": "No definida",
     "incompleteProfile": "Completa tu perfil para comenzar",
     "incompleteProfileDescription": "Para descubrir mentores y conectar con otros usuarios, primero necesitas agregar las habilidades que quieres enseñar y las que deseas aprender en tu perfil.",
-    "goToProfile": "Ir a mi perfil"
+    "goToProfile": "Ir a mi perfil",
+    "noMoreUsersDescription": "Has visto todos los perfiles disponibles por ahora. Vuelve más tarde para descubrir nuevos mentores.",
+    "topMatch": "TOP MATCH",
+    "matchPercentage": "Match",
+    "unknownUser": "Usuario Desconocido"
 }

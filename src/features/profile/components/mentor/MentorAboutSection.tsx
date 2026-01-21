@@ -12,7 +12,7 @@ export const MentorAboutSection = ({ bio }: MentorAboutSectionProps) => {
                 <h2 className="text-xl font-bold text-(--text-1)">{t('aboutMe')}</h2>
             </div>
             <p className="text-(--text-2) leading-relaxed whitespace-pre-line">
-                {bio || 'No bio provided yet.'}
+                {bio || t('noBioProvided')}
             </p>
         </div>
     )
